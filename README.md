@@ -28,13 +28,14 @@ npx k-harness init --ide claude
 npx k-harness init --ide cursor
 npx k-harness init --ide codex
 npx k-harness init --ide windsurf
+npx k-harness init --ide augment
 ```
 
 ### Options
 
 | Flag | Description |
 |------|-------------|
-| `--ide <name>` | Target IDE: `vscode`, `claude`, `cursor`, `codex`, `windsurf` |
+| `--ide <name>` | Target IDE: `vscode`, `claude`, `cursor`, `codex`, `windsurf`, `augment` |
 | `--dir <path>` | Target directory (default: current directory) |
 | `--overwrite` | Overwrite existing files |
 
@@ -47,6 +48,7 @@ npx k-harness init --ide windsurf
 | **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
 | **Codex** | `AGENTS.md` | (merged into AGENTS.md) | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |
 | **Windsurf** | `.windsurfrules` | (merged) | (merged) | (merged) |
+| **Augment Code** | `.augment/rules/core.md` | `.augment/rules/*.md` | `.augment/rules/*.md` | `.augment/rules/*.md` |
 
 All IDEs also get `project-state.md`, `failure-patterns.md`, `features.md`, and `project-brief.md` at the project root.
 

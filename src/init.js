@@ -210,6 +210,58 @@ function generateWindsurf(targetDir, overwrite) {
   writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
 }
 
+function generateAugment(targetDir, overwrite) {
+  // .augment/rules/ — Always-type rules for core, testing, backend
+  const coreRules = readTemplate('core-rules.md');
+  const coreRule =
+    '---\ndescription: Core project rules — Iron Laws, completion protocol, concreteness\ntype: always\n---\n\n' +
+    coreRules;
+  writeFile(targetDir, '.augment/rules/core.md', coreRule, overwrite);
+
+  const testingRules = readTemplate('testing-rules.md');
+  const testingRule =
+    '---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "**/*.test.*,**/*.spec.*,**/__mocks__/**,**/__tests__/**"\n---\n\n' +
+    testingRules;
+  writeFile(targetDir, '.augment/rules/testing.md', testingRule, overwrite);
+
+  const backendRules = readTemplate('backend-rules.md');
+  const backendRule =
+    '---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "src/**/*.ts,src/**/*.js"\n---\n\n' +
+    backendRules;
+  writeFile(targetDir, '.augment/rules/backend.md', backendRule, overwrite);
+
+  // Skills as Auto rules
+  const skills = ['test-integrity', 'security-checklist', 'investigate', 'impact-analysis', 'feature-breakdown'];
+  for (const skill of skills) {
+    const content = readTemplate(`skills/${skill}.md`);
+    const rule =
+      `---\ndescription: Skill — ${skill}\ntype: manual\n---\n\n` +
+      content;
+    writeFile(targetDir, `.augment/rules/${skill}.md`, rule, overwrite);
+  }
+
+  // Agents as Manual rules
+  const agents = [
+    { name: 'reviewer', file: 'agents/reviewer.md' },
+    { name: 'sprint-manager', file: 'agents/sprint-manager.md' },
+    { name: 'planner', file: 'agents/planner.md' },
+  ];
+  for (const agent of agents) {
+    const content = readTemplate(agent.file);
+    const rule =
+      `---\ndescription: Agent — ${agent.name}\ntype: manual\n---\n\n` +
+      content;
+    writeFile(targetDir, `.augment/rules/${agent.name}.md`, rule, overwrite);
+  }
+
+  // State files
+  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
+  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
+  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
+  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
+  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+}
+
 // ─── IDE registry ────────────────────────────────────────────
 const GENERATORS = {
   vscode:   { name: 'VS Code Copilot',  fn: generateVscode },
@@ -217,6 +269,7 @@ const GENERATORS = {
   cursor:   { name: 'Cursor',           fn: generateCursor },
   codex:    { name: 'Codex (OpenAI)',    fn: generateCodex },
   windsurf: { name: 'Windsurf',         fn: generateWindsurf },
+  augment:  { name: 'Augment Code',     fn: generateAugment },
 };
 
 // ─── Interactive prompt ──────────────────────────────────────
@@ -238,7 +291,7 @@ async function promptIde() {
   });
   console.log();
 
-  const answer = await askQuestion('  Choice (1-5): ');
+  const answer = await askQuestion(`  Choice (1-${keys.length}): `);
   const idx = parseInt(answer, 10) - 1;
   if (idx < 0 || idx >= keys.length || isNaN(idx)) {
     console.error('  Invalid choice.');
@@ -256,7 +309,7 @@ function showHelp() {
     npx k-harness init [options]
 
   Options:
-    --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf
+    --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, augment
     --dir <path>     Target directory (default: current directory)
     --overwrite      Overwrite existing files
     --help           Show this help
