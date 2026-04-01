@@ -15,7 +15,7 @@ K-Harness installs structured instruction files into your project that guide LLM
 ## Quick Start
 
 ```bash
-npx github:OG056501-Opensource-Poc/k-harness init
+npx k-harness init
 ```
 
 Select your IDE when prompted. Files are installed into the current directory.
@@ -23,14 +23,12 @@ Select your IDE when prompted. Files are installed into the current directory.
 ### Non-interactive
 
 ```bash
-npx github:OG056501-Opensource-Poc/k-harness init --ide vscode
-npx github:OG056501-Opensource-Poc/k-harness init --ide claude
-npx github:OG056501-Opensource-Poc/k-harness init --ide cursor
-npx github:OG056501-Opensource-Poc/k-harness init --ide codex
-npx github:OG056501-Opensource-Poc/k-harness init --ide windsurf
+npx k-harness init --ide vscode
+npx k-harness init --ide claude
+npx k-harness init --ide cursor
+npx k-harness init --ide codex
+npx k-harness init --ide windsurf
 ```
-
-> **Note**: npm publish 후에는 `npx k-harness init`으로 사용 가능합니다.
 
 ### Options
 
@@ -50,7 +48,7 @@ npx github:OG056501-Opensource-Poc/k-harness init --ide windsurf
 | **Codex** | `AGENTS.md` | (merged into AGENTS.md) | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |
 | **Windsurf** | `.windsurfrules` | (merged) | (merged) | (merged) |
 
-All IDEs also get `project-state.md` and `failure-patterns.md` at the project root.
+All IDEs also get `project-state.md`, `failure-patterns.md`, `features.md`, and `project-brief.md` at the project root.
 
 ## What Gets Installed
 
