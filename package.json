@@ -1,0 +1,41 @@
+{
+  "name": "k-harness",
+  "version": "0.1.0",
+  "description": "LLM Development Harness — IDE-agnostic rules, skills, and agents that prevent common AI coding failures",
+  "keywords": [
+    "llm",
+    "ai",
+    "copilot",
+    "claude",
+    "cursor",
+    "codex",
+    "windsurf",
+    "harness",
+    "development",
+    "agents",
+    "skills"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OG056501-Opensource-Poc/k-harness.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "main": "src/init.js",
+  "bin": {
+    "k-harness": "bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "harness/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
