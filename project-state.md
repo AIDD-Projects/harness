@@ -4,7 +4,7 @@
 
 ## Quick Summary
 
-K-Harness v0.1.0 npm 배포 완료. 5 IDE 지원 CLI, 8 Iron Laws, Feature Registry, Session Handoff 구현. 다음 단계: 실제 프로젝트 검증.
+K-Harness v0.3.0 npm 배포 완료. 7 IDE 지원 (antigravity, augment 추가). SKILL.md 포맷으로 `/` 슬래시 커맨드 지원. 다음 단계: 실제 프로젝트 검증.
 
 ## Current Sprint
 
@@ -17,8 +17,10 @@ K-Harness v0.1.0 npm 배포 완료. 5 IDE 지원 CLI, 8 Iron Laws, Feature Regis
 | ID | Title | Status | Assignee |
 |----|-------|--------|----------|
 | S2-1 | K-Harness 자체에 harness 적용 (dogfooding) | ✅ done | - |
-| S2-2 | 실제 프로젝트에서 검증 | ⬜ todo | - |
-| S2-3 | 검증 결과 반영 및 개선 | ⬜ todo | - |
+| S2-2 | Antigravity 제너레이터 + SKILL.md 포맷 | ✅ done | - |
+| S2-3 | Augment 제너레이터 Skills 추가 | ✅ done | - |
+| S2-4 | npm publish v0.3.0 | ✅ done | - |
+| S2-5 | 실제 프로젝트에서 검증 | ⬜ todo | - |
 
 ## Completed Sprints
 
@@ -40,7 +42,7 @@ K-Harness v0.1.0 npm 배포 완료. 5 IDE 지원 CLI, 8 Iron Laws, Feature Regis
 | Module | Layer | Status |
 |--------|-------|--------|
 | bin/cli.js | entry | ✅ stable |
-| src/init.js | core | ✅ stable |
+| src/init.js | core | ✅ stable (7 IDE generators) |
 | harness/ | templates | ✅ stable |
 
 ## Technical Decisions
@@ -51,10 +53,12 @@ K-Harness v0.1.0 npm 배포 완료. 5 IDE 지원 CLI, 8 Iron Laws, Feature Regis
 
 ## Recent Changes
 
+- 2026-04-02: feat: Antigravity 제너레이터 + SKILL.md 포맷 (7번째 IDE)
+- 2026-04-02: feat: Augment 제너레이터에 skills 추가
+- 2026-04-02: npm publish v0.3.0
 - 2026-04-01: feat: Augment Code 제너레이터 추가 (6번째 IDE)
+- 2026-04-01: npm publish v0.2.0
 - 2026-04-01: npm publish v0.1.0
-- 2026-04-01: feat: Feature Registry, Session Handoff, Direction Guard
-- 2026-04-01: docs: README → npx k-harness init
 
 ## Session Handoff Protocol
 
