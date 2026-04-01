@@ -24,6 +24,58 @@ function writeFile(targetDir, relPath, content, overwrite) {
   return true;
 }
 
+// ─── Shared definitions ──────────────────────────────────────
+
+const SKILLS = [
+  { id: 'test-integrity', desc: 'Ensure test mocks stay synchronized when interfaces change. Use when modifying repository or service interfaces.' },
+  { id: 'security-checklist', desc: 'Security risk inspection before commits. Use when reviewing code for security issues.' },
+  { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
+  { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
+  { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
+];
+
+const AGENTS = [
+  { id: 'reviewer', file: 'agents/reviewer.md', desc: 'Code review + auto-fix. Validates quality, security, and test integrity before commits.' },
+  { id: 'sprint-manager', file: 'agents/sprint-manager.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
+  { id: 'planner', file: 'agents/planner.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
+];
+
+const STATE_FILES = [
+  'project-state.md',
+  'failure-patterns.md',
+  'dependency-map.md',
+  'features.md',
+  'project-brief.md',
+];
+
+// ─── Shared writers ──────────────────────────────────────────
+
+function writeStateFiles(targetDir, overwrite) {
+  for (const file of STATE_FILES) {
+    writeFile(targetDir, file, readTemplate(file), overwrite);
+  }
+}
+
+function writeSkills(targetDir, skillsDir, overwrite) {
+  for (const skill of SKILLS) {
+    const content = readTemplate(`skills/${skill.id}.md`);
+    const skillMd =
+      `---\nname: ${skill.id}\ndescription: '${skill.desc}'\n---\n\n` +
+      content;
+    writeFile(targetDir, `${skillsDir}/${skill.id}/SKILL.md`, skillMd, overwrite);
+  }
+}
+
+function writeAgentsAsSkills(targetDir, skillsDir, overwrite) {
+  for (const agent of AGENTS) {
+    const content = readTemplate(agent.file);
+    const skillMd =
+      `---\nname: ${agent.id}\ndescription: '${agent.desc}'\n---\n\n` +
+      content;
+    writeFile(targetDir, `${skillsDir}/${agent.id}/SKILL.md`, skillMd, overwrite);
+  }
+}
+
 // ─── IDE Generators ──────────────────────────────────────────
 
 function generateVscode(targetDir, overwrite) {
@@ -45,38 +97,20 @@ function generateVscode(targetDir, overwrite) {
     backendRules;
   writeFile(targetDir, '.vscode/instructions/backend.instructions.md', backendWithFrontmatter, overwrite);
 
-  // Skills (.github/skills — VS Code default search path)
-  writeFile(targetDir, '.github/skills/test-integrity/SKILL.md', readTemplate('skills/test-integrity.md'), overwrite);
-  writeFile(targetDir, '.github/skills/security-checklist/SKILL.md', readTemplate('skills/security-checklist.md'), overwrite);
-  writeFile(targetDir, '.github/skills/investigate/SKILL.md', readTemplate('skills/investigate.md'), overwrite);
-  writeFile(targetDir, '.github/skills/impact-analysis/SKILL.md', readTemplate('skills/impact-analysis.md'), overwrite);
-  writeFile(targetDir, '.github/skills/feature-breakdown/SKILL.md', readTemplate('skills/feature-breakdown.md'), overwrite);
+  // Skills (.github/skills — VS Code default search path, SKILL.md with frontmatter)
+  writeSkills(targetDir, '.github/skills', overwrite);
 
-  // Agents (.github/agents — VS Code default search path)
-  const reviewerContent = readTemplate('agents/reviewer.md');
-  const reviewerAgent =
-    '---\nname: reviewer\ndescription: "Code review + auto-fix. Validates quality, security, and test integrity before commits."\n---\n\n' +
-    reviewerContent;
-  writeFile(targetDir, '.github/agents/reviewer.agent.md', reviewerAgent, overwrite);
-
-  const sprintContent = readTemplate('agents/sprint-manager.md');
-  const sprintAgent =
-    '---\nname: sprint-manager\ndescription: "Sprint/Story state tracking, next task guidance, scope drift prevention."\n---\n\n' +
-    sprintContent;
-  writeFile(targetDir, '.github/agents/sprint-manager.agent.md', sprintAgent, overwrite);
-
-  const plannerContent = readTemplate('agents/planner.md');
-  const plannerAgent =
-    '---\nname: planner\ndescription: "Feature planning and dependency management. Analyze architecture, break down features, track module relationships."\n---\n\n' +
-    plannerContent;
-  writeFile(targetDir, '.github/agents/planner.agent.md', plannerAgent, overwrite);
+  // Agents (.github/agents — VS Code uses .agent.md format with frontmatter)
+  for (const agent of AGENTS) {
+    const content = readTemplate(agent.file);
+    const agentMd =
+      `---\nname: ${agent.id}\ndescription: "${agent.desc}"\n---\n\n` +
+      content;
+    writeFile(targetDir, `.github/agents/${agent.id}.agent.md`, agentMd, overwrite);
+  }
 
   // State files
-  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
-  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
-  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
-  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
-  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+  writeStateFiles(targetDir, overwrite);
 }
 
 function generateClaude(targetDir, overwrite) {
@@ -90,19 +124,11 @@ function generateClaude(targetDir, overwrite) {
   ].join('');
   writeFile(targetDir, 'CLAUDE.md', merged, overwrite);
 
-  // Skills (Claude uses same SKILL.md format)
-  writeFile(targetDir, '.claude/skills/test-integrity/SKILL.md', readTemplate('skills/test-integrity.md'), overwrite);
-  writeFile(targetDir, '.claude/skills/security-checklist/SKILL.md', readTemplate('skills/security-checklist.md'), overwrite);
-  writeFile(targetDir, '.claude/skills/investigate/SKILL.md', readTemplate('skills/investigate.md'), overwrite);
-  writeFile(targetDir, '.claude/skills/impact-analysis/SKILL.md', readTemplate('skills/impact-analysis.md'), overwrite);
-  writeFile(targetDir, '.claude/skills/feature-breakdown/SKILL.md', readTemplate('skills/feature-breakdown.md'), overwrite);
+  // Skills (SKILL.md with frontmatter for slash commands)
+  writeSkills(targetDir, '.claude/skills', overwrite);
 
   // State files
-  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
-  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
-  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
-  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
-  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+  writeStateFiles(targetDir, overwrite);
 }
 
 function generateCursor(targetDir, overwrite) {
@@ -126,35 +152,25 @@ function generateCursor(targetDir, overwrite) {
   writeFile(targetDir, '.cursor/rules/backend.mdc', backendMdc, overwrite);
 
   // Skills as rules
-  const skills = ['test-integrity', 'security-checklist', 'investigate', 'impact-analysis', 'feature-breakdown'];
-  for (const skill of skills) {
-    const content = readTemplate(`skills/${skill}.md`);
+  for (const skill of SKILLS) {
+    const content = readTemplate(`skills/${skill.id}.md`);
     const mdc =
-      `---\ndescription: Skill — ${skill}\nalwaysApply: false\n---\n\n` +
+      `---\ndescription: Skill — ${skill.id}\nalwaysApply: false\n---\n\n` +
       content;
-    writeFile(targetDir, `.cursor/rules/${skill}.mdc`, mdc, overwrite);
+    writeFile(targetDir, `.cursor/rules/${skill.id}.mdc`, mdc, overwrite);
   }
 
   // Agents as rules
-  const agents = [
-    { name: 'reviewer', file: 'agents/reviewer.md' },
-    { name: 'sprint-manager', file: 'agents/sprint-manager.md' },
-    { name: 'planner', file: 'agents/planner.md' },
-  ];
-  for (const agent of agents) {
+  for (const agent of AGENTS) {
     const content = readTemplate(agent.file);
     const mdc =
-      `---\ndescription: Agent — ${agent.name}\nalwaysApply: false\n---\n\n` +
+      `---\ndescription: Agent — ${agent.id}\nalwaysApply: false\n---\n\n` +
       content;
-    writeFile(targetDir, `.cursor/rules/${agent.name}.mdc`, mdc, overwrite);
+    writeFile(targetDir, `.cursor/rules/${agent.id}.mdc`, mdc, overwrite);
   }
 
   // State files
-  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
-  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
-  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
-  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
-  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+  writeStateFiles(targetDir, overwrite);
 }
 
 function generateCodex(targetDir, overwrite) {
@@ -168,19 +184,11 @@ function generateCodex(targetDir, overwrite) {
   ].join('');
   writeFile(targetDir, 'AGENTS.md', merged, overwrite);
 
-  // Skills (Codex uses .agents/skills/ format)
-  writeFile(targetDir, '.agents/skills/test-integrity/SKILL.md', readTemplate('skills/test-integrity.md'), overwrite);
-  writeFile(targetDir, '.agents/skills/security-checklist/SKILL.md', readTemplate('skills/security-checklist.md'), overwrite);
-  writeFile(targetDir, '.agents/skills/investigate/SKILL.md', readTemplate('skills/investigate.md'), overwrite);
-  writeFile(targetDir, '.agents/skills/impact-analysis/SKILL.md', readTemplate('skills/impact-analysis.md'), overwrite);
-  writeFile(targetDir, '.agents/skills/feature-breakdown/SKILL.md', readTemplate('skills/feature-breakdown.md'), overwrite);
+  // Skills (SKILL.md with frontmatter for slash commands)
+  writeSkills(targetDir, '.agents/skills', overwrite);
 
   // State files
-  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
-  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
-  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
-  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
-  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+  writeStateFiles(targetDir, overwrite);
 }
 
 function generateWindsurf(targetDir, overwrite) {
@@ -190,24 +198,18 @@ function generateWindsurf(targetDir, overwrite) {
     readTemplate('testing-rules.md'),
     readTemplate('backend-rules.md'),
     '---\n\n# Skills\n\n',
-    readTemplate('skills/test-integrity.md'),
-    readTemplate('skills/security-checklist.md'),
-    readTemplate('skills/investigate.md'),
-    readTemplate('skills/impact-analysis.md'),
-    readTemplate('skills/feature-breakdown.md'),
-    '---\n\n# Agents\n\n',
-    readTemplate('agents/reviewer.md'),
-    readTemplate('agents/sprint-manager.md'),
-    readTemplate('agents/planner.md'),
   ];
+  for (const skill of SKILLS) {
+    sections.push(readTemplate(`skills/${skill.id}.md`));
+  }
+  sections.push('---\n\n# Agents\n\n');
+  for (const agent of AGENTS) {
+    sections.push(readTemplate(agent.file));
+  }
   writeFile(targetDir, '.windsurfrules', sections.join('\n\n---\n\n'), overwrite);
 
   // State files
-  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
-  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
-  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
-  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
-  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+  writeStateFiles(targetDir, overwrite);
 }
 
 function generateAugment(targetDir, overwrite) {
@@ -231,41 +233,11 @@ function generateAugment(targetDir, overwrite) {
   writeFile(targetDir, '.augment/rules/backend.md', backendRule, overwrite);
 
   // .augment/skills/ — SKILL.md format (enables / slash commands)
-  const skills = [
-    { id: 'test-integrity', desc: 'Ensure test mocks stay synchronized when interfaces change. Use when modifying repository or service interfaces.' },
-    { id: 'security-checklist', desc: 'Security risk inspection before commits. Use when reviewing code for security issues.' },
-    { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
-    { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
-    { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
-  ];
-  for (const skill of skills) {
-    const content = readTemplate(`skills/${skill.id}.md`);
-    const skillMd =
-      `---\nname: ${skill.id}\ndescription: '${skill.desc}'\n---\n\n` +
-      content;
-    writeFile(targetDir, `.augment/skills/${skill.id}/SKILL.md`, skillMd, overwrite);
-  }
-
-  // Agents as skills (invokable via / commands)
-  const agents = [
-    { id: 'reviewer', file: 'agents/reviewer.md', desc: 'Code review + auto-fix. Validates quality, security, and test integrity before commits.' },
-    { id: 'sprint-manager', file: 'agents/sprint-manager.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
-    { id: 'planner', file: 'agents/planner.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
-  ];
-  for (const agent of agents) {
-    const content = readTemplate(agent.file);
-    const skillMd =
-      `---\nname: ${agent.id}\ndescription: '${agent.desc}'\n---\n\n` +
-      content;
-    writeFile(targetDir, `.augment/skills/${agent.id}/SKILL.md`, skillMd, overwrite);
-  }
+  writeSkills(targetDir, '.augment/skills', overwrite);
+  writeAgentsAsSkills(targetDir, '.augment/skills', overwrite);
 
   // State files
-  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
-  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
-  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
-  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
-  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+  writeStateFiles(targetDir, overwrite);
 }
 
 function generateAntigravity(targetDir, overwrite) {
@@ -289,41 +261,11 @@ function generateAntigravity(targetDir, overwrite) {
   writeFile(targetDir, '.agent/rules/backend.md', backendRule, overwrite);
 
   // .agent/skills/ — SKILL.md format (enables / slash commands)
-  const skills = [
-    { id: 'test-integrity', desc: 'Ensure test mocks stay synchronized when interfaces change. Use when modifying repository or service interfaces.' },
-    { id: 'security-checklist', desc: 'Security risk inspection before commits. Use when reviewing code for security issues.' },
-    { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
-    { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
-    { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
-  ];
-  for (const skill of skills) {
-    const content = readTemplate(`skills/${skill.id}.md`);
-    const skillMd =
-      `---\nname: ${skill.id}\ndescription: '${skill.desc}'\n---\n\n` +
-      content;
-    writeFile(targetDir, `.agent/skills/${skill.id}/SKILL.md`, skillMd, overwrite);
-  }
-
-  // Agents as skills (invokable via / commands)
-  const agents = [
-    { id: 'reviewer', file: 'agents/reviewer.md', desc: 'Code review + auto-fix. Validates quality, security, and test integrity before commits.' },
-    { id: 'sprint-manager', file: 'agents/sprint-manager.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
-    { id: 'planner', file: 'agents/planner.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
-  ];
-  for (const agent of agents) {
-    const content = readTemplate(agent.file);
-    const skillMd =
-      `---\nname: ${agent.id}\ndescription: '${agent.desc}'\n---\n\n` +
-      content;
-    writeFile(targetDir, `.agent/skills/${agent.id}/SKILL.md`, skillMd, overwrite);
-  }
+  writeSkills(targetDir, '.agent/skills', overwrite);
+  writeAgentsAsSkills(targetDir, '.agent/skills', overwrite);
 
   // State files
-  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
-  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
-  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
-  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
-  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+  writeStateFiles(targetDir, overwrite);
 }
 
 // ─── IDE registry ────────────────────────────────────────────

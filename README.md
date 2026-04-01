@@ -46,13 +46,13 @@ npx k-harness init --ide antigravity
 |-----|-------------|-------------------|--------|--------|
 | **VS Code Copilot** | `.github/copilot-instructions.md` | `.vscode/instructions/*.instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
 | **Claude Code** | `CLAUDE.md` | (merged into CLAUDE.md) | `.claude/skills/*/SKILL.md` | (merged into CLAUDE.md) |
-| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | (merged into rules) | (merged into rules) |
 | **Codex** | `AGENTS.md` | (merged into AGENTS.md) | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |
 | **Windsurf** | `.windsurfrules` | (merged) | (merged) | (merged) |
 | **Augment Code** | `.augment/rules/core.md` | `.augment/rules/*.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
 | **Google Antigravity** | `.agent/rules/core.md` | `.agent/rules/*.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
 
-All IDEs also get `project-state.md`, `failure-patterns.md`, `features.md`, and `project-brief.md` at the project root.
+All IDEs also get `project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, and `dependency-map.md` at the project root.
 
 ## What Gets Installed
 
@@ -65,20 +65,27 @@ All IDEs also get `project-state.md`, `failure-patterns.md`, `features.md`, and 
 - **test-integrity** — Verify mock/interface synchronization before committing
 - **security-checklist** — Pre-commit security risk scan
 - **investigate** — 4-phase systematic debugging (evidence → scope → fix → verify)
+- **impact-analysis** — Assess change blast radius before modifying shared modules
+- **feature-breakdown** — Decompose features into dependency-ordered implementation tasks
 
 ### Agents (role-based personas)
 - **reviewer** — Code review: architecture, tests, security, failure pattern cross-check
 - **sprint-manager** — Sprint/Story state management, scope drift prevention
+- **planner** — Feature planning, dependency analysis, direction guard
 
 ### State Files
 - **project-state.md** — Current sprint, stories, and progress tracking
+- **project-brief.md** — Project vision, goals, non-goals (enables Direction Guard)
+- **features.md** — Living feature registry so LLMs know what exists
 - **failure-patterns.md** — Template for logging project-specific failure patterns
+- **dependency-map.md** — Module dependency graph for impact analysis
 
 ## After Installation
 
-1. **Edit `project-state.md`** — Set up your first sprint and stories
-2. **Customize global rules** — Add your architecture, type rules, and directory structure
-3. **Log failures** — When an LLM makes a repeated mistake, record it in `failure-patterns.md`
+1. **Edit `project-brief.md`** — Fill in Vision, Goals, Non-Goals, and Tech Stack. This enables Direction Guard.
+2. **Edit `project-state.md`** — Set up your first sprint and stories
+3. **Customize global rules** — Add your architecture, type rules, and directory structure
+4. **Log failures** — When an LLM makes a repeated mistake, record it in `failure-patterns.md`
 
 ## Design Principles
 

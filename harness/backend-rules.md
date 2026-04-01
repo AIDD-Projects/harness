@@ -2,18 +2,20 @@
 
 ## Required
 
-- Follow the project's architecture patterns strictly:
+- Follow the project's architecture patterns strictly.
+  <!-- TODO: Define your architecture layers. Examples:
   - Domain layer must not import from infrastructure.
   - Application layer accesses data only through domain interfaces.
   - Infrastructure implements domain interfaces.
-  - Presentation handles routing and DTO conversion only. No business logic.
-- Before calling any constructor, read the actual source file to verify parameters. Do not trust memory. (FP-002)
+  - Controllers/routes handle request/response only. No business logic.
+  -->
+- Before calling any constructor or factory, read the actual source file to verify parameters. Do not trust memory. (FP-002)
 
 ## Forbidden
 
-- Importing infrastructure from domain (dependency inversion violation).
-- `any` type usage — when unavoidable, add `// eslint-disable-next-line` with reason comment.
-- Hardcoding environment variables in code. Use `process.env` with centralized config.
+- Violating the project's dependency direction (e.g. importing infrastructure from domain).
+- Suppressing type safety without an explicit reason comment.
+- Hardcoding environment variables or secrets in code. Use centralized config.
 - `git add .` or `git add -A` — use explicit per-file staging.
 
 ## References

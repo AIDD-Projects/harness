@@ -1,0 +1,234 @@
+'use strict';
+
+const { describe, it, before, after } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const os = require('node:os');
+const { run } = require('../src/init');
+
+// Helper: create a temp directory and clean up after
+function makeTmpDir() {
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'k-harness-test-'));
+}
+
+function rmDir(dir) {
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// ─── File count expectations per IDE ────────────────────────
+const EXPECTED_FILES = {
+  vscode: {
+    count: 16,
+    required: [
+      '.github/copilot-instructions.md',
+      '.vscode/instructions/testing.instructions.md',
+      '.vscode/instructions/backend.instructions.md',
+      '.github/skills/test-integrity/SKILL.md',
+      '.github/skills/investigate/SKILL.md',
+      '.github/agents/reviewer.agent.md',
+      'project-state.md',
+      'features.md',
+    ],
+  },
+  claude: {
+    count: 11,
+    required: [
+      'CLAUDE.md',
+      '.claude/skills/test-integrity/SKILL.md',
+      '.claude/skills/security-checklist/SKILL.md',
+      'project-state.md',
+    ],
+  },
+  cursor: {
+    count: 16,
+    required: [
+      '.cursor/rules/core.mdc',
+      '.cursor/rules/testing.mdc',
+      '.cursor/rules/test-integrity.mdc',
+      '.cursor/rules/reviewer.mdc',
+      'project-state.md',
+    ],
+  },
+  codex: {
+    count: 11,
+    required: [
+      'AGENTS.md',
+      '.agents/skills/test-integrity/SKILL.md',
+      '.agents/skills/investigate/SKILL.md',
+      'project-state.md',
+    ],
+  },
+  windsurf: {
+    count: 6,
+    required: [
+      '.windsurfrules',
+      'project-state.md',
+      'features.md',
+    ],
+  },
+  augment: {
+    count: 16,
+    required: [
+      '.augment/rules/core.md',
+      '.augment/rules/testing.md',
+      '.augment/skills/test-integrity/SKILL.md',
+      '.augment/skills/reviewer/SKILL.md',
+      'project-state.md',
+    ],
+  },
+  antigravity: {
+    count: 16,
+    required: [
+      '.agent/rules/core.md',
+      '.agent/rules/testing.md',
+      '.agent/skills/test-integrity/SKILL.md',
+      '.agent/skills/planner/SKILL.md',
+      'project-state.md',
+    ],
+  },
+};
+
+// Count all files recursively
+function countFiles(dir) {
+  let count = 0;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      count += countFiles(path.join(dir, entry.name));
+    } else {
+      count++;
+    }
+  }
+  return count;
+}
+
+// ─── Tests ──────────────────────────────────────────────────
+
+describe('k-harness init', () => {
+  for (const [ide, spec] of Object.entries(EXPECTED_FILES)) {
+    describe(`--ide ${ide}`, () => {
+      let tmpDir;
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        // Suppress console output during tests
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', ide, '--dir', tmpDir]);
+        console.log = origLog;
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it(`generates exactly ${spec.count} files`, () => {
+        assert.equal(countFiles(tmpDir), spec.count);
+      });
+
+      for (const file of spec.required) {
+        it(`creates ${file}`, () => {
+          const fullPath = path.join(tmpDir, file);
+          assert.ok(fs.existsSync(fullPath), `Missing: ${file}`);
+        });
+      }
+    });
+  }
+
+  describe('SKILL.md frontmatter', () => {
+    let tmpDir;
+
+    before(async () => {
+      tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--dir', tmpDir]);
+      console.log = origLog;
+    });
+
+    after(() => {
+      rmDir(tmpDir);
+    });
+
+    it('VS Code skills have name/description frontmatter', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/skills/test-integrity/SKILL.md'),
+        'utf8',
+      );
+      assert.ok(content.startsWith('---\n'), 'Missing frontmatter opening');
+      assert.ok(content.includes('name: test-integrity'), 'Missing name field');
+      assert.ok(content.includes('description:'), 'Missing description field');
+    });
+
+    it('VS Code agents have name/description frontmatter', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/agents/reviewer.agent.md'),
+        'utf8',
+      );
+      assert.ok(content.startsWith('---\n'), 'Missing frontmatter opening');
+      assert.ok(content.includes('name: reviewer'), 'Missing name field');
+    });
+  });
+
+  describe('--overwrite behavior', () => {
+    let tmpDir;
+
+    before(() => {
+      tmpDir = makeTmpDir();
+    });
+
+    after(() => {
+      rmDir(tmpDir);
+    });
+
+    it('skips existing files without --overwrite', async () => {
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'windsurf', '--dir', tmpDir]);
+      console.log = origLog;
+
+      // Modify a file
+      const statePath = path.join(tmpDir, 'project-state.md');
+      fs.writeFileSync(statePath, 'CUSTOM CONTENT', 'utf8');
+
+      // Run again without --overwrite
+      const skipped = [];
+      console.log = (msg) => {
+        if (msg && msg.includes('Skipped')) skipped.push(msg);
+      };
+      await run(['init', '--ide', 'windsurf', '--dir', tmpDir]);
+      console.log = origLog;
+
+      assert.ok(skipped.length > 0, 'Should have skipped existing files');
+      const content = fs.readFileSync(statePath, 'utf8');
+      assert.equal(content, 'CUSTOM CONTENT', 'Should preserve existing file');
+    });
+  });
+
+  describe('invalid IDE', () => {
+    it('exits with error for unknown IDE', async () => {
+      const origExit = process.exit;
+      const origError = console.error;
+      let exitCode = null;
+      let errorMsg = '';
+
+      process.exit = (code) => {
+        exitCode = code;
+        throw new Error('EXIT');
+      };
+      console.error = (msg) => { errorMsg += msg; };
+
+      try {
+        await run(['init', '--ide', 'nonexistent']);
+      } catch (e) {
+        // expected
+      }
+
+      process.exit = origExit;
+      console.error = origError;
+
+      assert.equal(exitCode, 1);
+      assert.ok(errorMsg.includes('Unknown IDE'), 'Should show unknown IDE error');
+    });
+  });
+});

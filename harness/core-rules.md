@@ -42,8 +42,8 @@
 ## Test Rules
 
 - New feature = New test. Do not commit feature code without tests.
-- Test command: `npm test` <!-- TODO: customize -->
-- Mock location: `tests/__mocks__/` <!-- TODO: customize -->
+- Test command: <!-- TODO: e.g. npm test, pytest, go test ./..., mvn test -->
+- Mock location: <!-- TODO: e.g. tests/__mocks__/, test/fixtures/ -->
 
 ## Completion Status Protocol
 

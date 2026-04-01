@@ -41,20 +41,20 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 
 ### Wave 1 (no dependencies)
 - [ ] Task 1: [Module A] — Create entity + repository interface
-  - Files: src/domain/entities/X.ts, src/domain/repositories/XRepository.ts
-  - Tests: tests/domain/X.test.ts
+  - Files: <!-- list files to create/modify -->
+  - Tests: <!-- list test files -->
   - Depends on: none
 
 ### Wave 2 (depends on Wave 1)
 - [ ] Task 2: [Module B] — Implement use case
-  - Files: src/application/usecases/DoX.ts
-  - Tests: tests/application/DoX.test.ts
+  - Files: <!-- list files to create/modify -->
+  - Tests: <!-- list test files -->
   - Depends on: Task 1
 
 ### Wave 3 (depends on Wave 2)
-- [ ] Task 3: [Module C] — Add API endpoint
-  - Files: src/presentation/routes/x.ts, src/presentation/dto/XDto.ts
-  - Tests: tests/presentation/x.test.ts
+- [ ] Task 3: [Module C] — Add API endpoint / UI integration
+  - Files: <!-- list files to create/modify -->
+  - Tests: <!-- list test files -->
   - Depends on: Task 2
 
 ### Dependency Map Updates

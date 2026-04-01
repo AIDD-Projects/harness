@@ -11,9 +11,9 @@
 ## Forbidden
 
 - Casting mocks with `any` type. Create mocks using the actual interface type.
-- Creating mocks with bare `jest.fn()` only. Set default return values with `mockResolvedValue` etc.
+- Creating mocks with no default return values. Always set sensible defaults (e.g. `mockResolvedValue`, stub returns).
 - Committing with `skip` or `only` left in test files.
-- Committing with `console.log` debugging statements.
+- Committing with debugging statements (e.g. `console.log`, `print`, `println`).
 
 ## References
 
