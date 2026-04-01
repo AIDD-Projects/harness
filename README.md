@@ -42,7 +42,7 @@ npx k-harness init --ide windsurf
 
 | IDE | Global Rules | File-Scoped Rules | Skills | Agents |
 |-----|-------------|-------------------|--------|--------|
-| **VS Code Copilot** | `.github/copilot-instructions.md` | `.vscode/instructions/*.instructions.md` | `.vscode/skills/*/SKILL.md` | `.vscode/agents/*.agent.md` |
+| **VS Code Copilot** | `.github/copilot-instructions.md` | `.vscode/instructions/*.instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
 | **Claude Code** | `CLAUDE.md` | (merged into CLAUDE.md) | `.claude/skills/*/SKILL.md` | (merged into CLAUDE.md) |
 | **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
 | **Codex** | `AGENTS.md` | (merged into AGENTS.md) | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |

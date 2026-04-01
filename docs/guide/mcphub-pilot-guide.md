@@ -40,21 +40,21 @@ VS Code 기준으로 아래 파일들이 생성됩니다:
 
 ```
 프로젝트/
-├── .github/copilot-instructions.md     ← 전역 규칙 (매 세션 자동 적용)
-├── .vscode/
-│   ├── instructions/
-│   │   ├── testing.instructions.md     ← 테스트 파일 편집 시 자동 적용
-│   │   └── backend.instructions.md     ← src/ 파일 편집 시 자동 적용
-│   ├── skills/
-│   │   ├── test-integrity/SKILL.md     ← mock 동기화 검증
-│   │   ├── security-checklist/SKILL.md ← 보안 점검
-│   │   ├── investigate/SKILL.md        ← 체계적 디버깅
-│   │   ├── impact-analysis/SKILL.md    ← 변경 영향 분석
-│   │   └── feature-breakdown/SKILL.md  ← 기능 분해
-│   └── agents/
-│       ├── reviewer.agent.md           ← 코드 리뷰어
-│       ├── sprint-manager.agent.md     ← 스프린트 관리자
-│       └── planner.agent.md            ← 기능 기획자
+├── .github/
+│   ├── copilot-instructions.md         ← 전역 규칙 (매 세션 자동 적용)
+│   ├── agents/
+│   │   ├── reviewer.agent.md           ← 코드 리뷰어
+│   │   ├── sprint-manager.agent.md     ← 스프린트 관리자
+│   │   └── planner.agent.md            ← 기능 기획자
+│   └── skills/
+│       ├── test-integrity/SKILL.md     ← mock 동기화 검증
+│       ├── security-checklist/SKILL.md ← 보안 점검
+│       ├── investigate/SKILL.md        ← 체계적 디버깅
+│       ├── impact-analysis/SKILL.md    ← 변경 영향 분석
+│       └── feature-breakdown/SKILL.md  ← 기능 분해
+├── .vscode/instructions/
+│   ├── testing.instructions.md         ← 테스트 파일 편집 시 자동 적용
+│   └── backend.instructions.md         ← src/ 파일 편집 시 자동 적용
 ├── project-state.md                    ← 스프린트/스토리 상태
 ├── failure-patterns.md                 ← 실패 패턴 기록
 └── dependency-map.md                   ← 모듈 의존성 그래프

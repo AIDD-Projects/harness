@@ -45,31 +45,31 @@ function generateVscode(targetDir, overwrite) {
     backendRules;
   writeFile(targetDir, '.vscode/instructions/backend.instructions.md', backendWithFrontmatter, overwrite);
 
-  // Skills
-  writeFile(targetDir, '.vscode/skills/test-integrity/SKILL.md', readTemplate('skills/test-integrity.md'), overwrite);
-  writeFile(targetDir, '.vscode/skills/security-checklist/SKILL.md', readTemplate('skills/security-checklist.md'), overwrite);
-  writeFile(targetDir, '.vscode/skills/investigate/SKILL.md', readTemplate('skills/investigate.md'), overwrite);
-  writeFile(targetDir, '.vscode/skills/impact-analysis/SKILL.md', readTemplate('skills/impact-analysis.md'), overwrite);
-  writeFile(targetDir, '.vscode/skills/feature-breakdown/SKILL.md', readTemplate('skills/feature-breakdown.md'), overwrite);
+  // Skills (.github/skills — VS Code default search path)
+  writeFile(targetDir, '.github/skills/test-integrity/SKILL.md', readTemplate('skills/test-integrity.md'), overwrite);
+  writeFile(targetDir, '.github/skills/security-checklist/SKILL.md', readTemplate('skills/security-checklist.md'), overwrite);
+  writeFile(targetDir, '.github/skills/investigate/SKILL.md', readTemplate('skills/investigate.md'), overwrite);
+  writeFile(targetDir, '.github/skills/impact-analysis/SKILL.md', readTemplate('skills/impact-analysis.md'), overwrite);
+  writeFile(targetDir, '.github/skills/feature-breakdown/SKILL.md', readTemplate('skills/feature-breakdown.md'), overwrite);
 
-  // Agents (add VS Code agent frontmatter)
+  // Agents (.github/agents — VS Code default search path)
   const reviewerContent = readTemplate('agents/reviewer.md');
   const reviewerAgent =
     '---\nname: reviewer\ndescription: "Code review + auto-fix. Validates quality, security, and test integrity before commits."\n---\n\n' +
     reviewerContent;
-  writeFile(targetDir, '.vscode/agents/reviewer.agent.md', reviewerAgent, overwrite);
+  writeFile(targetDir, '.github/agents/reviewer.agent.md', reviewerAgent, overwrite);
 
   const sprintContent = readTemplate('agents/sprint-manager.md');
   const sprintAgent =
     '---\nname: sprint-manager\ndescription: "Sprint/Story state tracking, next task guidance, scope drift prevention."\n---\n\n' +
     sprintContent;
-  writeFile(targetDir, '.vscode/agents/sprint-manager.agent.md', sprintAgent, overwrite);
+  writeFile(targetDir, '.github/agents/sprint-manager.agent.md', sprintAgent, overwrite);
 
   const plannerContent = readTemplate('agents/planner.md');
   const plannerAgent =
     '---\nname: planner\ndescription: "Feature planning and dependency management. Analyze architecture, break down features, track module relationships."\n---\n\n' +
     plannerContent;
-  writeFile(targetDir, '.vscode/agents/planner.agent.md', plannerAgent, overwrite);
+  writeFile(targetDir, '.github/agents/planner.agent.md', plannerAgent, overwrite);
 
   // State files
   writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
