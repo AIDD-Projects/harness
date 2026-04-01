@@ -75,6 +75,8 @@ function generateVscode(targetDir, overwrite) {
   writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
   writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
   writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
+  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
+  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
 }
 
 function generateClaude(targetDir, overwrite) {
@@ -99,6 +101,8 @@ function generateClaude(targetDir, overwrite) {
   writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
   writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
   writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
+  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
+  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
 }
 
 function generateCursor(targetDir, overwrite) {
@@ -149,6 +153,8 @@ function generateCursor(targetDir, overwrite) {
   writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
   writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
   writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
+  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
+  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
 }
 
 function generateCodex(targetDir, overwrite) {
@@ -173,6 +179,8 @@ function generateCodex(targetDir, overwrite) {
   writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
   writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
   writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
+  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
+  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
 }
 
 function generateWindsurf(targetDir, overwrite) {
@@ -198,6 +206,8 @@ function generateWindsurf(targetDir, overwrite) {
   writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
   writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
   writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
+  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
+  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
 }
 
 // ─── IDE registry ────────────────────────────────────────────

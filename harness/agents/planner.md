@@ -13,6 +13,8 @@ The Planner is the entry point for new features — use it BEFORE writing code.
 
 ## Referenced Files
 
+- project-brief.md — Project vision, goals, and non-goals
+- features.md — Feature registry
 - dependency-map.md
 - project-state.md
 - failure-patterns.md
@@ -28,15 +30,19 @@ One of:
 
 ### For New Feature
 
-1. Read `dependency-map.md` to understand current architecture
-2. Read `project-state.md` for current Sprint context
-3. Identify which existing modules are affected
-4. Identify new modules that need to be created
-5. Run **feature-breakdown** skill to create ordered task list
-6. Run **impact-analysis** skill for each existing module being modified
-7. Check `failure-patterns.md` for relevant past mistakes
-8. Produce implementation plan (see Output Format)
-9. Update `project-state.md` with the new Story
+1. Read `project-brief.md` to understand project vision, goals, and **non-goals**
+2. **Direction Guard**: Verify the requested feature aligns with the project goals and does NOT fall into non-goals. If it conflicts, warn the user before proceeding.
+3. Read `features.md` to understand what already exists
+4. Read `dependency-map.md` to understand current architecture
+5. Read `project-state.md` for current Sprint context
+6. Identify which existing modules are affected
+7. Identify new modules that need to be created
+8. Run **feature-breakdown** skill to create ordered task list
+9. Run **impact-analysis** skill for each existing module being modified
+10. Check `failure-patterns.md` for relevant past mistakes
+11. Produce implementation plan (see Output Format)
+12. Update `project-state.md` with the new Story
+13. Update `features.md` with the new feature entry
 
 ### For Architecture Query
 

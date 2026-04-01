@@ -36,6 +36,8 @@
 4. **Security**: Never include credentials, passwords, or API keys in code or commits.
 5. **3-Failure Stop**: If the same approach fails 3 times, stop and report to the user.
 6. **Dependency Map**: When adding or modifying a module, update dependency-map.md in the same commit. Register new modules, update relationship columns.
+7. **Feature Registry**: When adding a new feature, register it in features.md in the same commit. Include key files and test files.
+8. **Session Handoff**: Before ending a chat session, update project-state.md Quick Summary. Never leave the project in an undocumented state.
 
 ## Test Rules
 
@@ -57,11 +59,18 @@ Report completion using one of:
 - When tests fail, quote the test name and error message.
 - When type errors occur, specify expected type and actual type.
 
+## New Session Bootstrap
+
+When starting a NEW chat session, read these files in order before doing any work:
+1. `project-state.md` — Quick Summary tells you where we left off
+2. `features.md` — What features exist in this project
+3. `failure-patterns.md` — What mistakes to avoid
+4. `project-brief.md` — Project vision, goals, and non-goals
+
 ## References
 
-- failure-patterns.md — Log of known failure patterns
-- project-state.md — Sprint/Story tracking, module registry
-- dependency-map.md — Module dependency graph (living architecture doc)
-
-- Failure patterns: failure-patterns.md
-- Current state: project-state.md
+- project-brief.md — Project vision, goals, non-goals (the "why")
+- features.md — Feature registry (the "what")
+- project-state.md — Sprint/Story tracking, module registry (the "where")
+- dependency-map.md — Module dependency graph (the "how")
+- failure-patterns.md — Log of known failure patterns (the "watch out")

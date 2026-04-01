@@ -48,7 +48,12 @@ Changed file list (user-provided or from `git diff --name-only`)
 - Compare current changes against all FP-NNN items in failure-patterns.md
 - Warn if any pattern applies
 
-**Step 6: Dependency Map Check**
+**Step 6: Feature Registry Check**
+- [ ] If a new feature was added, verify it is registered in features.md (Iron Law #7)
+- [ ] If feature files changed, verify features.md key files are up to date
+- [ ] If tests were added/removed, verify features.md test files column is accurate
+
+**Step 7: Dependency Map Check**
 - [ ] If new modules were added, verify they are registered in dependency-map.md (Iron Law #6)
 - [ ] If module interfaces changed, verify "Depends On" / "Depended By" columns are updated
 - [ ] If module was deleted/renamed, verify dependency-map.md is cleaned up
