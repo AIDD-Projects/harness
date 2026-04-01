@@ -230,28 +230,92 @@ function generateAugment(targetDir, overwrite) {
     backendRules;
   writeFile(targetDir, '.augment/rules/backend.md', backendRule, overwrite);
 
-  // Skills as Auto rules
-  const skills = ['test-integrity', 'security-checklist', 'investigate', 'impact-analysis', 'feature-breakdown'];
+  // .augment/skills/ — SKILL.md format (enables / slash commands)
+  const skills = [
+    { id: 'test-integrity', desc: 'Ensure test mocks stay synchronized when interfaces change. Use when modifying repository or service interfaces.' },
+    { id: 'security-checklist', desc: 'Security risk inspection before commits. Use when reviewing code for security issues.' },
+    { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
+    { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
+    { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
+  ];
   for (const skill of skills) {
-    const content = readTemplate(`skills/${skill}.md`);
-    const rule =
-      `---\ndescription: Skill — ${skill}\ntype: manual\n---\n\n` +
+    const content = readTemplate(`skills/${skill.id}.md`);
+    const skillMd =
+      `---\nname: ${skill.id}\ndescription: '${skill.desc}'\n---\n\n` +
       content;
-    writeFile(targetDir, `.augment/rules/${skill}.md`, rule, overwrite);
+    writeFile(targetDir, `.augment/skills/${skill.id}/SKILL.md`, skillMd, overwrite);
   }
 
-  // Agents as Manual rules
+  // Agents as skills (invokable via / commands)
   const agents = [
-    { name: 'reviewer', file: 'agents/reviewer.md' },
-    { name: 'sprint-manager', file: 'agents/sprint-manager.md' },
-    { name: 'planner', file: 'agents/planner.md' },
+    { id: 'reviewer', file: 'agents/reviewer.md', desc: 'Code review + auto-fix. Validates quality, security, and test integrity before commits.' },
+    { id: 'sprint-manager', file: 'agents/sprint-manager.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
+    { id: 'planner', file: 'agents/planner.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
   ];
   for (const agent of agents) {
     const content = readTemplate(agent.file);
-    const rule =
-      `---\ndescription: Agent — ${agent.name}\ntype: manual\n---\n\n` +
+    const skillMd =
+      `---\nname: ${agent.id}\ndescription: '${agent.desc}'\n---\n\n` +
       content;
-    writeFile(targetDir, `.augment/rules/${agent.name}.md`, rule, overwrite);
+    writeFile(targetDir, `.augment/skills/${agent.id}/SKILL.md`, skillMd, overwrite);
+  }
+
+  // State files
+  writeFile(targetDir, 'project-state.md', readTemplate('project-state.md'), overwrite);
+  writeFile(targetDir, 'failure-patterns.md', readTemplate('failure-patterns.md'), overwrite);
+  writeFile(targetDir, 'dependency-map.md', readTemplate('dependency-map.md'), overwrite);
+  writeFile(targetDir, 'features.md', readTemplate('features.md'), overwrite);
+  writeFile(targetDir, 'project-brief.md', readTemplate('project-brief.md'), overwrite);
+}
+
+function generateAntigravity(targetDir, overwrite) {
+  // .agent/rules/ — Always-type rules (same as Augment format, read by Antigravity)
+  const coreRules = readTemplate('core-rules.md');
+  const coreRule =
+    '---\ndescription: Core project rules — Iron Laws, completion protocol, concreteness\ntype: always\n---\n\n' +
+    coreRules;
+  writeFile(targetDir, '.agent/rules/core.md', coreRule, overwrite);
+
+  const testingRules = readTemplate('testing-rules.md');
+  const testingRule =
+    '---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "**/*.test.*,**/*.spec.*,**/__mocks__/**,**/__tests__/**"\n---\n\n' +
+    testingRules;
+  writeFile(targetDir, '.agent/rules/testing.md', testingRule, overwrite);
+
+  const backendRules = readTemplate('backend-rules.md');
+  const backendRule =
+    '---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "src/**/*.ts,src/**/*.js"\n---\n\n' +
+    backendRules;
+  writeFile(targetDir, '.agent/rules/backend.md', backendRule, overwrite);
+
+  // .agent/skills/ — SKILL.md format (enables / slash commands)
+  const skills = [
+    { id: 'test-integrity', desc: 'Ensure test mocks stay synchronized when interfaces change. Use when modifying repository or service interfaces.' },
+    { id: 'security-checklist', desc: 'Security risk inspection before commits. Use when reviewing code for security issues.' },
+    { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
+    { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
+    { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
+  ];
+  for (const skill of skills) {
+    const content = readTemplate(`skills/${skill.id}.md`);
+    const skillMd =
+      `---\nname: ${skill.id}\ndescription: '${skill.desc}'\n---\n\n` +
+      content;
+    writeFile(targetDir, `.agent/skills/${skill.id}/SKILL.md`, skillMd, overwrite);
+  }
+
+  // Agents as skills (invokable via / commands)
+  const agents = [
+    { id: 'reviewer', file: 'agents/reviewer.md', desc: 'Code review + auto-fix. Validates quality, security, and test integrity before commits.' },
+    { id: 'sprint-manager', file: 'agents/sprint-manager.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
+    { id: 'planner', file: 'agents/planner.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
+  ];
+  for (const agent of agents) {
+    const content = readTemplate(agent.file);
+    const skillMd =
+      `---\nname: ${agent.id}\ndescription: '${agent.desc}'\n---\n\n` +
+      content;
+    writeFile(targetDir, `.agent/skills/${agent.id}/SKILL.md`, skillMd, overwrite);
   }
 
   // State files
@@ -264,12 +328,13 @@ function generateAugment(targetDir, overwrite) {
 
 // ─── IDE registry ────────────────────────────────────────────
 const GENERATORS = {
-  vscode:   { name: 'VS Code Copilot',  fn: generateVscode },
-  claude:   { name: 'Claude Code',      fn: generateClaude },
-  cursor:   { name: 'Cursor',           fn: generateCursor },
-  codex:    { name: 'Codex (OpenAI)',    fn: generateCodex },
-  windsurf: { name: 'Windsurf',         fn: generateWindsurf },
-  augment:  { name: 'Augment Code',     fn: generateAugment },
+  vscode:       { name: 'VS Code Copilot',      fn: generateVscode },
+  claude:       { name: 'Claude Code',           fn: generateClaude },
+  cursor:       { name: 'Cursor',                fn: generateCursor },
+  codex:        { name: 'Codex (OpenAI)',         fn: generateCodex },
+  windsurf:     { name: 'Windsurf',              fn: generateWindsurf },
+  augment:      { name: 'Augment Code',          fn: generateAugment },
+  antigravity:  { name: 'Google Antigravity',    fn: generateAntigravity },
 };
 
 // ─── Interactive prompt ──────────────────────────────────────
@@ -309,7 +374,7 @@ function showHelp() {
     npx k-harness init [options]
 
   Options:
-    --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, augment
+    --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, augment, antigravity
     --dir <path>     Target directory (default: current directory)
     --overwrite      Overwrite existing files
     --help           Show this help

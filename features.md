@@ -6,7 +6,7 @@ A living document of all features in this project. Update whenever features are 
 
 | Feature | Status | Key Files | Test Files | Owner |
 |---------|--------|-----------|------------|-------|
-| CLI Init (5 IDE) | ✅ done | bin/cli.js, src/init.js | - | - |
+| CLI Init (7 IDE) | ✅ done | bin/cli.js, src/init.js | - | - |
 | VS Code Generator | ✅ done | src/init.js (generateVscode) | - | - |
 | Claude Generator | ✅ done | src/init.js (generateClaude) | - | - |
 | Cursor Generator | ✅ done | src/init.js (generateCursor) | - | - |
@@ -29,7 +29,7 @@ A living document of all features in this project. Update whenever features are 
 | Direction Guard | ✅ done | harness/agents/planner.md (Step 2) | - | - |
 | npm Public Publish | ✅ done | package.json | - | - |
 | Augment Code Generator | ✅ done | src/init.js (generateAugment) | - | - |
-| Antigravity IDE Generator | ❌ dropped | - | - | - |
+| Antigravity Generator | ✅ done | src/init.js (generateAntigravity) | - | - |
 
 ## Status Legend
 
