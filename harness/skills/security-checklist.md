@@ -44,6 +44,12 @@ git add .
 const dbPassword = "super_secret_123";
 ```
 
+## State File Updates (mandatory)
+
+After completing the security check:
+
+- [ ] **failure-patterns.md**: If a security issue was found (credentials staged, hardcoded secret), add a new FP-NNN entry or increment FP-004 Frequency.
+
 ## Related Failure Patterns
 
 - FP-004: Dangerous file committed → Checklist items 1, 4

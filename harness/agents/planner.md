@@ -28,10 +28,24 @@ One of:
 
 ## Procedure
 
+### Step 0: State File Readiness
+
+Before proceeding, verify that required state files have content (not just TODO placeholders):
+- `project-brief.md` — Must have Vision and Goals filled
+- `features.md` — Must have at least one feature row
+- `dependency-map.md` — Must have at least one module row (for existing projects)
+
+If ALL files are empty/placeholder-only → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
+If `project-brief.md` alone is empty → Warn the user but proceed (the plan will lack direction guard).
+
 ### For New Feature
 
-1. Read `project-brief.md` to understand project vision, goals, and **non-goals**
-2. **Direction Guard**: Verify the requested feature aligns with the project goals and does NOT fall into non-goals. If it conflicts, warn the user before proceeding.
+1. Read `project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
+2. **Direction Alignment**: Verify the requested feature against three checkpoints:
+   - **Goal Alignment**: Does it serve a listed Goal? If no clear link, warn the user.
+   - **Non-Goal Violation**: Does it fall into Non-Goals? If yes, **stop and ask** — this may be a pivot.
+   - **Decision Consistency**: Does it contradict any Decision Log entry? If yes, warn that a previous decision conflicts — recommend running the `pivot` skill before proceeding.
+   If the request represents a clear direction change → recommend running the `pivot` skill instead of proceeding with planning.
 3. Read `features.md` to understand what already exists
 4. Read `dependency-map.md` to understand current architecture
 5. Read `project-state.md` for current Sprint context

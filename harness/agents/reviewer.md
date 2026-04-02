@@ -19,6 +19,14 @@ Finds issues and auto-fixes where safe, escalates where not.
 
 ## Procedure
 
+### Step 0: State File Readiness
+
+Before reviewing, verify that required state files exist and are not empty:
+- `failure-patterns.md` — Must exist (needed for Step 5 cross-check)
+- `project-state.md` — Must have current Sprint info (needed for scope check)
+
+If state files are empty/placeholder-only → Warn: "State files are not filled. Review will proceed but scope check and failure pattern cross-check will be limited. Consider running `bootstrap` skill."
+
 ### Input
 
 Changed file list (user-provided or from `git diff --name-only`)
@@ -58,6 +66,17 @@ Changed file list (user-provided or from `git diff --name-only`)
 - [ ] If module interfaces changed, verify "Depends On" / "Depended By" columns are updated
 - [ ] If module was deleted/renamed, verify dependency-map.md is cleaned up
 - [ ] Run impact-analysis skill if interface changes affect 2+ dependent modules
+
+**Step 8: State File Audit**
+
+Verify that state file updates actually happened. Check each:
+- [ ] **project-state.md**: If stories were worked on, is Quick Summary current? Are story statuses updated?
+- [ ] **features.md**: If new features were added, are they registered? If features were completed, is status updated?
+- [ ] **dependency-map.md**: If new modules were created, are they registered? If dependencies changed, are relationships updated?
+- [ ] **failure-patterns.md**: If a bug was fixed that matched a pattern, was frequency incremented?
+- [ ] **project-brief.md**: If a technology or architectural decision was made, is it in Decision Log?
+
+For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
 
 ### Output Format
 

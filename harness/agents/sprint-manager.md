@@ -12,6 +12,14 @@ Keeps the LLM focused on the current work item.
 
 ## Procedure
 
+### Step 0: State File Readiness
+
+Before handling any request, verify `project-state.md` has content:
+- Quick Summary must not be all TODO placeholders
+- Story Status table must have at least one row
+
+If `project-state.md` is empty/placeholder-only → **Recommend running `bootstrap` skill first.** Report: "project-state.md is empty. Run bootstrap to initialize project state before tracking sprints."
+
 ### Input
 
 User request: "next task", "current status", "story done", "new sprint", "scope check"
@@ -21,7 +29,31 @@ User request: "next task", "current status", "story done", "new sprint", "scope 
 **Request: "current status" / "where are we"**
 1. Read project-state.md
 2. Summarize: current Sprint, in-progress Story, completed Stories
-3. Recommend next action
+3. Run **Next Step Recommendation** (see below)
+
+**Next Step Recommendation**
+
+After every status check, recommend the next action based on current context:
+
+1. Read `project-state.md`, `features.md`, `project-brief.md`, `failure-patterns.md`
+2. Determine the project phase and recommend accordingly:
+
+| Situation | Recommendation |
+|-----------|---------------|
+| State files are empty | → "Run `bootstrap` to onboard this project" |
+| project-brief.md has no Vision/Goals | → "Fill out project-brief.md — this is critical for direction" |
+| No stories exist | → "Run `planner` to break down your first feature" |
+| A story is in-progress | → "Continue S{N}-{M}: [title]. Scope: [files]" |
+| All stories in sprint are done | → "Run `learn` to capture session lessons, then start a new sprint" |
+| A direction change was discussed | → "Run `pivot` to update all state files before continuing" |
+| Recent failure patterns apply | → "Watch out for FP-{NNN}: [description]" |
+
+3. Format the recommendation as:
+```
+💡 Recommended next: [action]
+   Why: [one-sentence reason]
+   Command: [exact skill/agent to invoke]
+```
 
 **Request: "story done" / "S{N}-{M} done"**
 1. Update the Story status to `done` in project-state.md

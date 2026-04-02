@@ -41,6 +41,13 @@ Interface adds findByFilters() → Mock unchanged
 → Runtime error: method not found on mock object
 ```
 
+## State File Updates (mandatory)
+
+After synchronizing mocks:
+
+- [ ] **failure-patterns.md**: If mock sync was missed and caused a test failure, increment FP-001 Frequency.
+- [ ] **dependency-map.md**: If the interface change altered module relationships, update the relevant row.
+
 ## Related Failure Patterns
 
 - FP-001: Interface changed, mock not updated → Checklist item 1

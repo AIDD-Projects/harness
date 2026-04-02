@@ -32,6 +32,9 @@ const SKILLS = [
   { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
   { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
   { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
+  { id: 'bootstrap', desc: 'Onboard project into K-Harness. Scans codebase and fills state files. Use after k-harness init or when state files are empty.' },
+  { id: 'learn', desc: 'Capture session lessons and update state files. Use at the end of every session.' },
+  { id: 'pivot', desc: 'Propagate direction changes across all state files. Use when project goals, technology, scope, or architecture changes.' },
 ];
 
 const AGENTS = [

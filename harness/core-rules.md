@@ -59,6 +59,18 @@ Report completion using one of:
 - When tests fail, quote the test name and error message.
 - When type errors occur, specify expected type and actual type.
 
+## Direction Guard (Every Request)
+
+Before starting ANY coding task, do this:
+
+1. Read `project-brief.md` — check Vision, Goals, Non-Goals, and Decision Log
+2. If `project-brief.md` is empty → run the `bootstrap` skill first, then return to the request
+3. If the request conflicts with **Non-Goals** → stop and warn: "This falls under Non-Goals. Do you want to proceed? If yes, run `pivot` skill first."
+4. If the request contradicts a **Decision Log** entry → warn: "This conflicts with a previous decision: [entry]. Run `pivot` skill to update direction."
+5. If aligned → proceed
+
+This applies to EVERY request, not just new sessions. Skip only for trivial questions ("what does this function do?").
+
 ## New Session Bootstrap
 
 When starting a NEW chat session, read these files in order before doing any work:
@@ -66,6 +78,33 @@ When starting a NEW chat session, read these files in order before doing any wor
 2. `features.md` — What features exist in this project
 3. `failure-patterns.md` — What mistakes to avoid
 4. `project-brief.md` — Project vision, goals, and non-goals
+
+If ALL state files are empty (only TODOs/placeholders), run the `bootstrap` skill before doing anything else.
+
+## Workflow Pipeline
+
+Follow this order for different workflows. Each step's output feeds the next.
+
+### New Feature
+```
+bootstrap (if state files empty) → planner → [code] → reviewer → sprint-manager → learn
+```
+
+### Bug Fix
+```
+investigate → [fix] → test-integrity → reviewer → learn
+```
+
+### Session Lifecycle
+```
+[session start] → sprint-manager ("where are we?") → [work] → learn → [session end]
+```
+
+### Key Rules
+- **planner before code**: Never start coding a feature without running planner first.
+- **reviewer before commit**: Never commit without running reviewer.
+- **learn before closing**: Run learn as the last skill of every session.
+- **bootstrap once**: Run bootstrap once when state files are empty. Not needed after that.
 
 ## References
 

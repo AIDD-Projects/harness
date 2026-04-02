@@ -67,6 +67,13 @@ Phase 4: Tests pass, null case test added
 → Root cause unknown, no reproduction conditions recorded, same error possible elsewhere
 ```
 
+## State File Updates (mandatory)
+
+After the fix is verified (Phase 4):
+
+- [ ] **failure-patterns.md**: If the root cause is a repeatable pattern, add a new FP-NNN entry or increment the Frequency of an existing one. This is NOT optional.
+- [ ] **project-state.md**: Add the fix to Recent Changes with the root cause hypothesis.
+
 ## Related Failure Patterns
 
 - FP-002: Type confusion → Phase 1 requires verifying actual types

@@ -1,16 +1,17 @@
 # K-Harness
 
-LLM Development Harness — IDE-agnostic rules, skills, and agents that prevent common AI coding failures.
+Project Direction Management Framework for LLM-Driven Development.
 
 ## What It Does
 
-K-Harness installs structured instruction files into your project that guide LLM coding agents (Copilot, Claude, Cursor, Codex, Windsurf) to avoid common mistakes:
+K-Harness manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned across sessions. It combines BMAD's systematic project management with gstack's simplicity: zero dependencies, IDE-native format generation, and minimal context overhead.
 
-- **Iron Laws** — Hard rules the LLM must follow every session (mock sync, type checking, security)
-- **Skills** — Step-by-step procedures for specific tasks (debugging, code review, security checks)
-- **Agents** — Role-based personas (reviewer, sprint manager)
+- **Direction Guard** — Every coding request is checked against project goals/non-goals before execution
+- **State Files** — 5 markdown files that persist project knowledge across LLM sessions
+- **Skills** — Step-by-step procedures for planning, review, debugging, and direction changes
+- **Agents** — Role-based personas that enforce the workflow (planner, reviewer, sprint-manager)
 - **Failure Patterns** — Project-specific failure log that prevents repeat mistakes
-- **State Tracking** — Sprint/Story state so the LLM knows what to work on
+- **Decision Log** — Records why decisions were made so LLMs don't re-debate settled choices
 
 ## Quick Start
 
@@ -62,6 +63,9 @@ All IDEs also get `project-state.md`, `project-brief.md`, `features.md`, `failur
 - **Backend Rules** — Dependency inversion, type safety, explicit staging (applied to source files)
 
 ### Skills (on-demand procedures)
+- **bootstrap** — Onboard project into K-Harness: scans codebase + fills state files automatically
+- **learn** — End-of-session wrap-up: captures failure patterns, updates project state
+- **pivot** — Propagate direction changes across all state files when goals/tech/scope changes
 - **test-integrity** — Verify mock/interface synchronization before committing
 - **security-checklist** — Pre-commit security risk scan
 - **investigate** — 4-phase systematic debugging (evidence → scope → fix → verify)
@@ -69,47 +73,69 @@ All IDEs also get `project-state.md`, `project-brief.md`, `features.md`, `failur
 - **feature-breakdown** — Decompose features into dependency-ordered implementation tasks
 
 ### Agents (role-based personas)
-- **reviewer** — Code review: architecture, tests, security, failure pattern cross-check
-- **sprint-manager** — Sprint/Story state management, scope drift prevention
-- **planner** — Feature planning, dependency analysis, direction guard
+- **planner** — Feature planning, dependency analysis, Direction Alignment (goal/non-goal/decision check)
+- **reviewer** — Code review + State File Audit (verifies state files were actually updated)
+- **sprint-manager** — Sprint/Story state management, scope drift prevention, Next Step Recommendation
 
-### State Files
-- **project-state.md** — Current sprint, stories, and progress tracking
-- **project-brief.md** — Project vision, goals, non-goals (enables Direction Guard)
-- **features.md** — Living feature registry so LLMs know what exists
-- **failure-patterns.md** — Template for logging project-specific failure patterns
-- **dependency-map.md** — Module dependency graph for impact analysis
+### State Files (project memory)
+- **project-brief.md** — Project vision, goals, non-goals, Decision Log (the "why")
+- **project-state.md** — Current sprint, stories, and progress tracking (the "where")
+- **features.md** — Living feature registry so LLMs know what exists (the "what")
+- **dependency-map.md** — Module dependency graph for impact analysis (the "how")
+- **failure-patterns.md** — Project-specific failure patterns that prevent repeat mistakes (the "watch out")
 
-## After Installation
+## How It Works
 
-1. **Edit `project-brief.md`** — Fill in Vision, Goals, Non-Goals, and Tech Stack. This enables Direction Guard.
-2. **Edit `project-state.md`** — Set up your first sprint and stories
-3. **Customize global rules** — Add your architecture, type rules, and directory structure
-4. **Log failures** — When an LLM makes a repeated mistake, record it in `failure-patterns.md`
+### 1. Bootstrap (once)
+```bash
+npx k-harness init --ide vscode
+```
+Then ask your LLM to run the `bootstrap` skill — it scans your codebase and fills all 5 state files automatically.
+
+### 2. Direction Guard (every request)
+Before ANY coding task, the LLM reads `project-brief.md` and checks:
+- Does this align with Goals? → proceed
+- Does this fall under Non-Goals? → warn, suggest `pivot`
+- Does this contradict a Decision Log entry? → warn, suggest `pivot`
+
+### 3. Workflow Pipeline
+```
+bootstrap → planner → [code] → reviewer → sprint-manager → learn
+```
+- **planner**: Checks direction alignment, breaks down features
+- **reviewer**: Reviews code + audits state file updates
+- **sprint-manager**: Tracks progress, recommends next action
+- **learn**: Captures lessons before session ends
+
+### 4. Direction Changes
+When goals, technology, or scope changes, run the `pivot` skill:
+- Updates ALL 5 state files consistently
+- Records the decision with reasoning in Decision Log
+- Prevents silent inconsistencies across files
 
 ## Design Principles
 
-1. **State Injection** — Project state injected at every session start
-2. **Rigid Workflow** — Hard "do/don't" rules; soft suggestions get ignored by LLMs
-3. **Failure-Driven Rules** — Rules derived only from actual project failures
-4. **Completion Status Protocol** — DONE / BLOCKED / NEEDS_CONTEXT reporting
-5. **Scope Lock** — Escalate before modifying files outside current story scope
+1. **Direction First** — Every request checked against project goals before code is written
+2. **State Injection** — Project state injected at every session start
+3. **Rigid Workflow** — Hard "do/don't" rules; soft suggestions get ignored by LLMs
+4. **Enforced Updates** — Reviewer audits that state files were actually updated, not just instructed
+5. **Failure-Driven Rules** — Rules derived only from actual project failures
+6. **Context Minimization** — ≤3 files per task, zero dependencies, one `npm install`
 
-## Research & Analysis
+## Why Not BMAD or gstack?
 
-```
-docs/
-├── analysis/           # Framework comparisons
-│   ├── comparison.md   # BMAD vs gstack
-│   ├── bmad-deep-dive.md
-│   └── gstack-deep-dive.md
-├── architecture/       # K-Harness design
-│   ├── design-principles.md
-│   ├── file-structure.md
-│   └── skill-spec.md
-└── case-study/
-    └── mcphub-lessons.md
-```
+| | BMAD v6.2.2 | gstack v0.15.1 | K-Harness |
+|---|---|---|---|
+| Focus | Enterprise SDLC methodology | 1-person software factory | Project direction management |
+| Files | 200+ | ~40 | 15 |
+| Dependencies | Node 20+ | Bun + Node + Playwright | Zero |
+| IDE support | 20+ (installer) | 5 (setup --host) | 7 (native format) |
+| Direction management | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
+| Cold start | ❌ | ❌ | ✅ (bootstrap) |
+| State file audit | ❌ | ❌ | ✅ (reviewer Step 8) |
+| Context per task | 4-6 files | 1 file | 2-3 files |
+
+See [docs/analysis/comparison.md](docs/analysis/comparison.md) for the full analysis.
 
 ## License
 

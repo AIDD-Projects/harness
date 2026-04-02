@@ -54,3 +54,16 @@
    - Language: Python 3.12, Framework: FastAPI, Tests: pytest
    - Language: Go 1.22, no framework, Tests: go test
 -->
+
+## Decision Log
+
+<!-- Record WHY key decisions were made. The Planner uses this to avoid re-debating settled decisions.
+   Use the `pivot` skill to add entries here when direction changes.
+   Format:
+
+### [YYYY-MM-DD] [Decision Title]
+- **Change**: What changed
+- **Reason**: Why this decision was made
+- **Impact**: What was affected
+- **Alternatives Considered**: What else was considered and rejected
+-->

@@ -70,6 +70,14 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 - New modules MUST be registered in dependency-map.md (Iron Law #6)
 - If a task exceeds Story scope, stop and report to user
 
+## State File Updates (mandatory)
+
+After completing the breakdown, update these files in the same session:
+
+- [ ] **dependency-map.md**: Register all NEW_MODULE entries. Update "Depends On" / "Depended By" for INTERFACE_CHANGE entries.
+- [ ] **features.md**: Add a new row for the feature with Status `🔧 active`, Key Files from Wave tasks, and Test Files.
+- [ ] **project-state.md**: Add Stories to the Story Status table for each Wave.
+
 ## Anti-patterns
 
 | Anti-pattern | Correct Approach |
@@ -78,3 +86,4 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 | One giant task for the whole feature | Break into single-module tasks |
 | Skip dependency-map registration | Register immediately when creating module |
 | Tests "later" | Tests in the same task |
+| Produce breakdown but skip state file updates | State file updates are part of the breakdown, not a separate step |

@@ -57,6 +57,13 @@ Plan: 4 files to update, all within S3-2 scope
 → Tests fail in 3 modules, mock out of sync, 2 hours wasted
 ```
 
+## State File Updates (mandatory)
+
+After completing the analysis, update these files:
+
+- [ ] **dependency-map.md**: Update the Interface Change Log table with: Date, Module, Change description, Affected Modules, Status.
+- [ ] **project-state.md**: If scope exceeds current Story, add a note to Recent Changes.
+
 ## Related Failure Patterns
 
 - FP-001: Interface changed, mock not updated → Checklist item 5
