@@ -3,7 +3,7 @@
 ## Purpose
 
 When a project direction changes — technology swap, scope expansion/reduction, architecture shift — this skill propagates the change across ALL state files consistently.
-Without this, direction changes create silent inconsistencies: project-brief.md says "GraphQL" but dependency-map.md still references REST modules.
+Without this, direction changes create silent inconsistencies:docs/project-brief.md says "GraphQL" but docs/dependency-map.md still references REST modules.
 
 ## When to Apply
 
@@ -28,29 +28,29 @@ Without this, direction changes create silent inconsistencies: project-brief.md 
 
 Read ALL state files and identify what needs updating:
 
-1. **project-brief.md**:
+1. **docs/project-brief.md**:
    - Does Vision need rewording?
    - Do Goals need updating?
    - Do Non-Goals need updating?
    - Do Key Technical Decisions need changing?
    - Record the decision with reasoning in the Decision Log section
 
-2. **features.md**:
+2. **docs/features.md**:
    - Which existing features are affected?
    - Which features should be marked `⛔ dropped`?
    - Are new features needed?
 
-3. **dependency-map.md**:
+3. **docs/dependency-map.md**:
    - Which modules are obsoleted by this change?
    - Which new modules are needed?
    - Which dependency relationships change?
 
-4. **project-state.md**:
+4. **docs/project-state.md**:
    - Which in-progress stories are affected?
    - Does the current sprint goal change?
    - Update Quick Summary to reflect the pivot
 
-5. **failure-patterns.md**:
+5. **docs/failure-patterns.md**:
    - Are any existing patterns invalidated by this change?
    - Mark invalidated patterns as `Status: Obsolete (pivot: [reason])`
 
@@ -63,11 +63,11 @@ Before writing anything, present a summary to the user:
 Type: [Tech Swap | Scope Change | Architecture Shift | Goal Pivot]
 
 ### State File Changes:
-- project-brief.md: [what changes]
-- features.md: [N features affected, M dropped, K added]
-- dependency-map.md: [N modules obsoleted, M added, K relationships changed]
-- project-state.md: [N stories affected]
-- failure-patterns.md: [N patterns obsoleted]
+- docs/project-brief.md: [what changes]
+- docs/features.md: [N features affected, M dropped, K added]
+- docs/dependency-map.md: [N modules obsoleted, M added, K relationships changed]
+- docs/project-state.md: [N stories affected]
+- docs/failure-patterns.md: [N patterns obsoleted]
 
 ### Confirm? (yes/no)
 ```
@@ -76,15 +76,15 @@ Type: [Tech Swap | Scope Change | Architecture Shift | Goal Pivot]
 
 After user confirms, update ALL state files in order:
 
-1. **project-brief.md** first (source of truth for direction)
-2. **features.md** second (what we're building)
-3. **dependency-map.md** third (how it connects)
-4. **project-state.md** fourth (current work status)
-5. **failure-patterns.md** last (historical patterns)
+1. **docs/project-brief.md** first (source of truth for direction)
+2. **docs/features.md** second (what we're building)
+3. **docs/dependency-map.md** third (how it connects)
+4. **docs/project-state.md** fourth (current work status)
+5. **docs/failure-patterns.md** last (historical patterns)
 
 ### Step 5: Decision Log Entry
 
-Add an entry to the Decision Log section in project-brief.md:
+Add an entry to the Decision Log section in docs/project-brief.md:
 
 ```markdown
 ### [YYYY-MM-DD] [Decision Title]
@@ -97,6 +97,6 @@ Add an entry to the Decision Log section in project-brief.md:
 ## Rules
 
 - **Never skip the confirmation step** — the user must approve before any state file is written
-- **Never update partially** — if you update project-brief.md, you MUST check and update all other state files too
+- **Never update partially** — if you update docs/project-brief.md, you MUST check and update all other state files too
 - **Preserve history** — mark dropped features as `⛔ dropped`, don't delete rows
 - **Record the why** — every pivot must have a Decision Log entry with reasoning

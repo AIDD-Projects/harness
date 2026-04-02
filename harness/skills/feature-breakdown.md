@@ -15,7 +15,7 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 ## Procedure
 
 1. **Describe the feature** in one sentence
-2. **Read dependency-map.md** to understand current module relationships
+2. **Read docs/dependency-map.md** to understand current module relationships
 3. **Identify affected modules**: List every module that needs changes
 4. **Classify changes per module**:
    - NEW_MODULE: Entirely new module to create
@@ -58,7 +58,7 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
   - Depends on: Task 2
 
 ### Dependency Map Updates
-- [ ] Register Module A in dependency-map.md
+- [ ] Register Module A in docs/dependency-map.md
 - [ ] Update Module B's "Depends On" column
 ```
 
@@ -67,16 +67,16 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 - Never implement a module before its dependencies exist
 - Each task should be completable in one session
 - Every task must include its test files
-- New modules MUST be registered in dependency-map.md (Iron Law #6)
+- New modules MUST be registered in docs/dependency-map.md (Iron Law #6)
 - If a task exceeds Story scope, stop and report to user
 
 ## State File Updates (mandatory)
 
 After completing the breakdown, update these files in the same session:
 
-- [ ] **dependency-map.md**: Register all NEW_MODULE entries. Update "Depends On" / "Depended By" for INTERFACE_CHANGE entries.
-- [ ] **features.md**: Add a new row for the feature with Status `🔧 active`, Key Files from Wave tasks, and Test Files.
-- [ ] **project-state.md**: Add Stories to the Story Status table for each Wave.
+- [ ] **docs/dependency-map.md**: Register all NEW_MODULE entries. Update "Depends On" / "Depended By" for INTERFACE_CHANGE entries.
+- [ ] **docs/features.md**: Add a new row for the feature with Status `🔧 active`, Key Files from Wave tasks, and Test Files.
+- [ ] **docs/project-state.md**: Add Stories to the Story Status table for each Wave.
 
 ## Anti-patterns
 

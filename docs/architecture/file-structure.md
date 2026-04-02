@@ -28,8 +28,16 @@ project-root/
 │       ├── frontend.instructions.md
 │       └── testing.instructions.md
 │
-├── failure-patterns.md                  # 실패 패턴 누적 (프로젝트 root)
-├── project-state.md                     # 현재 프로젝트 상태 (자동 갱신)
+├── docs/                                # 프로젝트 상태 문서
+│   ├── project-brief.md                 # 프로젝트 비전/목표/비목표
+│   ├── project-state.md                 # 현재 스프린트 상태 (자동 갱신)
+│   ├── features.md                      # 기능 레지스트리
+│   ├── dependency-map.md                # 모듈 의존성 그래프
+│   ├── failure-patterns.md              # 실패 패턴 누적
+│   └── agent-memory/                    # 에이전트별 영속 메모리
+│       ├── planner.md
+│       ├── reviewer.md
+│       └── sprint-manager.md
 │
 ├── backend/                             # 실제 소스코드
 ├── frontend/
@@ -88,12 +96,12 @@ applyTo: "backend/**/*.ts"
 ...
 ```
 
-### `failure-patterns.md` — 실패 패턴
+### `docs/failure-patterns.md` — 실패 패턴
 - **위치**: 프로젝트 root (모든 skill/agent가 쉽게 참조)
 - **갱신**: 실패 발생 시 수동 추가
 - **형식**: FP-001 ~ FP-NNN 번호 체계
 
-### `project-state.md` — 프로젝트 상태
+### `docs/project-state.md` — 프로젝트 상태
 - **위치**: 프로젝트 root
 - **갱신**: Sprint 단위 또는 주요 변경 시
 - **내용**: 현재 Sprint 목표, 완료/진행 중 story, 기술적 결정 사항
@@ -104,7 +112,7 @@ applyTo: "backend/**/*.ts"
 
 ### 허용되는 참조
 ```
-copilot-instructions.md  ──→  failure-patterns.md (간접 참조: "failure-patterns.md 참고")
+copilot-instructions.md  ──→  docs/failure-patterns.md (간접 참조: "docs/failure-patterns.md 참고")
 agent.md                 ──→  skills/*.md (명시적 참조: "test-integrity.md skill 적용")
 instructions.md          ──→  skills/*.md (필요시 참조)
 ```
@@ -145,8 +153,8 @@ mcphub-official/
 │       ├── frontend.instructions.md     # applyTo: "frontend/**"
 │       └── testing.instructions.md      # applyTo: "**/*.test.ts"
 │
-├── failure-patterns.md                  # FP-001 ~ FP-011 (Sprint 1-4 실패)
-├── project-state.md                     # Sprint 5 진행 상황
+├── docs/failure-patterns.md                  # FP-001 ~ FP-011 (Sprint 1-4 실패)
+├── docs/project-state.md                     # Sprint 5 진행 상황
 │
 ├── backend/
 ├── frontend/
@@ -170,7 +178,7 @@ mcphub-official/
 .github/copilot-instructions.md    (1개)
 .vscode/skills/                    (2~4개)
 .vscode/instructions/              (2~3개)
-failure-patterns.md                (1개)
+docs/failure-patterns.md                (1개)
                                    ── 총 6~9개 파일
 ```
 
@@ -180,8 +188,8 @@ failure-patterns.md                (1개)
 .vscode/skills/                    (3~5개)
 .vscode/agents/                    (2개)
 .vscode/instructions/              (3개)
-failure-patterns.md                (1개)
-project-state.md                   (1개)
+docs/failure-patterns.md                (1개)
+docs/project-state.md                   (1개)
                                    ── 총 11~13개 파일
 ```
 
@@ -195,8 +203,8 @@ project-state.md                   (1개)
 | 워크플로우 | 33 | 0 (agent 내 인라인) |
 | 태스크 | 5 | 0 (skill로 통합) |
 | 매니페스트 | 6 | 0 |
-| 지식/테스트 | 30+ | 1 (failure-patterns.md) |
-| Story 파일 | 86 | 0 (project-state.md에 통합) |
+| 지식/테스트 | 30+ | 1 (docs/failure-patterns.md) |
+| Story 파일 | 86 | 0 (docs/project-state.md에 통합) |
 | 설정 | 5+ | 0 |
 | 기타 | 20+ | 2 (copilot-instructions, project-state) |
 | **합계** | **200+** | **≤ 15** |

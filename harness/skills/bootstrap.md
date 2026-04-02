@@ -46,30 +46,30 @@ Ask the user these questions (skip any already answered by Phase 1):
 
 Using data from Phase 1 + Phase 2, fill the following files:
 
-**project-brief.md**:
+**docs/project-brief.md**:
 - Project Name → from package.json name, go.mod module, or user input
 - Vision → from user answer #1
 - Goals → from user answer #2
 - Non-Goals → from user answer #3
 - Key Technical Decisions → from Phase 1 scan + user answer #4, #5
 
-**features.md**:
+**docs/features.md**:
 - Add one row per detected module/feature area
 - Status: `✅ done` for modules with passing tests, `🔧 active` for modules without tests
 - Key Files: actual file paths from scan
 - Test Files: actual test file paths from scan
 
-**dependency-map.md**:
+**docs/dependency-map.md**:
 - Add one row per module
 - Layer: inferred from directory structure (domain/application/infrastructure/presentation)
 - Depends On / Depended By: inferred from import scan
 
-**project-state.md**:
+**docs/project-state.md**:
 - Quick Summary: filled with current project state
 - Sprint 1 stories: based on what bootstrap discovered
-- Module Registry: summary from dependency-map.md
+- Module Registry: summary from docs/dependency-map.md
 
-**failure-patterns.md**:
+**docs/failure-patterns.md**:
 - Keep FP-001 through FP-004 as templates (Frequency: 0)
 - No changes unless user reports known issues
 
@@ -92,11 +92,11 @@ Using data from Phase 1 + Phase 2, fill the following files:
 ### Dependency Links: [count]
 
 ### State Files Updated:
-- [x] project-brief.md — [summary]
-- [x] features.md — [N] features registered
-- [x] dependency-map.md — [N] modules, [N] dependencies
-- [x] project-state.md — Sprint 1 initialized
-- [ ] failure-patterns.md — templates only (no changes)
+- [x]docs/project-brief.md — [summary]
+- [x]docs/features.md — [N] features registered
+- [x]docs/dependency-map.md — [N] modules, [N] dependencies
+- [x]docs/project-state.md — Sprint 1 initialized
+- [ ]docs/failure-patterns.md — templates only (no changes)
 
 STATUS: DONE
 ```

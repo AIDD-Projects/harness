@@ -32,12 +32,12 @@
 
 1. **Mock Sync**: When you modify a repository/service interface, update corresponding mocks in the same commit.
 2. **Type Check**: Before calling a constructor or factory, read the actual source file to verify parameters. Do not rely on memory.
-3. **Scope Compliance**: Do not modify files outside the current Story scope (see project-state.md) without reporting first.
+3. **Scope Compliance**: Do not modify files outside the current Story scope (see docs/project-state.md) without reporting first.
 4. **Security**: Never include credentials, passwords, or API keys in code or commits.
 5. **3-Failure Stop**: If the same approach fails 3 times, stop and report to the user.
-6. **Dependency Map**: When adding or modifying a module, update dependency-map.md in the same commit. Register new modules, update relationship columns.
-7. **Feature Registry**: When adding a new feature, register it in features.md in the same commit. Include key files and test files.
-8. **Session Handoff**: Before ending a chat session, update project-state.md Quick Summary. Never leave the project in an undocumented state.
+6. **Dependency Map**: When adding or modifying a module, update docs/dependency-map.md in the same commit. Register new modules, update relationship columns.
+7. **Feature Registry**: When adding a new feature, register it in docs/features.md in the same commit. Include key files and test files.
+8. **Session Handoff**: Before ending a chat session, update docs/project-state.md Quick Summary. Never leave the project in an undocumented state.
 
 ## Test Rules
 
@@ -63,8 +63,8 @@ Report completion using one of:
 
 Before starting ANY coding task, do this:
 
-1. Read `project-brief.md` — check Vision, Goals, Non-Goals, and Decision Log
-2. If `project-brief.md` is empty → run the `bootstrap` skill first, then return to the request
+1. Read `docs/project-brief.md` — check Vision, Goals, Non-Goals, and Decision Log
+2. If `docs/project-brief.md` is empty → run the `bootstrap` skill first, then return to the request
 3. If the request conflicts with **Non-Goals** → stop and warn: "This falls under Non-Goals. Do you want to proceed? If yes, run `pivot` skill first."
 4. If the request contradicts a **Decision Log** entry → warn: "This conflicts with a previous decision: [entry]. Run `pivot` skill to update direction."
 5. If aligned → proceed
@@ -74,10 +74,10 @@ This applies to EVERY request, not just new sessions. Skip only for trivial ques
 ## New Session Bootstrap
 
 When starting a NEW chat session, read these files in order before doing any work:
-1. `project-state.md` — Quick Summary tells you where we left off
-2. `features.md` — What features exist in this project
-3. `failure-patterns.md` — What mistakes to avoid
-4. `project-brief.md` — Project vision, goals, and non-goals
+1. `docs/project-state.md` — Quick Summary tells you where we left off
+2. `docs/features.md` — What features exist in this project
+3. `docs/failure-patterns.md` — What mistakes to avoid
+4. `docs/project-brief.md` — Project vision, goals, and non-goals
 
 If ALL state files are empty (only TODOs/placeholders), run the `bootstrap` skill before doing anything else.
 
@@ -108,8 +108,19 @@ investigate → [fix] → test-integrity → reviewer → learn
 
 ## References
 
-- project-brief.md — Project vision, goals, non-goals (the "why")
-- features.md — Feature registry (the "what")
-- project-state.md — Sprint/Story tracking, module registry (the "where")
-- dependency-map.md — Module dependency graph (the "how")
-- failure-patterns.md — Log of known failure patterns (the "watch out")
+- docs/project-brief.md — Project vision, goals, non-goals (the "why")
+- docs/features.md — Feature registry (the "what")
+- docs/project-state.md — Sprint/Story tracking, module registry (the "where")
+- docs/dependency-map.md — Module dependency graph (the "how")
+- docs/failure-patterns.md — Log of known failure patterns (the "watch out")
+- docs/agent-memory/ — Per-agent persistent memory (the "learned")
+
+## State File Size Limits
+
+State files must stay compact to fit in LLM context windows. Enforce these limits:
+- **docs/project-brief.md**: Max 200 lines. Keep Vision/Goals/Non-Goals concise.
+- **docs/project-state.md**: Max 300 lines. Archive completed sprints when exceeding limit.
+- **docs/failure-patterns.md**: Max 50 patterns. Periodically remove `Status: Resolved` entries.
+- **docs/dependency-map.md**: Max 100 modules. Merge trivial internal modules.
+- **docs/features.md**: Max 50 features. Archive shipped features when exceeding limit.
+- **docs/agent-memory/*.md**: Max 100 lines each. Keep only actionable learnings.

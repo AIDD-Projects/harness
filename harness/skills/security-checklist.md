@@ -48,7 +48,7 @@ const dbPassword = "super_secret_123";
 
 After completing the security check:
 
-- [ ] **failure-patterns.md**: If a security issue was found (credentials staged, hardcoded secret), add a new FP-NNN entry or increment FP-004 Frequency.
+- [ ] **docs/failure-patterns.md**: If a security issue was found (credentials staged, hardcoded secret), add a new FP-NNN entry or increment FP-004 Frequency.
 
 ## Related Failure Patterns
 

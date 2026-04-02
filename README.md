@@ -21,6 +21,12 @@ npx k-harness init
 
 Select your IDE when prompted. Files are installed into the current directory.
 
+After installation, ask your LLM to run the `bootstrap` skill:
+
+> "Run bootstrap to onboard this project."
+
+This scans your codebase and fills all 5 state files automatically.
+
 ### Non-interactive
 
 ```bash
@@ -87,10 +93,7 @@ All IDEs also get `project-state.md`, `project-brief.md`, `features.md`, `failur
 ## How It Works
 
 ### 1. Bootstrap (once)
-```bash
-npx k-harness init --ide vscode
-```
-Then ask your LLM to run the `bootstrap` skill — it scans your codebase and fills all 5 state files automatically.
+After `k-harness init`, run the `bootstrap` skill. It scans your codebase, interviews you about goals/non-goals, and fills all 5 state files automatically. **This is the most important step** — without it, Direction Guard and other skills have no context.
 
 ### 2. Direction Guard (every request)
 Before ANY coding task, the LLM reads `project-brief.md` and checks:
@@ -113,14 +116,9 @@ When goals, technology, or scope changes, run the `pivot` skill:
 - Records the decision with reasoning in Decision Log
 - Prevents silent inconsistencies across files
 
-## Design Principles
+## Documentation
 
-1. **Direction First** — Every request checked against project goals before code is written
-2. **State Injection** — Project state injected at every session start
-3. **Rigid Workflow** — Hard "do/don't" rules; soft suggestions get ignored by LLMs
-4. **Enforced Updates** — Reviewer audits that state files were actually updated, not just instructed
-5. **Failure-Driven Rules** — Rules derived only from actual project failures
-6. **Context Minimization** — ≤3 files per task, zero dependencies, one `npm install`
+See [docs/reference.md](docs/reference.md) for detailed descriptions of every skill, agent, rule, and state file.
 
 ## Why Not BMAD or gstack?
 
@@ -134,8 +132,6 @@ When goals, technology, or scope changes, run the `pivot` skill:
 | Cold start | ❌ | ❌ | ✅ (bootstrap) |
 | State file audit | ❌ | ❌ | ✅ (reviewer Step 8) |
 | Context per task | 4-6 files | 1 file | 2-3 files |
-
-See [docs/analysis/comparison.md](docs/analysis/comparison.md) for the full analysis.
 
 ## License
 

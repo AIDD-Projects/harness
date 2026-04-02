@@ -32,7 +32,7 @@ Keep resolved patterns for regression prevention.
 - **Occurred**: <!-- Sprint/Story where this happened -->
 - **Frequency**: 0
 - **Cause**: LLM lost track of current scope in large workflows. Skipped "report and wait for approval" steps.
-- **Prevention**: Track current Story in project-state.md. Sprint manager agent detects scope violations.
+- **Prevention**: Track current Story in docs/project-state.md. Sprint manager agent detects scope violations.
 - **Applied in**: sprint-manager agent, global instructions
 - **Status**: Template — activate when first occurrence is logged
 

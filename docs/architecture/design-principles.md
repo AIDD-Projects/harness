@@ -61,7 +61,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ## 원칙 3: Failure Pattern Learning (실패 패턴 학습)
 
 ### 규칙
-- 프로젝트에서 발생한 실제 실수를 `failure-patterns.md`에 축적
+- 프로젝트에서 발생한 실제 실수를 `docs/failure-patterns.md`에 축적
 - 각 skill 파일의 **체크리스트 섹션**에 관련 실패 패턴을 자동 반영
 - 실패 패턴은 일반적 지식이 아닌 **이 프로젝트에서 실제로 발생한 것만** 기록
 
@@ -78,7 +78,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 | | BMAD testarch | K-Harness |
 |--|--------------|-----------|
 | 내용 | 일반적 테스트 이론 | 프로젝트 실제 실패 |
-| 파일 수 | 30+ | 1 (failure-patterns.md) |
+| 파일 수 | 30+ | 1 (docs/failure-patterns.md) |
 | 효과 | 낮음 (MCPHub에서 같은 실수 4번 반복) | 높음 (구체적 체크리스트) |
 
 ---
@@ -128,7 +128,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 
 ### 규칙
 - 1인 팀: copilot-instructions.md + skills 2~3개 + instructions 2개 = 충분
-- 2~3인 팀: + agents 2개 + failure-patterns.md 추가
+- 2~3인 팀: + agents 2개 + docs/failure-patterns.md 추가
 - 4인+ 팀: 이 프레임워크 범위 밖. BMAD나 전용 PM 도구 권장.
 
 ### 1인 팀 최소 구성 (5개 파일)
@@ -159,8 +159,8 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
   frontend.instructions.md
   testing.instructions.md
 
-failure-patterns.md
-project-state.md
+docs/failure-patterns.md
+docs/project-state.md
 ```
 
 ---

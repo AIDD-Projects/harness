@@ -7,18 +7,18 @@ Keeps the LLM focused on the current work item.
 
 ## Referenced Files
 
-- project-state.md — Current state (this is the core file)
-- failure-patterns.md — Recurring failure tracking
+- docs/project-state.md — Current state (this is the core file)
+- docs/failure-patterns.md — Recurring failure tracking
 
 ## Procedure
 
 ### Step 0: State File Readiness
 
-Before handling any request, verify `project-state.md` has content:
+Before handling any request, verify `docs/project-state.md` has content:
 - Quick Summary must not be all TODO placeholders
 - Story Status table must have at least one row
 
-If `project-state.md` is empty/placeholder-only → **Recommend running `bootstrap` skill first.** Report: "project-state.md is empty. Run bootstrap to initialize project state before tracking sprints."
+If `docs/project-state.md` is empty/placeholder-only → **Recommend running `bootstrap` skill first.** Report: docs/project-state.md is empty. Run bootstrap to initialize project state before tracking sprints."
 
 ### Input
 
@@ -27,7 +27,7 @@ User request: "next task", "current status", "story done", "new sprint", "scope 
 ### Handlers
 
 **Request: "current status" / "where are we"**
-1. Read project-state.md
+1. Read docs/project-state.md
 2. Summarize: current Sprint, in-progress Story, completed Stories
 3. Run **Next Step Recommendation** (see below)
 
@@ -35,13 +35,13 @@ User request: "next task", "current status", "story done", "new sprint", "scope 
 
 After every status check, recommend the next action based on current context:
 
-1. Read `project-state.md`, `features.md`, `project-brief.md`, `failure-patterns.md`
+1. Read `docs/project-state.md`, `docs/features.md`, `docs/project-brief.md`, `docs/failure-patterns.md`
 2. Determine the project phase and recommend accordingly:
 
 | Situation | Recommendation |
 |-----------|---------------|
 | State files are empty | → "Run `bootstrap` to onboard this project" |
-| project-brief.md has no Vision/Goals | → "Fill out project-brief.md — this is critical for direction" |
+|docs/project-brief.md has no Vision/Goals | → "Fill out docs/project-brief.md — this is critical for direction" |
 | No stories exist | → "Run `planner` to break down your first feature" |
 | A story is in-progress | → "Continue S{N}-{M}: [title]. Scope: [files]" |
 | All stories in sprint are done | → "Run `learn` to capture session lessons, then start a new sprint" |
@@ -56,21 +56,21 @@ After every status check, recommend the next action based on current context:
 ```
 
 **Request: "story done" / "S{N}-{M} done"**
-1. Update the Story status to `done` in project-state.md
+1. Update the Story status to `done` in docs/project-state.md
 2. Add completion record to "Recent Changes" section
 3. Guide to next Story if available
 
 **Request: "new story" / "next task"**
-1. Find next `todo` Story in project-state.md
+1. Find next `todo` Story in docs/project-state.md
 2. Change its status to `in-progress`
 3. Specify Story scope (related files/directories)
-4. Alert relevant failure-patterns.md items
+4. Alert relevant docs/failure-patterns.md items
 
 **Request: "new sprint"**
 1. Check all Stories in current Sprint
 2. Warn if incomplete Stories exist
 3. Confirm new Sprint number and theme (user input)
-4. Update project-state.md
+4. Update docs/project-state.md
 
 **Scope Check (automatic)**
 - If user requests a file modification outside current Story scope:
@@ -101,5 +101,5 @@ STATUS: DONE
 ## Constraints
 
 - Do not modify code directly — manage state only
-- Only write to project-state.md; read-only for all other files
+- Only write to docs/project-state.md; read-only for all other files
 - Always confirm with user before modifying scope boundaries

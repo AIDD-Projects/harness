@@ -45,8 +45,8 @@ Interface adds findByFilters() → Mock unchanged
 
 After synchronizing mocks:
 
-- [ ] **failure-patterns.md**: If mock sync was missed and caused a test failure, increment FP-001 Frequency.
-- [ ] **dependency-map.md**: If the interface change altered module relationships, update the relevant row.
+- [ ] **docs/failure-patterns.md**: If mock sync was missed and caused a test failure, increment FP-001 Frequency.
+- [ ] **docs/dependency-map.md**: If the interface change altered module relationships, update the relevant row.
 
 ## Related Failure Patterns
 

@@ -25,7 +25,7 @@
 
 ## Module Registry
 
-<!-- Summary of current modules. Full details in dependency-map.md -->
+<!-- Summary of current modules. Full details in docs/dependency-map.md -->
 | Module | Layer | Status |
 |--------|-------|--------|
 <!-- Fill as modules are created -->
@@ -45,11 +45,11 @@
 Before ending a chat session, you MUST:
 1. Update the **Quick Summary** section above (3 lines)
 2. Update **Story Status** table with current progress
-3. Add any new failure patterns to `failure-patterns.md`
-4. Update `features.md` if any features were added/changed
+3. Add any new failure patterns to `docs/failure-patterns.md`
+4. Update `docs/features.md` if any features were added/changed
 
 When starting a new chat session, read these files first:
-1. `project-state.md` (this file) — where we are
-2. `features.md` — what exists
-3. `failure-patterns.md` — what to watch out for
-4. `project-brief.md` — why we're building this
+1. `docs/project-state.md` (this file) — where we are
+2. `docs/features.md` — what exists
+3. `docs/failure-patterns.md` — what to watch out for
+4. `docs/project-brief.md` — why we're building this

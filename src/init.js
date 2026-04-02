@@ -51,11 +51,22 @@ const STATE_FILES = [
   'project-brief.md',
 ];
 
+const AGENT_MEMORY_FILES = [
+  'agent-memory/reviewer.md',
+  'agent-memory/planner.md',
+  'agent-memory/sprint-manager.md',
+];
+
+const STATE_DEST_DIR = 'docs';
+
 // ─── Shared writers ──────────────────────────────────────────
 
 function writeStateFiles(targetDir, overwrite) {
   for (const file of STATE_FILES) {
-    writeFile(targetDir, file, readTemplate(file), overwrite);
+    writeFile(targetDir, `${STATE_DEST_DIR}/${file}`, readTemplate(file), overwrite);
+  }
+  for (const file of AGENT_MEMORY_FILES) {
+    writeFile(targetDir, `${STATE_DEST_DIR}/${file}`, readTemplate(file), overwrite);
   }
 }
 
@@ -369,7 +380,7 @@ async function run(argv) {
     const gen = GENERATORS[ide];
     console.log(`\n  Installing for ${gen.name}...\n`);
     gen.fn(args.dir, args.overwrite);
-    console.log(`\n  Done! Edit project-state.md to set up your first sprint.\n`);
+    console.log(`\n  Done! Edit docs/project-state.md to set up your first sprint.\n`);
   }
 }
 

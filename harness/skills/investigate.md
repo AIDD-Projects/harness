@@ -27,7 +27,7 @@ Debug bugs systematically. Prevent "symptom patching" — fixing without underst
 
 1. Identify the module/directory containing the root cause
 2. Exclude files outside that scope from modification
-3. Check failure-patterns.md for matching patterns
+3. Check docs/failure-patterns.md for matching patterns
 
 ### Phase 3: Hypothesis + Fix
 
@@ -39,7 +39,7 @@ Debug bugs systematically. Prevent "symptom patching" — fixing without underst
 
 1. Run all related tests after the fix
 2. Add a regression test (prevent the same bug from recurring)
-3. Decide if the pattern should be recorded in failure-patterns.md
+3. Decide if the pattern should be recorded in docs/failure-patterns.md
 
 ## Checklist
 
@@ -71,8 +71,8 @@ Phase 4: Tests pass, null case test added
 
 After the fix is verified (Phase 4):
 
-- [ ] **failure-patterns.md**: If the root cause is a repeatable pattern, add a new FP-NNN entry or increment the Frequency of an existing one. This is NOT optional.
-- [ ] **project-state.md**: Add the fix to Recent Changes with the root cause hypothesis.
+- [ ] **docs/failure-patterns.md**: If the root cause is a repeatable pattern, add a new FP-NNN entry or increment the Frequency of an existing one. This is NOT optional.
+- [ ] **docs/project-state.md**: Add the fix to Recent Changes with the root cause hypothesis.
 
 ## Related Failure Patterns
 

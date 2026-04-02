@@ -18,4 +18,4 @@
 ## References
 
 - test-integrity skill
-- failure-patterns.md FP-001: Mock not updated
+- docs/failure-patterns.md FP-001: Mock not updated

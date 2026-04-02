@@ -29,7 +29,7 @@ When modifying a module:
 3. For each dependent module:
    - Check if the change affects the public interface
    - Update tests and mocks for all affected dependents
-4. Record the change in project-state.md
+4. Record the change in docs/project-state.md
 
 ## Interface Change Log
 

@@ -19,7 +19,7 @@ function rmDir(dir) {
 // ─── File count expectations per IDE ────────────────────────
 const EXPECTED_FILES = {
   vscode: {
-    count: 19,
+    count: 22,
     required: [
       '.github/copilot-instructions.md',
       '.vscode/instructions/testing.instructions.md',
@@ -30,12 +30,12 @@ const EXPECTED_FILES = {
       '.github/skills/learn/SKILL.md',
       '.github/skills/pivot/SKILL.md',
       '.github/agents/reviewer.agent.md',
-      'project-state.md',
-      'features.md',
+      'docs/project-state.md',
+      'docs/features.md',
     ],
   },
   claude: {
-    count: 14,
+    count: 17,
     required: [
       'CLAUDE.md',
       '.claude/skills/test-integrity/SKILL.md',
@@ -43,11 +43,11 @@ const EXPECTED_FILES = {
       '.claude/skills/bootstrap/SKILL.md',
       '.claude/skills/learn/SKILL.md',
       '.claude/skills/pivot/SKILL.md',
-      'project-state.md',
+      'docs/project-state.md',
     ],
   },
   cursor: {
-    count: 19,
+    count: 22,
     required: [
       '.cursor/rules/core.mdc',
       '.cursor/rules/testing.mdc',
@@ -56,11 +56,11 @@ const EXPECTED_FILES = {
       '.cursor/rules/learn.mdc',
       '.cursor/rules/pivot.mdc',
       '.cursor/rules/reviewer.mdc',
-      'project-state.md',
+      'docs/project-state.md',
     ],
   },
   codex: {
-    count: 14,
+    count: 17,
     required: [
       'AGENTS.md',
       '.agents/skills/test-integrity/SKILL.md',
@@ -68,19 +68,19 @@ const EXPECTED_FILES = {
       '.agents/skills/bootstrap/SKILL.md',
       '.agents/skills/learn/SKILL.md',
       '.agents/skills/pivot/SKILL.md',
-      'project-state.md',
+      'docs/project-state.md',
     ],
   },
   windsurf: {
-    count: 6,
+    count: 9,
     required: [
       '.windsurfrules',
-      'project-state.md',
-      'features.md',
+      'docs/project-state.md',
+      'docs/features.md',
     ],
   },
   augment: {
-    count: 19,
+    count: 22,
     required: [
       '.augment/rules/core.md',
       '.augment/rules/testing.md',
@@ -89,11 +89,11 @@ const EXPECTED_FILES = {
       '.augment/skills/learn/SKILL.md',
       '.augment/skills/pivot/SKILL.md',
       '.augment/skills/reviewer/SKILL.md',
-      'project-state.md',
+      'docs/project-state.md',
     ],
   },
   antigravity: {
-    count: 19,
+    count: 22,
     required: [
       '.agent/rules/core.md',
       '.agent/rules/testing.md',
@@ -102,7 +102,7 @@ const EXPECTED_FILES = {
       '.agent/skills/learn/SKILL.md',
       '.agent/skills/pivot/SKILL.md',
       '.agent/skills/planner/SKILL.md',
-      'project-state.md',
+      'docs/project-state.md',
     ],
   },
 };
@@ -206,7 +206,7 @@ describe('k-harness init', () => {
       console.log = origLog;
 
       // Modify a file
-      const statePath = path.join(tmpDir, 'project-state.md');
+      const statePath = path.join(tmpDir, 'docs/project-state.md');
       fs.writeFileSync(statePath, 'CUSTOM CONTENT', 'utf8');
 
       // Run again without --overwrite

@@ -20,5 +20,5 @@
 
 ## References
 
-- failure-patterns.md FP-002: Type confusion
-- failure-patterns.md FP-004: Unnecessary files committed
+- docs/failure-patterns.md FP-002: Type confusion
+- docs/failure-patterns.md FP-004: Unnecessary files committed
