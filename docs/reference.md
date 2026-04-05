@@ -17,7 +17,7 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 **What it does**:
 1. Scans project root for config files (`package.json`, `go.mod`, `requirements.txt`, etc.)
 2. Scans directory structure and imports to detect modules and dependencies
-3. Interviews the user: project purpose, goals, non-goals, architecture
+3. Interviews the user: project purpose, goals, non-goals, architecture, conventions, test command
 4. Auto-fills all 5 state files
 5. Presents summary for user review
 
@@ -27,7 +27,7 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 ### learn
 
-**Purpose**: End-of-session wrap-up. Captures failure patterns and refreshes project state.
+**Purpose**: End-of-session wrap-up. Captures failure patterns and refreshes project state. **Run once per session, at the end.**
 
 **When**: Before ending a chat session (recommended as the LAST skill), after debugging, after repeated mistakes.
 
@@ -36,8 +36,9 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 2. Detects new failure patterns or increments existing ones
 3. Updates `docs/project-state.md` Quick Summary (3 lines)
 4. Updates `docs/features.md` if features were added/modified
+5. Updates Agent Memory (`docs/agent-memory/{name}.md`) with session learnings
 
-**Output**: Updated `docs/failure-patterns.md` and `docs/project-state.md`.
+**Output**: Updated `docs/failure-patterns.md`, `docs/project-state.md`, and `docs/agent-memory/{name}.md`.
 
 ---
 
@@ -86,6 +87,7 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 3. For interface changes: traces each dependent's imports and identifies breaking changes
 4. Creates a task list of all files that need modification
 5. Verifies changes are within current Story scope
+6. Updates Interface Change Log (mandatory — do not skip)
 
 **Updates**: `docs/dependency-map.md` Interface Change Log, `docs/project-state.md`.
 
@@ -151,7 +153,11 @@ Agents are role-based personas that enforce the workflow. Each reads state files
 
 **Key behaviors**:
 - **Step 0**: Checks if state files have content. If all empty → runs `bootstrap` first.
-- **Direction Alignment**: Verifies the feature against Goals, Non-Goals, and Decision Log. If a direction change is detected → recommends `pivot`.
+- **Direction Alignment**: Verifies the feature against Goals, Non-Goals, and Decision Log:
+  - Goal → warn but proceed
+  - Non-Goal → stop and ask user
+  - Decision conflict → stop and warn
+  If a direction change is detected → recommends `pivot`.
 - Runs `feature-breakdown` and `impact-analysis` skills internally.
 - Updates `docs/project-state.md` and `docs/features.md` with the plan.
 
@@ -169,7 +175,7 @@ Agents are role-based personas that enforce the workflow. Each reads state files
 - **Steps 1-5**: Architecture rules, test integrity, security check, failure pattern cross-check.
 - **Step 6**: Feature registry check — new features must be in `docs/features.md`.
 - **Step 7**: Dependency map check — new modules must be in `docs/dependency-map.md`.
-- **Step 8 (State File Audit)**: Verifies that ALL 5 state files were actually updated. Flags missing updates as `[STATE-AUDIT]`.
+- **Step 8 (State File Audit)**: Verifies that ALL 5 state files AND `docs/agent-memory/*.md` were actually updated. Flags missing updates as `[STATE-AUDIT]`.
 
 **Output**: Review result with auto-fixes, warnings, and pass/fail per category.
 
@@ -204,6 +210,7 @@ Rules are always-active instructions. LLM reads them automatically — no need t
 - **New Session Bootstrap**: Reads state files at session start
 - **Workflow Pipeline**: Defines execution order (bootstrap → planner → code → reviewer → sprint-manager → learn)
 - **Completion Status Protocol**: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT
+- **State File Size Limits**: Per-file line/entry limits to prevent context overflow
 
 ### testing-rules
 
@@ -231,7 +238,7 @@ Rules are always-active instructions. LLM reads them automatically — no need t
 
 ## State Files (5)
 
-State files persist project knowledge across LLM sessions. They live at the project root.
+State files persist project knowledge across LLM sessions. They live in the `docs/` directory.
 
 ### docs/project-brief.md — The "Why"
 

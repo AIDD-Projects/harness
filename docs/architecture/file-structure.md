@@ -10,27 +10,29 @@
 project-root/
 │
 ├── .github/
-│   └── copilot-instructions.md          # 전역 규칙 (자동 주입)
+│   ├── copilot-instructions.md          # 전역 규칙 (자동 주입)
+│   ├── skills/                          # 스킬 (온디맨드 절차)
+│   │   ├── bootstrap/SKILL.md
+│   │   ├── feature-breakdown/SKILL.md
+│   │   ├── impact-analysis/SKILL.md
+│   │   ├── investigate/SKILL.md
+│   │   ├── learn/SKILL.md
+│   │   ├── pivot/SKILL.md
+│   │   ├── security-checklist/SKILL.md
+│   │   └── test-integrity/SKILL.md
+│   └── agents/                          # 에이전트 (역할 기반)
+│       ├── planner.agent.md
+│       ├── reviewer.agent.md
+│       └── sprint-manager.agent.md
 │
 ├── .vscode/
-│   ├── skills/                          # 도메인 지식 파일
-│   │   ├── test-integrity.md
-│   │   ├── hexagonal-arch.md
-│   │   ├── pagination-pattern.md
-│   │   └── security-checklist.md
-│   │
-│   ├── agents/                          # 전문 에이전트
-│   │   ├── reviewer.agent.md
-│   │   └── sprint-manager.agent.md
-│   │
 │   └── instructions/                    # 조건부 규칙 (applyTo)
 │       ├── backend.instructions.md
-│       ├── frontend.instructions.md
 │       └── testing.instructions.md
 │
 ├── docs/                                # 프로젝트 상태 문서
 │   ├── project-brief.md                 # 프로젝트 비전/목표/비목표
-│   ├── project-state.md                 # 현재 스프린트 상태 (자동 갱신)
+│   ├── project-state.md                 # 현재 스프린트 상태
 │   ├── features.md                      # 기능 레지스트리
 │   ├── dependency-map.md                # 모듈 의존성 그래프
 │   ├── failure-patterns.md              # 실패 패턴 누적
@@ -39,10 +41,11 @@ project-root/
 │       ├── reviewer.md
 │       └── sprint-manager.md
 │
-├── backend/                             # 실제 소스코드
-├── frontend/
+├── src/                                 # 실제 소스코드
 └── ...
 ```
+
+> 위 구조는 VS Code 기준. 다른 IDE는 Section 4 IDE 매핑 참조.
 
 ---
 
@@ -74,14 +77,14 @@ project-root/
 - 현재 브랜치: feature/sprint-5-xxx
 ```
 
-### `.vscode/skills/` — 도메인 지식
-- **주입 시점**: 에이전트가 명시적으로 참조하거나 사용자가 요청할 때
-- **명명 규칙**: `{도메인}.md` (kebab-case)
-- **내용**: 특정 기술 패턴의 상세 지침 + 체크리스트
+### `.github/skills/` — 스킬 (온디맨드 절차)
+- **주입 시점**: 사용자가 명시적으로 호출할 때 (`"bootstrap 실행해줘"`)
+- **명명 규칙**: `.github/skills/{skill-name}/SKILL.md`
+- **내용**: 절차적 가이드 (언제, 무엇을, 어떻게)
 
-### `.vscode/agents/` — 전문 에이전트
-- **호출 방법**: `@reviewer 이 PR 검토해줘`
-- **명명 규칙**: `{역할}.agent.md`
+### `.github/agents/` — 전문 에이전트
+- **호출 방법**: `@planner 인증 기능 추가하고 싶어`
+- **명명 규칙**: `.github/agents/{role}.agent.md`
 - **내용**: 역할 정의, 참조할 skills, 절차, 출력 형식
 
 ### `.vscode/instructions/` — 조건부 규칙
@@ -97,12 +100,12 @@ applyTo: "backend/**/*.ts"
 ```
 
 ### `docs/failure-patterns.md` — 실패 패턴
-- **위치**: 프로젝트 root (모든 skill/agent가 쉽게 참조)
+- **위치**: `docs/` 디렉토리 (모든 skill/agent가 참조)
 - **갱신**: 실패 발생 시 수동 추가
 - **형식**: FP-001 ~ FP-NNN 번호 체계
 
 ### `docs/project-state.md` — 프로젝트 상태
-- **위치**: 프로젝트 root
+- **위치**: `docs/` 디렉토리
 - **갱신**: Sprint 단위 또는 주요 변경 시
 - **내용**: 현재 Sprint 목표, 완료/진행 중 story, 기술적 결정 사항
 
@@ -130,36 +133,19 @@ instructions.md          ──→  skills/*.md (필요시 참조)
 
 ---
 
-## 4. MCPHub 프로젝트 적용 예시
+## 4. IDE별 파일 매핑
 
-```
-mcphub-official/
-├── .github/
-│   └── copilot-instructions.md          # Hexagonal arch, TypeORM, 필수 규칙
-│
-├── .vscode/
-│   ├── skills/
-│   │   ├── test-integrity.md            # Mock 동기화, 테스트 패턴
-│   │   ├── hexagonal-arch.md            # Port/Adapter 패턴, DI 규칙
-│   │   ├── pagination-pattern.md        # PaginatedResponse, 커서 기반
-│   │   └── security-checklist.md        # AES-256-GCM, .env 관리
-│   │
-│   ├── agents/
-│   │   ├── reviewer.agent.md            # 코드 리뷰 + 자동 수정
-│   │   └── sprint-manager.agent.md      # Sprint 추적 + 상태 보고
-│   │
-│   └── instructions/
-│       ├── backend.instructions.md      # applyTo: "backend/**"
-│       ├── frontend.instructions.md     # applyTo: "frontend/**"
-│       └── testing.instructions.md      # applyTo: "**/*.test.ts"
-│
-├── docs/failure-patterns.md                  # FP-001 ~ FP-011 (Sprint 1-4 실패)
-├── docs/project-state.md                     # Sprint 5 진행 상황
-│
-├── backend/
-├── frontend/
-└── ...
-```
+| IDE | 전역 규칙 | 조건부 규칙 | 스킬 | 에이전트 |
+|-----|----------|-----------|------|--------|
+| **VS Code** | `.github/copilot-instructions.md` | `.vscode/instructions/*.instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
+| **Claude Code** | `CLAUDE.md` | (통합) | `.claude/skills/*/SKILL.md` | (통합) |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | (통합) | (통합) |
+| **Codex** | `AGENTS.md` | (통합) | `.agents/skills/*/SKILL.md` | (통합) |
+| **Windsurf** | `.windsurfrules` | (통합) | (통합) | (통합) |
+| **Augment** | `.augment/rules/core.md` | `.augment/rules/*.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
+| **Antigravity** | `.agent/rules/core.md` | `.agent/rules/*.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
+
+> 모든 IDE에서 상태 파일은 `docs/` 디렉토리에 생성됩니다.
 
 ---
 
@@ -170,27 +156,28 @@ mcphub-official/
 .github/copilot-instructions.md    (1개)
 .vscode/instructions/
   backend.instructions.md          (1개)
-                                   ── 총 2개 파일
+docs/
+  project-brief.md                 (1개)
+                                   ── 총 3개 파일
 ```
 
 ### Standard (1~2인, 운영 프로젝트)
 ```
 .github/copilot-instructions.md    (1개)
-.vscode/skills/                    (2~4개)
-.vscode/instructions/              (2~3개)
-docs/failure-patterns.md                (1개)
-                                   ── 총 6~9개 파일
+.github/skills/                    (4~6개)
+.vscode/instructions/              (2개)
+docs/                              (5개)
+                                   ── 총 12~14개 파일
 ```
 
 ### Full (2~3인, 장기 프로젝트)
 ```
 .github/copilot-instructions.md    (1개)
-.vscode/skills/                    (3~5개)
-.vscode/agents/                    (2개)
-.vscode/instructions/              (3개)
-docs/failure-patterns.md                (1개)
-docs/project-state.md                   (1개)
-                                   ── 총 11~13개 파일
+.github/skills/                    (8개)
+.github/agents/                    (3개)
+.vscode/instructions/              (2개)
+docs/                              (5개 + agent-memory 3개)
+                                   ── 총 ~22개 파일
 ```
 
 ---
@@ -199,12 +186,12 @@ docs/project-state.md                   (1개)
 
 | 범주 | BMAD | K-Harness Full |
 |------|------|---------------|
-| 에이전트 정의 | 11 | 2 |
+| 에이전트 정의 | 11 | 3 |
 | 워크플로우 | 33 | 0 (agent 내 인라인) |
 | 태스크 | 5 | 0 (skill로 통합) |
 | 매니페스트 | 6 | 0 |
 | 지식/테스트 | 30+ | 1 (docs/failure-patterns.md) |
 | Story 파일 | 86 | 0 (docs/project-state.md에 통합) |
 | 설정 | 5+ | 0 |
-| 기타 | 20+ | 2 (copilot-instructions, project-state) |
-| **합계** | **200+** | **≤ 15** |
+| 기타 | 20+ | 3 (copilot-instructions, instructions 2개) |
+| **합계** | **200+** | **~20** |

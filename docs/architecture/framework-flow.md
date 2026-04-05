@@ -200,7 +200,7 @@ Agent Memory (학습 축적) ←── 다음 에이전트 호출 시 읽힘
 | Rules | .github/copilot-instructions.md + .vscode/instructions/ | CLAUDE.md (병합) | .cursor/rules/*.mdc | AGENTS.md (병합) | .windsurfrules (단일) | .augment/rules/*.md | .agent/rules/*.md |
 | Skills | .github/skills/{id}/SKILL.md | .claude/skills/{id}/SKILL.md | .cursor/rules/{id}.mdc | .agents/skills/{id}/SKILL.md | .windsurfrules 내 포함 | .augment/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
 | Agents | .github/agents/{id}.agent.md | — (스킬로 변환) | .cursor/rules/{id}.mdc | — (스킬로 변환) | .windsurfrules 내 포함 | .augment/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
-| State Files | 루트에 .md | 루트에 .md | 루트에 .md | 루트에 .md | 루트에 .md | 루트에 .md | 루트에 .md |
+| State Files | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md |
 | Agent Memory | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md |
 
 ---

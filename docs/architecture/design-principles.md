@@ -94,21 +94,20 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ```
 .github/
   copilot-instructions.md    ← 전역 규칙 (모든 대화에 자동 적용)
-
-.vscode/
-  skills/                    ← SKILL.md 파일들
-    test-integrity.md
-    hexagonal-arch.md
-    pagination-pattern.md
-
-  agents/                    ← .agent.md 파일들  
+  skills/                    ← SKILL.md 파일들 (온디맨드 절차)
+    bootstrap/SKILL.md
+    feature-breakdown/SKILL.md
+    impact-analysis/SKILL.md
+    ...
+  agents/                    ← .agent.md 파일들
+    planner.agent.md
     reviewer.agent.md
     sprint-manager.agent.md
 
+.vscode/
   instructions/              ← .instructions.md 파일들
-    backend.instructions.md      (applyTo: "backend/**")
-    frontend.instructions.md     (applyTo: "frontend/**")
-    testing.instructions.md      (applyTo: "**/*.test.ts")
+    backend.instructions.md      (applyTo: "src/**")
+    testing.instructions.md      (applyTo: "**/*.test.*")
 ```
 
 ### 작동 방식
@@ -134,33 +133,45 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ### 1인 팀 최소 구성 (5개 파일)
 ```
 .github/copilot-instructions.md
-.vscode/skills/test-integrity.md
-.vscode/skills/project-arch.md
+.github/skills/bootstrap/SKILL.md
+.github/skills/test-integrity/SKILL.md
 .vscode/instructions/backend.instructions.md
 .vscode/instructions/testing.instructions.md
 ```
 
-### 2~3인 팀 표준 구성 (10~15개 파일)
+### 2~3인 팀 표준 구성 (~20개 파일)
 ```
 .github/copilot-instructions.md
 
-.vscode/skills/
-  test-integrity.md
-  project-arch.md
-  pagination-pattern.md
-  security-checklist.md
+.github/skills/
+  bootstrap/SKILL.md
+  feature-breakdown/SKILL.md
+  impact-analysis/SKILL.md
+  investigate/SKILL.md
+  learn/SKILL.md
+  pivot/SKILL.md
+  security-checklist/SKILL.md
+  test-integrity/SKILL.md
 
-.vscode/agents/
+.github/agents/
+  planner.agent.md
   reviewer.agent.md
   sprint-manager.agent.md
 
 .vscode/instructions/
   backend.instructions.md
-  frontend.instructions.md
   testing.instructions.md
 
-docs/failure-patterns.md
-docs/project-state.md
+docs/
+  project-brief.md
+  project-state.md
+  features.md
+  dependency-map.md
+  failure-patterns.md
+  agent-memory/
+    planner.md
+    reviewer.md
+    sprint-manager.md
 ```
 
 ---
