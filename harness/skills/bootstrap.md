@@ -41,6 +41,7 @@ Ask the user these questions (skip any already answered by Phase 1):
 3. "What is explicitly OUT of scope? (non-goals)"
 4. "What architecture pattern are you using?" (show detected pattern if found)
 5. "Are there any type decisions or conventions the AI should know about?"
+6. "What is your test command?" (show detected command if found, e.g., `npm test`, `pytest`, `go test ./...`)
 
 ### Phase 3: Fill State Files
 

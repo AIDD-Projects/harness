@@ -14,6 +14,12 @@ Keep resolved patterns for regression prevention.
 - **Applied in**: testing rules, test-integrity skill, reviewer agent
 - **Status**: Template — activate when first occurrence is logged
 
+<!-- Activation example: When this pattern first occurs, update like this:
+- **Occurred**: S1-2
+- **Frequency**: 1
+- **Status**: Active
+On subsequent occurrences, increment Frequency and append to Occurred (e.g., S1-2, S2-1) -->
+
 ---
 
 ## FP-002: Type confusion (enum vs union, wrong parameter count)

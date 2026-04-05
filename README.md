@@ -59,7 +59,7 @@ npx k-harness init --ide antigravity
 | **Augment Code** | `.augment/rules/core.md` | `.augment/rules/*.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
 | **Google Antigravity** | `.agent/rules/core.md` | `.agent/rules/*.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
 
-All IDEs also get `project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, and `dependency-map.md` at the project root.
+All IDEs also get state files (`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`) in the `docs/` directory.
 
 ## What Gets Installed
 
@@ -125,7 +125,7 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 | | BMAD v6.2.2 | gstack v0.15.1 | K-Harness |
 |---|---|---|---|
 | Focus | Enterprise SDLC methodology | 1-person software factory | Project direction management |
-| Files | 200+ | ~40 | 15 |
+| Files | 200+ | ~40 | ~20 |
 | Dependencies | Node 20+ | Bun + Node + Playwright | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 7 (native format) |
 | Direction management | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |

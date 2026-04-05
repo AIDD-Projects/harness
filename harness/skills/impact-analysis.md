@@ -61,7 +61,7 @@ Plan: 4 files to update, all within S3-2 scope
 
 After completing the analysis, update these files:
 
-- [ ] **docs/dependency-map.md**: Update the Interface Change Log table with: Date, Module, Change description, Affected Modules, Status.
+- [ ] **docs/dependency-map.md**: Update the Interface Change Log table with: Date, Module, Change description, Affected Modules, Status. **This is mandatory for ALL interface changes** — do not skip even if the change seems minor.
 - [ ] **docs/project-state.md**: If scope exceeds current Story, add a note to Recent Changes.
 
 ## Related Failure Patterns

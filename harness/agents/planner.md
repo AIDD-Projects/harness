@@ -42,9 +42,9 @@ If `docs/project-brief.md` alone is empty → Warn the user but proceed (the pla
 
 1. Read `docs/project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
 2. **Direction Alignment**: Verify the requested feature against three checkpoints:
-   - **Goal Alignment**: Does it serve a listed Goal? If no clear link, warn the user.
-   - **Non-Goal Violation**: Does it fall into Non-Goals? If yes, **stop and ask** — this may be a pivot.
-   - **Decision Consistency**: Does it contradict any Decision Log entry? If yes, warn that a previous decision conflicts — recommend running the `pivot` skill before proceeding.
+   - **Goal Alignment**: Does it serve a listed Goal? If no clear link → **warn but proceed**. Include the warning in the plan output.
+   - **Non-Goal Violation**: Does it fall into Non-Goals? If yes → **stop and ask the user**. Do not proceed until the user confirms this is intentional (may need `pivot` skill).
+   - **Decision Consistency**: Does it contradict any Decision Log entry? If yes → **stop and warn**. Recommend running the `pivot` skill before proceeding.
    If the request represents a clear direction change → recommend running the `pivot` skill instead of proceeding with planning.
 3. Read `docs/features.md` to understand what already exists
 4. Read `docs/dependency-map.md` to understand current architecture

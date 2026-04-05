@@ -8,10 +8,12 @@ This is K-Harness's memory mechanism — without it, the same mistakes repeat ac
 
 ## When to Apply
 
-- Before ending a chat session (recommended as the LAST skill invoked)
+- Before ending a chat session (recommended as the LAST skill invoked, **once per session**)
 - After a debugging session where a non-obvious fix was found
 - After a review revealed a repeated mistake
 - When the user explicitly asks to record a lesson
+
+> **Timing**: Invoke this skill **once at session end**, not after each individual skill. It aggregates the entire session's work into state files.
 
 ## Procedure
 
@@ -63,7 +65,10 @@ For each issue/error that occurred in this session:
 If an agent (reviewer, planner, sprint-manager) was used in this session, update its memory file in `docs/agent-memory/`:
 
 1. Read `docs/agent-memory/{agent-name}.md`
-2. Add session-specific learnings to the appropriate section:
+2. If the file only contains placeholder comments (`<!-- 예시:... -->`), initialize it by replacing the comments with actual entries. Example:
+   - Before: `<!-- 예시: Wave 1 추정: 정확 -->`
+   - After: `- [S1-2] Wave 1 추정: 정확 (3 tasks, 실제 소요 1일)`
+3. Add session-specific learnings to the appropriate section:
    - **reviewer.md**: Review patterns, frequently missed items, statistics
    - **planner.md**: Estimation accuracy, architecture insights, repeated patterns
    - **sprint-manager.md**: Velocity data, scope drift incidents, sizing recommendations

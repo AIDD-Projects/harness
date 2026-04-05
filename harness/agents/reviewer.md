@@ -75,6 +75,7 @@ Verify that state file updates actually happened. Check each:
 - [ ] **docs/dependency-map.md**: If new modules were created, are they registered? If dependencies changed, are relationships updated?
 - [ ] **docs/failure-patterns.md**: If a bug was fixed that matched a pattern, was frequency incremented?
 - [ ] **docs/project-brief.md**: If a technology or architectural decision was made, is it in Decision Log?
+- [ ] **docs/agent-memory/*.md**: If an agent (reviewer/planner/sprint-manager) was used this session, was its memory updated by the learn skill?
 
 For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
 
