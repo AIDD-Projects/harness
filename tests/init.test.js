@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
-const { run, detectLanguage, LANG_GLOBS } = require('../src/init');
+const { run, detectLanguage } = require('../src/init');
 
 // Helper: create a temp directory and clean up after
 function makeTmpDir() {
@@ -306,15 +306,6 @@ describe('k-harness init', () => {
   });
 
   describe('language-aware globs', () => {
-    it('LANG_GLOBS covers all detected languages', () => {
-      const expectedLangs = ['typescript', 'python', 'go', 'java', 'rust', 'ruby'];
-      for (const lang of expectedLangs) {
-        assert.ok(LANG_GLOBS[lang], `Missing LANG_GLOBS entry for ${lang}`);
-        assert.ok(LANG_GLOBS[lang].backend, `Missing backend glob for ${lang}`);
-        assert.ok(LANG_GLOBS[lang].testing, `Missing testing glob for ${lang}`);
-      }
-    });
-
     it('core.md should only have core rules, not testing/backend', async () => {
       const tmpDir = makeTmpDir();
       fs.writeFileSync(path.join(tmpDir, 'requirements.txt'), 'flask\n');

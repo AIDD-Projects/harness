@@ -76,32 +76,7 @@ function detectLanguage(targetDir) {
   return 'typescript';
 }
 
-const LANG_GLOBS = {
-  typescript: {
-    backend: 'src/**/*.ts,src/**/*.js',
-    testing: '**/*.test.ts,**/*.test.js,**/*.spec.ts,**/*.spec.js,**/__mocks__/**,**/__tests__/**',
-  },
-  python: {
-    backend: '**/*.py',
-    testing: '**/test_*.py,**/tests/**/*.py,**/*_test.py,**/conftest.py',
-  },
-  go: {
-    backend: '**/*.go',
-    testing: '**/*_test.go',
-  },
-  java: {
-    backend: 'src/main/**/*.java',
-    testing: 'src/test/**/*.java',
-  },
-  rust: {
-    backend: 'src/**/*.rs',
-    testing: 'tests/**/*.rs,**/tests.rs',
-  },
-  ruby: {
-    backend: '**/*.rb',
-    testing: 'spec/**/*.rb,test/**/*.rb',
-  },
-};
+
 
 // ─── Shared writers ──────────────────────────────────────────
 
@@ -356,4 +331,4 @@ async function run(argv) {
   }
 }
 
-module.exports = { run, detectLanguage, LANG_GLOBS };
+module.exports = { run, detectLanguage };

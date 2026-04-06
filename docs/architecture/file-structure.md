@@ -83,18 +83,6 @@ project-root/
 - **명명 규칙**: `.github/agents/{role}.agent.md`
 - **내용**: 역할 정의, 참조할 skills, 절차, 출력 형식
 
-### `.vscode/instructions/` — 조건부 규칙
-- **주입 시점**: `applyTo` glob 패턴에 매칭되는 파일 편집 시 자동
-- **명명 규칙**: `{영역}.instructions.md`
-- **헤더 형식**:
-```markdown
----
-applyTo: "backend/**/*.ts"
----
-# Backend 코드 규칙
-...
-```
-
 ### `docs/failure-patterns.md` — 실패 패턴
 - **위치**: `docs/` 디렉토리 (모든 skill/agent가 참조)
 - **갱신**: 실패 발생 시 수동 추가
@@ -113,7 +101,6 @@ applyTo: "backend/**/*.ts"
 ```
 copilot-instructions.md  ──→  docs/failure-patterns.md (간접 참조: "docs/failure-patterns.md 참고")
 agent.md                 ──→  skills/*.md (명시적 참조: "test-integrity.md skill 적용")
-instructions.md          ──→  skills/*.md (필요시 참조)
 ```
 
 ### 금지되는 참조
@@ -124,7 +111,7 @@ instructions.md          ──→  skills/*.md (필요시 참조)
 ```
 
 ### 참조 깊이 제한
-- 최대 1단계: `agent → skill` 또는 `instructions → skill`
+- 최대 1단계: `agent → skill`
 - **절대로 2단계 이상 체인 금지**
 
 ---

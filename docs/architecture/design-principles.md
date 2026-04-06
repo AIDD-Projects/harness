@@ -124,7 +124,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ## 원칙 5: Team Size Adaptation (팀 규모 적응)
 
 ### 규칙
-- 1인 팀: copilot-instructions.md + skills 2~3개 + instructions 2개 = 충분
+- 1인 팀: copilot-instructions.md (디스패처) + skills 2~3개 = 충분
 - 2~3인 팀: + agents 2개 + docs/failure-patterns.md 추가
 - 4인+ 팀: 이 프레임워크 범위 밖. BMAD나 전용 PM 도구 권장.
 
