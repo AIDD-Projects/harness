@@ -57,7 +57,7 @@ npx k-harness init --ide antigravity
 |-----|----------------------|--------|--------|
 | **VS Code Copilot** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
 | **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` |
-| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/skills/*/SKILL.md` |
 | **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |
 | **Windsurf** | `.windsurfrules` | (merged) | (merged) |
 | **Augment Code** | `.augment/rules/core.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |

@@ -148,30 +148,18 @@ function generateClaude(targetDir, overwrite) {
 }
 
 function generateCursor(targetDir, overwrite) {
-  // .cursor/rules/core.mdc — dispatcher only
+  // .cursor/rules/core.mdc — dispatcher only (always active)
   const coreRules = readTemplate('core-rules.md');
   const coreMdc =
     '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, overwrite);
 
-  // Skills as rules
-  for (const skill of SKILLS) {
-    const content = readTemplate(`skills/${skill.id}.md`);
-    const mdc =
-      `---\ndescription: ${skill.desc}\nalwaysApply: false\n---\n\n` +
-      content;
-    writeFile(targetDir, `.cursor/rules/${skill.id}.mdc`, mdc, overwrite);
-  }
+  // Skills (.cursor/skills — invokable by mentioning skill name)
+  writeSkills(targetDir, '.cursor/skills', overwrite);
 
-  // Agents as rules
-  for (const agent of AGENTS) {
-    const content = readTemplate(agent.file);
-    const mdc =
-      `---\ndescription: ${agent.desc}\nalwaysApply: false\n---\n\n` +
-      content;
-    writeFile(targetDir, `.cursor/rules/${agent.id}.mdc`, mdc, overwrite);
-  }
+  // Agents as skills
+  writeAgentsAsSkills(targetDir, '.cursor/skills', overwrite);
 
   // State files
   writeStateFiles(targetDir, overwrite);
