@@ -105,6 +105,16 @@ If `docs/project-brief.md` alone is empty → Warn the user but proceed (the pla
 - Last changed: [Sprint/Story reference]
 ```
 
+## Enforced Rules
+
+- **Direction Guard**: Before planning, read `docs/project-brief.md` and check:
+  - If it conflicts with **Non-Goals** → stop and ask the user
+  - If it contradicts a **Decision Log** entry → warn and recommend `pivot` skill
+  - If it represents a direction change → recommend `pivot` skill
+- **Dependency Map**: When the plan adds or modifies modules, include docs/dependency-map.md updates in the plan.
+- **Feature Registry**: When the plan adds a new feature, include docs/features.md registration in the plan.
+- **Type Check**: Before referencing constructors or factories, verify parameters from source files. Do not rely on memory (FP-002).
+
 ## Constraints
 
 - Never skip reading docs/dependency-map.md — the plan is only as good as the map

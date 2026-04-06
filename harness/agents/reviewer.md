@@ -99,6 +99,40 @@ For each missing update: flag as `[STATE-AUDIT]` in the output and provide the e
 STATUS: DONE / DONE_WITH_CONCERNS / BLOCKED
 ```
 
+## Embedded Rules
+
+These rules are enforced during every review:
+
+### Iron Laws
+1. **Mock Sync**: Interface change → mock updated in same commit (FP-001)
+2. **Type Check**: Verify constructor/factory parameters from source, not memory (FP-002)
+3. **Scope Compliance**: Changes must be within current Story scope (docs/project-state.md)
+4. **Security**: No credentials, passwords, or API keys in code or commits
+5. **3-Failure Stop**: Same approach failed 3 times → stop and report
+6. **Dependency Map**: New/modified module → docs/dependency-map.md updated
+7. **Feature Registry**: New feature → docs/features.md updated
+8. **Session Handoff**: Session end → docs/project-state.md Quick Summary updated
+
+### Testing Rules
+- New feature = New test. No feature code without tests.
+- Mocks must implement ALL interface methods with sensible defaults.
+- No `any` type casting on mocks. Use the actual interface type.
+- No `skip`, `only`, or debug statements (`console.log`, `print`) in committed test files.
+- Async tests must use `await`. No floating promises.
+
+### Backend Rules
+- Follow project architecture pattern strictly (e.g., Domain must not import Infrastructure)
+- No hardcoded environment variables or secrets — use centralized config
+- Use explicit file staging (`git add <file>`), never `git add .` or `git add -A`
+
+### Completion Protocol
+Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT**
+
+### Concreteness
+- Specify exact file paths and line numbers
+- Quote test names and error messages on failure
+- Specify expected vs actual types on type errors
+
 ## Constraints
 
 - Do not refactor beyond the review scope

@@ -19,11 +19,9 @@ function rmDir(dir) {
 // ─── File count expectations per IDE ────────────────────────
 const EXPECTED_FILES = {
   vscode: {
-    count: 22,
+    count: 20,
     required: [
       '.github/copilot-instructions.md',
-      '.vscode/instructions/testing.instructions.md',
-      '.vscode/instructions/backend.instructions.md',
       '.github/skills/test-integrity/SKILL.md',
       '.github/skills/investigate/SKILL.md',
       '.github/skills/bootstrap/SKILL.md',
@@ -35,22 +33,24 @@ const EXPECTED_FILES = {
     ],
   },
   claude: {
-    count: 17,
+    count: 20,
     required: [
-      'CLAUDE.md',
+      '.claude/rules/core.md',
       '.claude/skills/test-integrity/SKILL.md',
       '.claude/skills/security-checklist/SKILL.md',
       '.claude/skills/bootstrap/SKILL.md',
       '.claude/skills/learn/SKILL.md',
       '.claude/skills/pivot/SKILL.md',
+      '.claude/skills/reviewer/SKILL.md',
+      '.claude/skills/planner/SKILL.md',
+      '.claude/skills/sprint-manager/SKILL.md',
       'docs/project-state.md',
     ],
   },
   cursor: {
-    count: 22,
+    count: 20,
     required: [
       '.cursor/rules/core.mdc',
-      '.cursor/rules/testing.mdc',
       '.cursor/rules/test-integrity.mdc',
       '.cursor/rules/bootstrap.mdc',
       '.cursor/rules/learn.mdc',
@@ -80,10 +80,9 @@ const EXPECTED_FILES = {
     ],
   },
   augment: {
-    count: 22,
+    count: 20,
     required: [
       '.augment/rules/core.md',
-      '.augment/rules/testing.md',
       '.augment/skills/test-integrity/SKILL.md',
       '.augment/skills/bootstrap/SKILL.md',
       '.augment/skills/learn/SKILL.md',
@@ -93,10 +92,9 @@ const EXPECTED_FILES = {
     ],
   },
   antigravity: {
-    count: 22,
+    count: 20,
     required: [
       '.agent/rules/core.md',
-      '.agent/rules/testing.md',
       '.agent/skills/test-integrity/SKILL.md',
       '.agent/skills/bootstrap/SKILL.md',
       '.agent/skills/learn/SKILL.md',
@@ -308,90 +306,6 @@ describe('k-harness init', () => {
   });
 
   describe('language-aware globs', () => {
-    it('Python project gets Python globs in VS Code', async () => {
-      const tmpDir = makeTmpDir();
-      fs.writeFileSync(path.join(tmpDir, 'requirements.txt'), 'flask\n');
-
-      const origLog = console.log;
-      console.log = () => {};
-      await run(['init', '--ide', 'vscode', '--dir', tmpDir]);
-      console.log = origLog;
-
-      const backend = fs.readFileSync(
-        path.join(tmpDir, '.vscode/instructions/backend.instructions.md'),
-        'utf8',
-      );
-      assert.ok(backend.includes('**/*.py'), 'Backend globs should contain **/*.py');
-      assert.ok(!backend.includes('src/**/*.ts'), 'Backend globs should NOT contain src/**/*.ts');
-
-      const testing = fs.readFileSync(
-        path.join(tmpDir, '.vscode/instructions/testing.instructions.md'),
-        'utf8',
-      );
-      assert.ok(testing.includes('test_*.py'), 'Testing globs should contain test_*.py');
-
-      rmDir(tmpDir);
-    });
-
-    it('Go project gets Go globs in Cursor', async () => {
-      const tmpDir = makeTmpDir();
-      fs.writeFileSync(path.join(tmpDir, 'go.mod'), 'module example\n');
-
-      const origLog = console.log;
-      console.log = () => {};
-      await run(['init', '--ide', 'cursor', '--dir', tmpDir]);
-      console.log = origLog;
-
-      const backend = fs.readFileSync(
-        path.join(tmpDir, '.cursor/rules/backend.mdc'),
-        'utf8',
-      );
-      assert.ok(backend.includes('**/*.go'), 'Backend globs should contain **/*.go');
-
-      const testing = fs.readFileSync(
-        path.join(tmpDir, '.cursor/rules/testing.mdc'),
-        'utf8',
-      );
-      assert.ok(testing.includes('*_test.go'), 'Testing globs should contain *_test.go');
-
-      rmDir(tmpDir);
-    });
-
-    it('Java project gets Java globs in Antigravity', async () => {
-      const tmpDir = makeTmpDir();
-      fs.writeFileSync(path.join(tmpDir, 'pom.xml'), '<project/>\n');
-
-      const origLog = console.log;
-      console.log = () => {};
-      await run(['init', '--ide', 'antigravity', '--dir', tmpDir]);
-      console.log = origLog;
-
-      const backend = fs.readFileSync(
-        path.join(tmpDir, '.agent/rules/backend.md'),
-        'utf8',
-      );
-      assert.ok(backend.includes('src/main/**/*.java'), 'Backend globs should contain src/main/**/*.java');
-
-      rmDir(tmpDir);
-    });
-
-    it('empty project defaults to TypeScript globs', async () => {
-      const tmpDir = makeTmpDir();
-
-      const origLog = console.log;
-      console.log = () => {};
-      await run(['init', '--ide', 'vscode', '--dir', tmpDir]);
-      console.log = origLog;
-
-      const backend = fs.readFileSync(
-        path.join(tmpDir, '.vscode/instructions/backend.instructions.md'),
-        'utf8',
-      );
-      assert.ok(backend.includes('src/**/*.ts'), 'Default backend globs should contain src/**/*.ts');
-
-      rmDir(tmpDir);
-    });
-
     it('LANG_GLOBS covers all detected languages', () => {
       const expectedLangs = ['typescript', 'python', 'go', 'java', 'rust', 'ruby'];
       for (const lang of expectedLangs) {
@@ -399,6 +313,25 @@ describe('k-harness init', () => {
         assert.ok(LANG_GLOBS[lang].backend, `Missing backend glob for ${lang}`);
         assert.ok(LANG_GLOBS[lang].testing, `Missing testing glob for ${lang}`);
       }
+    });
+
+    it('core.md should only have core rules, not testing/backend', async () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'requirements.txt'), 'flask\n');
+
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'claude', '--dir', tmpDir]);
+      console.log = origLog;
+
+      // core.md should only have core rules, not testing/backend
+      const core = fs.readFileSync(
+        path.join(tmpDir, '.claude/rules/core.md'),
+        'utf8',
+      );
+      assert.ok(!core.includes('No `any` type casting'), 'core.md should NOT contain testing rules');
+
+      rmDir(tmpDir);
     });
   });
 });

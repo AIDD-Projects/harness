@@ -10,7 +10,7 @@
 project-root/
 │
 ├── .github/
-│   ├── copilot-instructions.md          # 전역 규칙 (자동 주입)
+│   ├── copilot-instructions.md          # 22줄 디스패처 (자동 주입)
 │   ├── skills/                          # 스킬 (온디맨드 절차)
 │   │   ├── bootstrap/SKILL.md
 │   │   ├── feature-breakdown/SKILL.md
@@ -24,11 +24,6 @@ project-root/
 │       ├── planner.agent.md
 │       ├── reviewer.agent.md
 │       └── sprint-manager.agent.md
-│
-├── .vscode/
-│   └── instructions/                    # 조건부 규칙 (applyTo)
-│       ├── backend.instructions.md
-│       └── testing.instructions.md
 │
 ├── docs/                                # 프로젝트 상태 문서
 │   ├── project-brief.md                 # 프로젝트 비전/목표/비목표
@@ -51,10 +46,11 @@ project-root/
 
 ## 2. 각 파일의 역할
 
-### `.github/copilot-instructions.md` — 전역 규칙
+### `.github/copilot-instructions.md` — 디스패처 (22줄)
 - **주입 시점**: 모든 Copilot Chat 대화에 자동
-- **내용**: 프로젝트 아키텍처, 기술 스택, 필수 규칙
-- **크기 제한**: 200줄 이하 (매번 주입되므로 최소화 필수)
+- **내용**: 워크플로우 안내 (어떤 스킬/에이전트를 언제 호출할지), state 파일 목록
+- **크기 제한**: 30줄 이하 (매번 주입되므로 최소화 필수)
+- **설계 철학**: 상세 규칙(Iron Laws, Testing Rules 등)은 각 스킬/에이전트에 임베딩. 디스패처는 워크플로우 안내만 담당.
 
 ```markdown
 # 프로젝트 규칙
@@ -135,15 +131,15 @@ instructions.md          ──→  skills/*.md (필요시 참조)
 
 ## 4. IDE별 파일 매핑
 
-| IDE | 전역 규칙 | 조건부 규칙 | 스킬 | 에이전트 |
-|-----|----------|-----------|------|--------|
-| **VS Code** | `.github/copilot-instructions.md` | `.vscode/instructions/*.instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
-| **Claude Code** | `CLAUDE.md` | (통합) | `.claude/skills/*/SKILL.md` | (통합) |
-| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | (통합) | (통합) |
-| **Codex** | `AGENTS.md` | (통합) | `.agents/skills/*/SKILL.md` | (통합) |
-| **Windsurf** | `.windsurfrules` | (통합) | (통합) | (통합) |
-| **Augment** | `.augment/rules/core.md` | `.augment/rules/*.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
-| **Antigravity** | `.agent/rules/core.md` | `.agent/rules/*.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
+| IDE | 디스패처 (always-on) | 스킬 | 에이전트 |
+|-----|------------------------|------|--------|
+| **VS Code** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
+| **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
+| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | (merged) |
+| **Windsurf** | `.windsurfrules` | (merged) | (merged) |
+| **Augment** | `.augment/rules/core.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
+| **Antigravity** | `.agent/rules/core.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
 
 > 모든 IDE에서 상태 파일은 `docs/` 디렉토리에 생성됩니다.
 
@@ -154,20 +150,17 @@ instructions.md          ──→  skills/*.md (필요시 참조)
 ### Minimal (1인, 신규 프로젝트)
 ```
 .github/copilot-instructions.md    (1개)
-.vscode/instructions/
-  backend.instructions.md          (1개)
 docs/
   project-brief.md                 (1개)
-                                   ── 총 3개 파일
+                                   ── 총 2개 파일
 ```
 
 ### Standard (1~2인, 운영 프로젝트)
 ```
 .github/copilot-instructions.md    (1개)
 .github/skills/                    (4~6개)
-.vscode/instructions/              (2개)
 docs/                              (5개)
-                                   ── 총 12~14개 파일
+                                   ── 총 10~12개 파일
 ```
 
 ### Full (2~3인, 장기 프로젝트)
@@ -175,9 +168,8 @@ docs/                              (5개)
 .github/copilot-instructions.md    (1개)
 .github/skills/                    (8개)
 .github/agents/                    (3개)
-.vscode/instructions/              (2개)
 docs/                              (5개 + agent-memory 3개)
-                                   ── 총 ~22개 파일
+                                   ── 총 ~20개 파일
 ```
 
 ---
@@ -193,5 +185,5 @@ docs/                              (5개 + agent-memory 3개)
 | 지식/테스트 | 30+ | 1 (docs/failure-patterns.md) |
 | Story 파일 | 86 | 0 (docs/project-state.md에 통합) |
 | 설정 | 5+ | 0 |
-| 기타 | 20+ | 3 (copilot-instructions, instructions 2개) |
-| **합계** | **200+** | **~27** |
+| 기타 | 20+ | 1 (copilot-instructions) |
+| **합계** | **200+** | **~20** |

@@ -108,6 +108,17 @@ STATUS: DONE
 - Do not modify source code — this skill only updates state files
 - Quick Summary must be exactly 3 lines — concise enough for the next session to scan instantly
 
+## Enforced Rules
+
+- **Session Handoff**: Before ending a session, docs/project-state.md Quick Summary MUST be updated. Never leave the project in an undocumented state.
+- **State File Size Limits**: Keep state files compact for LLM context windows:
+  - docs/project-brief.md: Max 200 lines
+  - docs/project-state.md: Max 300 lines (archive completed sprints)
+  - docs/failure-patterns.md: Max 50 patterns (remove resolved entries)
+  - docs/dependency-map.md: Max 100 modules
+  - docs/features.md: Max 50 features
+  - docs/agent-memory/*.md: Max 100 lines each
+
 ## Anti-patterns
 
 | Anti-pattern | Correct Approach |

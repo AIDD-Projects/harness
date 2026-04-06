@@ -19,10 +19,9 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 2. Scans directory structure and imports to detect modules and dependencies
 3. Interviews the user: project purpose, goals, non-goals, architecture, conventions, test command
 4. Auto-fills all 5 state files
-5. Auto-configures rules files: fills Architecture, Directory Structure, Core Type Rules, Test command, and verifies globs match the detected project language
-6. Presents summary for user review
+5. Presents summary for user review
 
-**Output**: Filled `docs/project-brief.md`, `docs/features.md`, `docs/dependency-map.md`, `docs/project-state.md`. `docs/failure-patterns.md` is left as templates. Core rules and globs configured for the detected language.
+**Output**: Filled `docs/project-brief.md`, `docs/features.md`, `docs/dependency-map.md`, `docs/project-state.md`. `docs/failure-patterns.md` is left as templates.
 
 ---
 
@@ -197,44 +196,28 @@ Agents are role-based personas that enforce the workflow. Each reads state files
 
 ---
 
-## Rules (3)
+## Dispatcher (1)
 
-Rules are always-active instructions. LLM reads them automatically — no need to invoke.
+The dispatcher is always active. LLM reads it automatically — no need to invoke.
 
-### core-rules
+### core-rules (22줄 디스패처)
 
 **File**: `core-rules.md` (global instructions)
 
 **Contains**:
-- **Iron Laws**: 8 hard rules (mock sync, type check, scope compliance, security, 3-failure stop, dependency map registration, feature registry, session handoff)
-- **Direction Guard**: Before ANY coding task, reads `docs/project-brief.md` and checks Goals/Non-Goals/Decision Log
-- **New Session Bootstrap**: Reads state files at session start
-- **Health Check**: Detects unfilled TODO placeholders in rules files and mismatched globs — warns user to run bootstrap
-- **Workflow Pipeline**: Defines execution order (bootstrap → planner → code → reviewer → sprint-manager → learn)
-- **Completion Status Protocol**: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT
-- **State File Size Limits**: Per-file line/entry limits to prevent context overflow
+- 프로젝트 이름 표시
+- 세션 시작 시 `docs/project-state.md` 읽기 지시
+- 워크플로우 참조 (bootstrap → planner → code → reviewer → sprint-manager → learn)
+- State 파일 목록 참조
 
-### testing-rules
-
-**File**: `testing-rules.md` (applied to test files only)
-
-**Contains**:
-- Interface changes require mock updates in the same commit
-- Mocks must implement ALL interface methods
-- No `any` type casting for mocks
-- No `skip` / `only` in committed tests
-- No debugging statements in tests
-
-### backend-rules
-
-**File**: `backend-rules.md` (applied to source files only)
-
-**Contains**:
-- Follow project architecture patterns strictly
-- Read source file before calling constructors (FP-002 prevention)
-- No dependency direction violations
-- No hardcoded environment variables
-- No `git add .` — use explicit per-file staging
+**Not included** (스킬/에이전트에 임베딩됨):
+- Iron Laws → `reviewer.agent.md`
+- Direction Guard → `planner.agent.md`
+- Testing Rules → `reviewer.agent.md`, `test-integrity.md`
+- Backend Rules → `reviewer.agent.md`
+- Health Check → 제거 (스킬에서 개별 확인)
+- Completion Protocol → `reviewer.agent.md`, `sprint-manager.agent.md`
+- 3-Failure Stop → `investigate.md`
 
 ---
 
@@ -323,8 +306,7 @@ pivot → [resume normal workflow]
 
 ## Templates
 
-Templates are in `templates/` for creating custom skills, agents, and rules:
+Templates are in `templates/` for creating custom skills and agents:
 
 - `skill.template.md` — Skill file template with required sections
 - `agent.template.md` — Agent file template with role, skills, procedure
-- `instructions.template.md` — File-scoped rule template with applyTo pattern

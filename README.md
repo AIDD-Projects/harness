@@ -49,24 +49,22 @@ npx k-harness init --ide antigravity
 
 ## Supported IDEs
 
-| IDE | Global Rules | File-Scoped Rules | Skills | Agents |
-|-----|-------------|-------------------|--------|--------|
-| **VS Code Copilot** | `.github/copilot-instructions.md` | `.vscode/instructions/*.instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
-| **Claude Code** | `CLAUDE.md` | (merged into CLAUDE.md) | `.claude/skills/*/SKILL.md` | (merged into CLAUDE.md) |
-| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | (merged into rules) | (merged into rules) |
-| **Codex** | `AGENTS.md` | (merged into AGENTS.md) | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |
-| **Windsurf** | `.windsurfrules` | (merged) | (merged) | (merged) |
-| **Augment Code** | `.augment/rules/core.md` | `.augment/rules/*.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
-| **Google Antigravity** | `.agent/rules/core.md` | `.agent/rules/*.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
+| IDE | Dispatcher (always-on) | Skills | Agents |
+|-----|----------------------|--------|--------|
+| **VS Code Copilot** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
+| **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
+| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |
+| **Windsurf** | `.windsurfrules` | (merged) | (merged) |
+| **Augment Code** | `.augment/rules/core.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
+| **Google Antigravity** | `.agent/rules/core.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
 
 All IDEs also get state files (`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`) in the `docs/` directory.
 
 ## What Gets Installed
 
-### Rules (always active)
-- **Core Rules** — Architecture enforcement, Iron Laws, completion protocol, concreteness rules
-- **Testing Rules** — Mock synchronization, forbidden patterns (applied to test files)
-- **Backend Rules** — Dependency inversion, type safety, explicit staging (applied to source files)
+### Dispatcher (always active)
+- **Core Rules** — 22-line dispatcher: session start guidance, workflow references, state file list. Detailed rules are embedded in each skill/agent that enforces them.
 
 ### Skills (on-demand procedures)
 - **bootstrap** — Onboard project into K-Harness: scans codebase + fills state files automatically
@@ -125,7 +123,7 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 | | BMAD v6.2.2 | gstack v0.15.1 | K-Harness |
 |---|---|---|---|
 | Focus | Enterprise SDLC methodology | 1-person software factory | Project direction management |
-| Files | 200+ | ~40 | ~27 |
+| Files | 200+ | ~40 | ~20 |
 | Dependencies | Node 20+ | Bun + Node + Playwright | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 7 (native format) |
 | Direction management | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |

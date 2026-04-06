@@ -74,6 +74,12 @@ After the fix is verified (Phase 4):
 - [ ] **docs/failure-patterns.md**: If the root cause is a repeatable pattern, add a new FP-NNN entry or increment the Frequency of an existing one. This is NOT optional.
 - [ ] **docs/project-state.md**: Add the fix to Recent Changes with the root cause hypothesis.
 
+## Enforced Rules
+
+- **3-Failure Stop**: If the same fix approach fails 3 times, stop and report to the user. Do not keep trying.
+- **Concreteness**: Specify exact file paths and line numbers. Quote error messages. Specify expected vs actual types.
+- **Scope Lock**: Do not modify files outside the identified problem scope (Phase 2).
+
 ## Related Failure Patterns
 
 - FP-002: Type confusion → Phase 1 requires verifying actual types

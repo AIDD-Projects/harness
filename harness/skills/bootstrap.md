@@ -75,54 +75,22 @@ Using data from Phase 1 + Phase 2, fill the following files:
 - Keep FP-001 through FP-004 as templates (Frequency: 0)
 - No changes unless user reports known issues
 
-### Phase 3.5: Rules Auto-Configuration
+### Phase 3.5: Project Brief Auto-Configuration
 
-Using language/framework detected in Phase 1 + user answers from Phase 2, auto-configure the project's rules files.
+Using language/framework detected in Phase 1 + user answers from Phase 2, enrich `docs/project-brief.md`:
 
-1. **Find the core rules file** — Search for the file containing `<!-- TODO: Describe your project's architecture here -->`:
-   - VS Code: `.github/copilot-instructions.md`
-   - Claude: `CLAUDE.md`
-   - Cursor: `.cursor/rules/core.mdc`
-   - Codex: `AGENTS.md`
-   - Windsurf: `.windsurfrules`
-   - Augment: `.augment/rules/core.md`
-   - Antigravity: `.agent/rules/core.md`
+1. **Fill Key Technical Decisions** with detected tech stack:
+   - Language, framework, database (from Phase 1)
+   - Architecture pattern (from user answer #4)
+   - Type conventions (from user answer #5)
+   - Test command and mock location (from user answer #6)
 
-2. **Fill `## Architecture` section** — Replace the TODO with detected tech stack:
-   ```
-   ## Architecture
-   [Language] / [Framework] / [Database if detected]
-   [Architecture pattern from user answer #4]
-   ```
-
-3. **Fill `## Directory Structure` section** — Replace the TODO with actual tree from Phase 1:
-   ```
-   ## Directory Structure
-   project-root/
-   ├── src/           # [purpose from scan]
-   ├── tests/         # [purpose from scan]
-   └── ...
-   ```
-
-4. **Fill `## Core Type Rules` section** — Replace the TODO with user answer #5 plus language defaults:
+2. **Add language-specific defaults** to Key Technical Decisions if not already present:
    - Python: `Use Pydantic models for API schemas, not plain dicts.`
    - TypeScript: `Prefer union types ("a" | "b") over enums.`
    - Go: `Use interfaces for dependency injection.`
    - Java: `Use records for DTOs.`
    - Rust: `Use enum variants, not string constants.`
-
-5. **Fill `## Test Rules`** — Set test command (from user answer #6) and mock location (from Phase 1):
-   ```
-   - Test command: [detected or user-provided, e.g. pytest, npm test, go test ./...]
-   - Mock location: [detected, e.g. tests/conftest.py, tests/__mocks__/]
-   ```
-
-6. **Verify globs** — Check backend and testing rules files have correct globs for the detected language:
-   - Python: backend `**/*.py`, testing `**/test_*.py,**/tests/**/*.py`
-   - TypeScript: backend `src/**/*.ts,src/**/*.js`, testing `**/*.test.*,**/*.spec.*`
-   - Go: backend `**/*.go`, testing `**/*_test.go`
-   - Java: backend `src/main/**/*.java`, testing `src/test/**/*.java`
-   - If globs don't match → **edit the file directly** to set correct globs
 
 ### Phase 4: Verify
 
@@ -150,12 +118,6 @@ Using language/framework detected in Phase 1 + user answers from Phase 2, auto-c
 - [x]docs/project-state.md — Sprint 1 initialized
 - [ ]docs/failure-patterns.md — templates only (no changes)
 
-### Rules Files Configured:
-- [x] Core rules — Architecture, Directory Structure, Type Rules filled
-- [x] Test command — [detected command]
-- [x] Backend globs — [globs set]
-- [x] Testing globs — [globs set]
-
 STATUS: DONE
 ```
 
@@ -167,6 +129,28 @@ STATUS: DONE
 - If a state file already has content, ask before overwriting
 - Rules file TODO sections can be overwritten without asking (they are placeholders)
 - Run this skill only once per project (or when explicitly requested for refresh)
+
+## Embedded Knowledge
+
+### Session Bootstrap Protocol
+When starting a NEW session (not during bootstrap), read these files in order:
+1. `docs/project-state.md` — Quick Summary tells you where we left off
+2. `docs/features.md` — What features exist
+3. `docs/failure-patterns.md` — What mistakes to avoid
+4. `docs/project-brief.md` — Project vision and non-goals
+
+### Workflow Pipeline
+- New feature: `planner → [code] → reviewer → sprint-manager → learn`
+- Bug fix: `investigate → [fix] → test-integrity → reviewer → learn`
+- Session lifecycle: `sprint-manager ("where are we?") → [work] → learn`
+
+### State File Size Limits
+- docs/project-brief.md: Max 200 lines
+- docs/project-state.md: Max 300 lines
+- docs/failure-patterns.md: Max 50 patterns
+- docs/dependency-map.md: Max 100 modules
+- docs/features.md: Max 50 features
+- docs/agent-memory/*.md: Max 100 lines each
 
 ## Anti-patterns
 

@@ -137,25 +137,10 @@ function writeAgentsAsSkills(targetDir, skillsDir, overwrite) {
 // ─── IDE Generators ──────────────────────────────────────────
 
 function generateVscode(targetDir, overwrite) {
-  const lang = detectLanguage(targetDir);
-  const globs = LANG_GLOBS[lang];
   const coreRules = readTemplate('core-rules.md');
-  const testingRules = readTemplate('testing-rules.md');
-  const backendRules = readTemplate('backend-rules.md');
 
-  // Global instructions
+  // Global instructions (dispatcher only — rules are embedded in skills)
   writeFile(targetDir, '.github/copilot-instructions.md', coreRules, overwrite);
-
-  // File-scoped instructions (add VS Code applyTo frontmatter)
-  const testingWithFrontmatter =
-    `---\napplyTo: "${globs.testing}"\n---\n\n` +
-    testingRules;
-  writeFile(targetDir, '.vscode/instructions/testing.instructions.md', testingWithFrontmatter, overwrite);
-
-  const backendWithFrontmatter =
-    `---\napplyTo: "${globs.backend}"\n---\n\n` +
-    backendRules;
-  writeFile(targetDir, '.vscode/instructions/backend.instructions.md', backendWithFrontmatter, overwrite);
 
   // Skills (.github/skills — VS Code default search path, SKILL.md with frontmatter)
   writeSkills(targetDir, '.github/skills', overwrite);
@@ -174,44 +159,26 @@ function generateVscode(targetDir, overwrite) {
 }
 
 function generateClaude(targetDir, overwrite) {
-  // CLAUDE.md — merge core + testing + backend rules
-  const merged = [
-    readTemplate('core-rules.md'),
-    '\n---\n\n',
-    readTemplate('testing-rules.md'),
-    '\n---\n\n',
-    readTemplate('backend-rules.md'),
-  ].join('');
-  writeFile(targetDir, 'CLAUDE.md', merged, overwrite);
+  // .claude/rules/core.md — dispatcher only (no paths = always loaded)
+  writeFile(targetDir, '.claude/rules/core.md', readTemplate('core-rules.md'), overwrite);
 
-  // Skills (SKILL.md with frontmatter for slash commands)
+  // Skills (SKILL.md with frontmatter)
   writeSkills(targetDir, '.claude/skills', overwrite);
+
+  // Agents as skills (Claude Code skills pattern)
+  writeAgentsAsSkills(targetDir, '.claude/skills', overwrite);
 
   // State files
   writeStateFiles(targetDir, overwrite);
 }
 
 function generateCursor(targetDir, overwrite) {
-  const lang = detectLanguage(targetDir);
-  const globs = LANG_GLOBS[lang];
-  // .cursor/rules/*.mdc — each needs frontmatter
+  // .cursor/rules/core.mdc — dispatcher only
   const coreRules = readTemplate('core-rules.md');
   const coreMdc =
-    '---\ndescription: Core project rules — Iron Laws, completion protocol, concreteness\nalwaysApply: true\n---\n\n' +
+    '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, overwrite);
-
-  const testingRules = readTemplate('testing-rules.md');
-  const testingMdc =
-    `---\ndescription: Testing rules — mock sync, forbidden patterns\nglobs: "${globs.testing}"\nalwaysApply: false\n---\n\n` +
-    testingRules;
-  writeFile(targetDir, '.cursor/rules/testing.mdc', testingMdc, overwrite);
-
-  const backendRules = readTemplate('backend-rules.md');
-  const backendMdc =
-    `---\ndescription: Backend code rules — architecture enforcement, type safety\nglobs: "${globs.backend}"\nalwaysApply: false\n---\n\n` +
-    backendRules;
-  writeFile(targetDir, '.cursor/rules/backend.mdc', backendMdc, overwrite);
 
   // Skills as rules
   for (const skill of SKILLS) {
@@ -236,15 +203,8 @@ function generateCursor(targetDir, overwrite) {
 }
 
 function generateCodex(targetDir, overwrite) {
-  // AGENTS.md — merge core + testing + backend rules
-  const merged = [
-    readTemplate('core-rules.md'),
-    '\n---\n\n',
-    readTemplate('testing-rules.md'),
-    '\n---\n\n',
-    readTemplate('backend-rules.md'),
-  ].join('');
-  writeFile(targetDir, 'AGENTS.md', merged, overwrite);
+  // AGENTS.md — dispatcher only
+  writeFile(targetDir, 'AGENTS.md', readTemplate('core-rules.md'), overwrite);
 
   // Skills (SKILL.md with frontmatter for slash commands)
   writeSkills(targetDir, '.agents/skills', overwrite);
@@ -254,47 +214,20 @@ function generateCodex(targetDir, overwrite) {
 }
 
 function generateWindsurf(targetDir, overwrite) {
-  // .windsurfrules — everything in one file
-  const sections = [
-    readTemplate('core-rules.md'),
-    readTemplate('testing-rules.md'),
-    readTemplate('backend-rules.md'),
-    '---\n\n# Skills\n\n',
-  ];
-  for (const skill of SKILLS) {
-    sections.push(readTemplate(`skills/${skill.id}.md`));
-  }
-  sections.push('---\n\n# Agents\n\n');
-  for (const agent of AGENTS) {
-    sections.push(readTemplate(agent.file));
-  }
-  writeFile(targetDir, '.windsurfrules', sections.join('\n\n---\n\n'), overwrite);
+  // .windsurfrules — dispatcher only (rules are embedded in skills)
+  writeFile(targetDir, '.windsurfrules', readTemplate('core-rules.md'), overwrite);
 
   // State files
   writeStateFiles(targetDir, overwrite);
 }
 
 function generateAugment(targetDir, overwrite) {
-  const lang = detectLanguage(targetDir);
-  const globs = LANG_GLOBS[lang];
-  // .augment/rules/ — Always-type rules for core, testing, backend
+  // .augment/rules/core.md — dispatcher only
   const coreRules = readTemplate('core-rules.md');
   const coreRule =
-    '---\ndescription: Core project rules — Iron Laws, completion protocol, concreteness\ntype: always\n---\n\n' +
+    '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\ntype: always\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.augment/rules/core.md', coreRule, overwrite);
-
-  const testingRules = readTemplate('testing-rules.md');
-  const testingRule =
-    `---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "${globs.testing}"\n---\n\n` +
-    testingRules;
-  writeFile(targetDir, '.augment/rules/testing.md', testingRule, overwrite);
-
-  const backendRules = readTemplate('backend-rules.md');
-  const backendRule =
-    `---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "${globs.backend}"\n---\n\n` +
-    backendRules;
-  writeFile(targetDir, '.augment/rules/backend.md', backendRule, overwrite);
 
   // .augment/skills/ — SKILL.md format (enables / slash commands)
   writeSkills(targetDir, '.augment/skills', overwrite);
@@ -305,26 +238,12 @@ function generateAugment(targetDir, overwrite) {
 }
 
 function generateAntigravity(targetDir, overwrite) {
-  const lang = detectLanguage(targetDir);
-  const globs = LANG_GLOBS[lang];
-  // .agent/rules/ — Always-type rules (same as Augment format, read by Antigravity)
+  // .agent/rules/core.md — dispatcher only
   const coreRules = readTemplate('core-rules.md');
   const coreRule =
-    '---\ndescription: Core project rules — Iron Laws, completion protocol, concreteness\ntype: always\n---\n\n' +
+    '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\ntype: always\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.agent/rules/core.md', coreRule, overwrite);
-
-  const testingRules = readTemplate('testing-rules.md');
-  const testingRule =
-    `---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "${globs.testing}"\n---\n\n` +
-    testingRules;
-  writeFile(targetDir, '.agent/rules/testing.md', testingRule, overwrite);
-
-  const backendRules = readTemplate('backend-rules.md');
-  const backendRule =
-    `---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "${globs.backend}"\n---\n\n` +
-    backendRules;
-  writeFile(targetDir, '.agent/rules/backend.md', backendRule, overwrite);
 
   // .agent/skills/ — SKILL.md format (enables / slash commands)
   writeSkills(targetDir, '.agent/skills', overwrite);

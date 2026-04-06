@@ -1,4 +1,4 @@
-# Skill / Agent / Instructions 작성 스펙
+# Skill / Agent 작성 스펙
 
 > K-Harness 파일의 구조, 규칙, 작성 가이드
 
@@ -188,63 +188,44 @@ Sprint 대시보드 형태:
 
 ---
 
-## 3. Instructions.md 스펙
+## 3. 규칙 임베딩 패턴
 
-### 목적
-특정 파일 패턴을 편집할 때 **자동으로 주입되는 규칙**.
-사용자가 명시적으로 호출하지 않아도 적용됨.
+### 배경
+v0.8.0 이전에는 `testing-rules.md`, `backend-rules.md` 등 path-scoped rules 파일이 별도로 존재했다.
+항상 자동 주입되어 토큰을 소비하는 문제가 있어, **스킬/에이전트 내부에 규칙을 임베딩**하는 방식으로 전환했다.
 
-### 필수 구조
+### 원칙
+- 규칙은 해당 스킬/에이전트가 호출될 때만 로드됨
+- `core-rules.md`(22줄 디스패처)만 항상 로드
+- Iron Laws, Testing Rules, Backend Rules 등은 관련 스킬/에이전트 `.md` 파일 하단에 직접 포함
+
+### 임베딩 위치
+| 규칙 | 임베딩된 파일 |
+|------|-------------|
+| Iron Laws | reviewer.agent.md |
+| Testing Rules | reviewer.agent.md, test-integrity.md |
+| Backend Rules | reviewer.agent.md |
+| Completion Protocol | reviewer.agent.md, sprint-manager.agent.md |
+| 3-Failure Stop | investigate.md |
+| Scope Compliance | sprint-manager.agent.md |
+| Direction Guard | planner.agent.md |
+| Session Handoff | learn.md |
+
+### 형식
+스킬/에이전트 `.md` 파일의 마지막 섹션에 `## 임베딩된 규칙` 헤더 아래에 배치:
 
 ```markdown
----
-applyTo: "{glob-pattern}"
----
+## 임베딩된 규칙
 
-# {영역} 규칙
+### Iron Laws
+1. Mock Sync: 인터페이스 변경 시 Mock 동시 갱신
+2. Type Check: 생성자 호출 전 소스 파일 확인
+3. ...
 
-## 필수 규칙
-- 규칙 1
-- 규칙 2
-
-## 금지 사항
-- 하지 말아야 할 것 1
-- 하지 말아야 할 것 2
-
-## 참조
-- {관련 skill 또는 문서}
-```
-
-### 규칙
-| 규칙 | 설명 |
-|------|------|
-| ≤ 100줄 | 매번 자동 주입되므로 최소화 필수 |
-| glob 정확성 | applyTo가 너무 광범위하면 불필요한 주입 증가 |
-| 규칙만 | 절차나 예시는 skill에 위임, instructions에는 규칙/금지만 |
-| 중복 금지 | copilot-instructions.md와 내용 겹치지 않도록 |
-
-### 예시: testing.instructions.md
-```markdown
----
-applyTo: "**/*.test.ts,**/*.spec.ts"
----
-
-# 테스트 코드 규칙
-
-## 필수 규칙
-- 테스트 대상 모듈만 import, 실제 구현 의존성은 Mock
-- Repository 인터페이스의 모든 메서드에 jest.fn() 매핑 확인
-- describe/it 네스팅 최대 2단계
-- 각 테스트는 독립적 — 실행 순서 의존 금지
-
-## 금지 사항
-- 실제 DB 연결 (메모리 Mock 사용)
-- any 타입 사용 (Mock도 정확한 타입)
-- console.log 디버깅 코드 커밋
-
-## 참조
-- test-integrity skill 참고
-- docs/failure-patterns.md FP-001 확인
+### Testing Rules  
+- 테스트 대상 모듈만 import
+- any 타입 사용 금지
+- ...
 ```
 
 ---

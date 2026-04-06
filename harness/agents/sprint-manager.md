@@ -98,6 +98,11 @@ Progress: {done}/{total} Stories
 STATUS: DONE
 ```
 
+## Enforced Rules
+
+- **Scope Compliance**: Do not modify files outside the current Story scope. If user requests an out-of-scope change, warn first and proceed only after confirmation.
+- **Completion Protocol**: Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT**
+
 ## Constraints
 
 - Do not modify code directly — manage state only

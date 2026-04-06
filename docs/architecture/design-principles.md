@@ -93,7 +93,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ### VS Code Copilot 커스터마이징 체계
 ```
 .github/
-  copilot-instructions.md    ← 전역 규칙 (모든 대화에 자동 적용)
+  copilot-instructions.md    ← 22줄 디스패처 (모든 대화에 자동 적용)
   skills/                    ← SKILL.md 파일들 (온디맨드 절차)
     bootstrap/SKILL.md
     feature-breakdown/SKILL.md
@@ -103,23 +103,21 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
     planner.agent.md
     reviewer.agent.md
     sprint-manager.agent.md
-
-.vscode/
-  instructions/              ← .instructions.md 파일들
-    backend.instructions.md      (applyTo: "src/**")
-    testing.instructions.md      (applyTo: "**/*.test.*")
 ```
 
+> 상세 규칙(Iron Laws, Testing Rules, Backend Rules 등)은 각 스킬/에이전트 안에 임베딩되어 있음.
+> 디스패처는 워크플로우 안내와 state 파일 참조만 담당.
+
 ### 작동 방식
-1. **copilot-instructions.md**: 매 대화에 자동 주입 (프로젝트 컨텍스트, 아키텍처 규칙)
-2. **.instructions.md**: `applyTo` glob 패턴으로 파일 편집 시 조건부 주입
-3. **.agent.md**: `@reviewer`처럼 멘션으로 호출하는 전문 에이전트
-4. **SKILL.md**: 도메인 지식 문서 (에이전트가 참조)
+1. **copilot-instructions.md**: 매 대화에 자동 주입 (22줄 디스패처 — 워크플로우 안내 + state 파일 참조)
+2. **.agent.md**: `@reviewer`처럼 멘션으로 호출하는 전문 에이전트 (규칙 임베딩됨)
+3. **SKILL.md**: 도메인 지식 문서 (규칙 임베딩됨, 에이전트가 참조)
 
 ### 왜 네이티브여야 하는가
 - BMAD는 `_bmad/` 폴더에 자체 체계를 구축했지만 VS Code Copilot은 이를 인식하지 못함
 - LLM이 BMAD 파일을 찾아 읽는 것 자체가 추가 컨텍스트 비용
 - VS Code 네이티브 파일은 **자동으로 컨텍스트에 주입**되므로 비용 0
+- 상세 규칙은 스킬/에이전트 안에 임베딩하여, 해당 스킬 실행 시에만 로드 (토큰 절감)
 
 ---
 
@@ -130,16 +128,14 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 - 2~3인 팀: + agents 2개 + docs/failure-patterns.md 추가
 - 4인+ 팀: 이 프레임워크 범위 밖. BMAD나 전용 PM 도구 권장.
 
-### 1인 팀 최소 구성 (5개 파일)
+### 1인 팀 최소 구성 (3개 파일)
 ```
 .github/copilot-instructions.md
 .github/skills/bootstrap/SKILL.md
 .github/skills/test-integrity/SKILL.md
-.vscode/instructions/backend.instructions.md
-.vscode/instructions/testing.instructions.md
 ```
 
-### 2~3인 팀 표준 구성 (~27개 파일)
+### 2~3인 팀 표준 구성 (~20개 파일)
 ```
 .github/copilot-instructions.md
 
@@ -157,10 +153,6 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
   planner.agent.md
   reviewer.agent.md
   sprint-manager.agent.md
-
-.vscode/instructions/
-  backend.instructions.md
-  testing.instructions.md
 
 docs/
   project-brief.md

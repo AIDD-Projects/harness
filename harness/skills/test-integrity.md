@@ -48,6 +48,15 @@ After synchronizing mocks:
 - [ ] **docs/failure-patterns.md**: If mock sync was missed and caused a test failure, increment FP-001 Frequency.
 - [ ] **docs/dependency-map.md**: If the interface change altered module relationships, update the relevant row.
 
+## Testing Rules (enforced during this skill)
+
+- Mocks must implement ALL interface methods. Missing method = build failure.
+- No `any` type casting on mocks. Create mocks using the actual interface type.
+- New methods must have default mock return values (e.g., `mockResolvedValue`, stub returns).
+- No `skip`, `only`, or debug statements in committed test files.
+- Async tests must use `await`. No floating promises.
+- Each test must be independent. No shared state between tests.
+
 ## Related Failure Patterns
 
 - FP-001: Interface changed, mock not updated → Checklist item 1
