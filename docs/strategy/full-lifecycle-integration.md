@@ -19,7 +19,7 @@ K-Harness(Execution 하네스)와 kode:crew(Planning 포털)를 통합하여 KT 
 
 ## 2. 현재 위치 — 솔직한 평가
 
-### 2.1 K-Harness (v0.7.0)
+### 2.1 K-Harness (v0.8.4)
 
 | 항목 | 상태 | 비고 |
 |---|---|---|
