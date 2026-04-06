@@ -1,5 +1,9 @@
 # K-Harness
 
+[![npm version](https://img.shields.io/npm/v/k-harness.svg)](https://www.npmjs.com/package/k-harness)
+[![npm downloads](https://img.shields.io/npm/dm/k-harness.svg)](https://www.npmjs.com/package/k-harness)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Project Direction Management Framework for LLM-Driven Development.
 
 ## What It Does
@@ -118,18 +122,18 @@ When goals, technology, or scope changes, run the `pivot` skill:
 
 See [docs/reference.md](docs/reference.md) for detailed descriptions of every skill, agent, rule, and state file.
 
-## Why Not BMAD or gstack?
+## Why K-Harness?
 
-| | BMAD v6.2.2 | gstack v0.15.1 | K-Harness |
-|---|---|---|---|
-| Focus | Enterprise SDLC methodology | 1-person software factory | Project direction management |
-| Files | 200+ | ~40 | ~20 |
-| Dependencies | Node 20+ | Bun + Node + Playwright | Zero |
-| IDE support | 20+ (installer) | 5 (setup --host) | 7 (native format) |
-| Direction management | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
-| Cold start | ❌ | ❌ | ✅ (bootstrap) |
-| State file audit | ❌ | ❌ | ✅ (reviewer Step 8) |
-| Context per task | 4-6 files | 1 file | 2-3 files |
+| | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | K-Harness |
+|---|---|---|---|---|
+| Focus | Enterprise SDLC methodology | 1-person software factory | Full lifecycle automation | Project direction management |
+| Files | 200+ | ~40 | Hundreds | ~20 |
+| Dependencies | Node 20+ | Bun + Node + Playwright | Node 18+ | Zero |
+| IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 7 (native format) |
+| Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
+| Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (6 laws embedded in skills) |
+| Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`bootstrap` skill) |
+| Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (22-line dispatcher) |
 
 ## License
 
