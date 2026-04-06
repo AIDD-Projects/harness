@@ -139,7 +139,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 .vscode/instructions/testing.instructions.md
 ```
 
-### 2~3인 팀 표준 구성 (~20개 파일)
+### 2~3인 팀 표준 구성 (~27개 파일)
 ```
 .github/copilot-instructions.md
 

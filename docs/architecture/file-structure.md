@@ -194,4 +194,4 @@ docs/                              (5개 + agent-memory 3개)
 | Story 파일 | 86 | 0 (docs/project-state.md에 통합) |
 | 설정 | 5+ | 0 |
 | 기타 | 20+ | 3 (copilot-instructions, instructions 2개) |
-| **합계** | **200+** | **~20** |
+| **합계** | **200+** | **~27** |

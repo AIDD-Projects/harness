@@ -125,7 +125,7 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 | | BMAD v6.2.2 | gstack v0.15.1 | K-Harness |
 |---|---|---|---|
 | Focus | Enterprise SDLC methodology | 1-person software factory | Project direction management |
-| Files | 200+ | ~40 | ~20 |
+| Files | 200+ | ~40 | ~27 |
 | Dependencies | Node 20+ | Bun + Node + Playwright | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 7 (native format) |
 | Direction management | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
