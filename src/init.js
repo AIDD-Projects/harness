@@ -159,7 +159,7 @@ function generateCursor(targetDir, overwrite) {
   for (const skill of SKILLS) {
     const content = readTemplate(`skills/${skill.id}.md`);
     const mdc =
-      `---\ndescription: Skill — ${skill.id}\nalwaysApply: false\n---\n\n` +
+      `---\ndescription: ${skill.desc}\nalwaysApply: false\n---\n\n` +
       content;
     writeFile(targetDir, `.cursor/rules/${skill.id}.mdc`, mdc, overwrite);
   }
@@ -168,7 +168,7 @@ function generateCursor(targetDir, overwrite) {
   for (const agent of AGENTS) {
     const content = readTemplate(agent.file);
     const mdc =
-      `---\ndescription: Agent — ${agent.id}\nalwaysApply: false\n---\n\n` +
+      `---\ndescription: ${agent.desc}\nalwaysApply: false\n---\n\n` +
       content;
     writeFile(targetDir, `.cursor/rules/${agent.id}.mdc`, mdc, overwrite);
   }
