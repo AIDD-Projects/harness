@@ -19,9 +19,10 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 2. Scans directory structure and imports to detect modules and dependencies
 3. Interviews the user: project purpose, goals, non-goals, architecture, conventions, test command
 4. Auto-fills all 5 state files
-5. Presents summary for user review
+5. Auto-configures rules files: fills Architecture, Directory Structure, Core Type Rules, Test command, and verifies globs match the detected project language
+6. Presents summary for user review
 
-**Output**: Filled `docs/project-brief.md`, `docs/features.md`, `docs/dependency-map.md`, `docs/project-state.md`. `docs/failure-patterns.md` is left as templates.
+**Output**: Filled `docs/project-brief.md`, `docs/features.md`, `docs/dependency-map.md`, `docs/project-state.md`. `docs/failure-patterns.md` is left as templates. Core rules and globs configured for the detected language.
 
 ---
 
@@ -208,6 +209,7 @@ Rules are always-active instructions. LLM reads them automatically — no need t
 - **Iron Laws**: 8 hard rules (mock sync, type check, scope compliance, security, 3-failure stop, dependency map registration, feature registry, session handoff)
 - **Direction Guard**: Before ANY coding task, reads `docs/project-brief.md` and checks Goals/Non-Goals/Decision Log
 - **New Session Bootstrap**: Reads state files at session start
+- **Health Check**: Detects unfilled TODO placeholders in rules files and mismatched globs — warns user to run bootstrap
 - **Workflow Pipeline**: Defines execution order (bootstrap → planner → code → reviewer → sprint-manager → learn)
 - **Completion Status Protocol**: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT
 - **State File Size Limits**: Per-file line/entry limits to prevent context overflow
