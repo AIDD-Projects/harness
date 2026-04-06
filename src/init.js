@@ -59,6 +59,50 @@ const AGENT_MEMORY_FILES = [
 
 const STATE_DEST_DIR = 'docs';
 
+// ─── Language detection ──────────────────────────────────────
+function detectLanguage(targetDir) {
+  const markers = [
+    ['python', ['requirements.txt', 'pyproject.toml', 'setup.py', 'Pipfile', 'setup.cfg']],
+    ['go', ['go.mod']],
+    ['java', ['pom.xml', 'build.gradle', 'build.gradle.kts']],
+    ['rust', ['Cargo.toml']],
+    ['ruby', ['Gemfile']],
+  ];
+  for (const [lang, files] of markers) {
+    for (const f of files) {
+      if (fs.existsSync(path.join(targetDir, f))) return lang;
+    }
+  }
+  return 'typescript';
+}
+
+const LANG_GLOBS = {
+  typescript: {
+    backend: 'src/**/*.ts,src/**/*.js',
+    testing: '**/*.test.ts,**/*.test.js,**/*.spec.ts,**/*.spec.js,**/__mocks__/**,**/__tests__/**',
+  },
+  python: {
+    backend: '**/*.py',
+    testing: '**/test_*.py,**/tests/**/*.py,**/*_test.py,**/conftest.py',
+  },
+  go: {
+    backend: '**/*.go',
+    testing: '**/*_test.go',
+  },
+  java: {
+    backend: 'src/main/**/*.java',
+    testing: 'src/test/**/*.java',
+  },
+  rust: {
+    backend: 'src/**/*.rs',
+    testing: 'tests/**/*.rs,**/tests.rs',
+  },
+  ruby: {
+    backend: '**/*.rb',
+    testing: 'spec/**/*.rb,test/**/*.rb',
+  },
+};
+
 // ─── Shared writers ──────────────────────────────────────────
 
 function writeStateFiles(targetDir, overwrite) {
@@ -93,6 +137,8 @@ function writeAgentsAsSkills(targetDir, skillsDir, overwrite) {
 // ─── IDE Generators ──────────────────────────────────────────
 
 function generateVscode(targetDir, overwrite) {
+  const lang = detectLanguage(targetDir);
+  const globs = LANG_GLOBS[lang];
   const coreRules = readTemplate('core-rules.md');
   const testingRules = readTemplate('testing-rules.md');
   const backendRules = readTemplate('backend-rules.md');
@@ -102,12 +148,12 @@ function generateVscode(targetDir, overwrite) {
 
   // File-scoped instructions (add VS Code applyTo frontmatter)
   const testingWithFrontmatter =
-    '---\napplyTo: "**/*.test.ts,**/*.test.js,**/*.spec.ts,**/*.spec.js,**/__mocks__/**,**/__tests__/**"\n---\n\n' +
+    `---\napplyTo: "${globs.testing}"\n---\n\n` +
     testingRules;
   writeFile(targetDir, '.vscode/instructions/testing.instructions.md', testingWithFrontmatter, overwrite);
 
   const backendWithFrontmatter =
-    '---\napplyTo: "src/**/*.ts,src/**/*.js"\n---\n\n' +
+    `---\napplyTo: "${globs.backend}"\n---\n\n` +
     backendRules;
   writeFile(targetDir, '.vscode/instructions/backend.instructions.md', backendWithFrontmatter, overwrite);
 
@@ -146,6 +192,8 @@ function generateClaude(targetDir, overwrite) {
 }
 
 function generateCursor(targetDir, overwrite) {
+  const lang = detectLanguage(targetDir);
+  const globs = LANG_GLOBS[lang];
   // .cursor/rules/*.mdc — each needs frontmatter
   const coreRules = readTemplate('core-rules.md');
   const coreMdc =
@@ -155,13 +203,13 @@ function generateCursor(targetDir, overwrite) {
 
   const testingRules = readTemplate('testing-rules.md');
   const testingMdc =
-    '---\ndescription: Testing rules — mock sync, forbidden patterns\nglobs: "**/*.test.*,**/*.spec.*,**/__mocks__/**,**/__tests__/**"\nalwaysApply: false\n---\n\n' +
+    `---\ndescription: Testing rules — mock sync, forbidden patterns\nglobs: "${globs.testing}"\nalwaysApply: false\n---\n\n` +
     testingRules;
   writeFile(targetDir, '.cursor/rules/testing.mdc', testingMdc, overwrite);
 
   const backendRules = readTemplate('backend-rules.md');
   const backendMdc =
-    '---\ndescription: Backend code rules — architecture enforcement, type safety\nglobs: "src/**/*.ts,src/**/*.js"\nalwaysApply: false\n---\n\n' +
+    `---\ndescription: Backend code rules — architecture enforcement, type safety\nglobs: "${globs.backend}"\nalwaysApply: false\n---\n\n` +
     backendRules;
   writeFile(targetDir, '.cursor/rules/backend.mdc', backendMdc, overwrite);
 
@@ -227,6 +275,8 @@ function generateWindsurf(targetDir, overwrite) {
 }
 
 function generateAugment(targetDir, overwrite) {
+  const lang = detectLanguage(targetDir);
+  const globs = LANG_GLOBS[lang];
   // .augment/rules/ — Always-type rules for core, testing, backend
   const coreRules = readTemplate('core-rules.md');
   const coreRule =
@@ -236,13 +286,13 @@ function generateAugment(targetDir, overwrite) {
 
   const testingRules = readTemplate('testing-rules.md');
   const testingRule =
-    '---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "**/*.test.*,**/*.spec.*,**/__mocks__/**,**/__tests__/**"\n---\n\n' +
+    `---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "${globs.testing}"\n---\n\n` +
     testingRules;
   writeFile(targetDir, '.augment/rules/testing.md', testingRule, overwrite);
 
   const backendRules = readTemplate('backend-rules.md');
   const backendRule =
-    '---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "src/**/*.ts,src/**/*.js"\n---\n\n' +
+    `---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "${globs.backend}"\n---\n\n` +
     backendRules;
   writeFile(targetDir, '.augment/rules/backend.md', backendRule, overwrite);
 
@@ -255,6 +305,8 @@ function generateAugment(targetDir, overwrite) {
 }
 
 function generateAntigravity(targetDir, overwrite) {
+  const lang = detectLanguage(targetDir);
+  const globs = LANG_GLOBS[lang];
   // .agent/rules/ — Always-type rules (same as Augment format, read by Antigravity)
   const coreRules = readTemplate('core-rules.md');
   const coreRule =
@@ -264,13 +316,13 @@ function generateAntigravity(targetDir, overwrite) {
 
   const testingRules = readTemplate('testing-rules.md');
   const testingRule =
-    '---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "**/*.test.*,**/*.spec.*,**/__mocks__/**,**/__tests__/**"\n---\n\n' +
+    `---\ndescription: Testing rules — mock sync, forbidden patterns\ntype: auto\nglobs: "${globs.testing}"\n---\n\n` +
     testingRules;
   writeFile(targetDir, '.agent/rules/testing.md', testingRule, overwrite);
 
   const backendRules = readTemplate('backend-rules.md');
   const backendRule =
-    '---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "src/**/*.ts,src/**/*.js"\n---\n\n' +
+    `---\ndescription: Backend code rules — architecture enforcement, type safety\ntype: auto\nglobs: "${globs.backend}"\n---\n\n` +
     backendRules;
   writeFile(targetDir, '.agent/rules/backend.md', backendRule, overwrite);
 
@@ -378,10 +430,11 @@ async function run(argv) {
     }
 
     const gen = GENERATORS[ide];
-    console.log(`\n  Installing for ${gen.name}...\n`);
+    const lang = detectLanguage(args.dir);
+    console.log(`\n  Installing for ${gen.name}... (detected language: ${lang})\n`);
     gen.fn(args.dir, args.overwrite);
-    console.log(`\n  Done! Edit docs/project-state.md to set up your first sprint.\n`);
+    console.log(`\n  Done! Run "bootstrap" in your AI chat to auto-fill state files and rules.\n`);
   }
 }
 
-module.exports = { run };
+module.exports = { run, detectLanguage, LANG_GLOBS };

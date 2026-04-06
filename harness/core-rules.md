@@ -81,6 +81,15 @@ When starting a NEW chat session, read these files in order before doing any wor
 
 If ALL state files are empty (only TODOs/placeholders), run the `bootstrap` skill before doing anything else.
 
+### Health Check (every session start)
+
+After reading state files, also check this file for unfilled placeholders:
+- If the `## Architecture` section still has `<!-- TODO -->` → warn: **"Core rules are incomplete. Run `bootstrap` to auto-fill."**
+- If the `## Test Rules` section still has `<!-- TODO -->` for test command → warn the same
+- If any rules file has globs that don't match the project language (e.g., `src/**/*.ts` for a Python project) → warn: **"Rules globs don't match your project language. Run `bootstrap` to fix."**
+
+Do NOT proceed with work until the user acknowledges or resolves these warnings.
+
 ## Workflow Pipeline
 
 Follow this order for different workflows. Each step's output feeds the next.

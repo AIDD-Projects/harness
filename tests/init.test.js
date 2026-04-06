@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
-const { run } = require('../src/init');
+const { run, detectLanguage, LANG_GLOBS } = require('../src/init');
 
 // Helper: create a temp directory and clean up after
 function makeTmpDir() {
@@ -247,6 +247,158 @@ describe('k-harness init', () => {
 
       assert.equal(exitCode, 1);
       assert.ok(errorMsg.includes('Unknown IDE'), 'Should show unknown IDE error');
+    });
+  });
+
+  describe('language detection', () => {
+    it('detects Python from requirements.txt', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'requirements.txt'), 'flask\n');
+      assert.equal(detectLanguage(tmpDir), 'python');
+      rmDir(tmpDir);
+    });
+
+    it('detects Python from pyproject.toml', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'pyproject.toml'), '[project]\n');
+      assert.equal(detectLanguage(tmpDir), 'python');
+      rmDir(tmpDir);
+    });
+
+    it('detects Go from go.mod', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'go.mod'), 'module example\n');
+      assert.equal(detectLanguage(tmpDir), 'go');
+      rmDir(tmpDir);
+    });
+
+    it('detects Java from pom.xml', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'pom.xml'), '<project/>\n');
+      assert.equal(detectLanguage(tmpDir), 'java');
+      rmDir(tmpDir);
+    });
+
+    it('detects Java from build.gradle', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'build.gradle'), 'plugins {}\n');
+      assert.equal(detectLanguage(tmpDir), 'java');
+      rmDir(tmpDir);
+    });
+
+    it('detects Rust from Cargo.toml', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'Cargo.toml'), '[package]\n');
+      assert.equal(detectLanguage(tmpDir), 'rust');
+      rmDir(tmpDir);
+    });
+
+    it('detects Ruby from Gemfile', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'Gemfile'), 'source "https://rubygems.org"\n');
+      assert.equal(detectLanguage(tmpDir), 'ruby');
+      rmDir(tmpDir);
+    });
+
+    it('defaults to typescript for empty directory', () => {
+      const tmpDir = makeTmpDir();
+      assert.equal(detectLanguage(tmpDir), 'typescript');
+      rmDir(tmpDir);
+    });
+  });
+
+  describe('language-aware globs', () => {
+    it('Python project gets Python globs in VS Code', async () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'requirements.txt'), 'flask\n');
+
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--dir', tmpDir]);
+      console.log = origLog;
+
+      const backend = fs.readFileSync(
+        path.join(tmpDir, '.vscode/instructions/backend.instructions.md'),
+        'utf8',
+      );
+      assert.ok(backend.includes('**/*.py'), 'Backend globs should contain **/*.py');
+      assert.ok(!backend.includes('src/**/*.ts'), 'Backend globs should NOT contain src/**/*.ts');
+
+      const testing = fs.readFileSync(
+        path.join(tmpDir, '.vscode/instructions/testing.instructions.md'),
+        'utf8',
+      );
+      assert.ok(testing.includes('test_*.py'), 'Testing globs should contain test_*.py');
+
+      rmDir(tmpDir);
+    });
+
+    it('Go project gets Go globs in Cursor', async () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'go.mod'), 'module example\n');
+
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'cursor', '--dir', tmpDir]);
+      console.log = origLog;
+
+      const backend = fs.readFileSync(
+        path.join(tmpDir, '.cursor/rules/backend.mdc'),
+        'utf8',
+      );
+      assert.ok(backend.includes('**/*.go'), 'Backend globs should contain **/*.go');
+
+      const testing = fs.readFileSync(
+        path.join(tmpDir, '.cursor/rules/testing.mdc'),
+        'utf8',
+      );
+      assert.ok(testing.includes('*_test.go'), 'Testing globs should contain *_test.go');
+
+      rmDir(tmpDir);
+    });
+
+    it('Java project gets Java globs in Antigravity', async () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'pom.xml'), '<project/>\n');
+
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'antigravity', '--dir', tmpDir]);
+      console.log = origLog;
+
+      const backend = fs.readFileSync(
+        path.join(tmpDir, '.agent/rules/backend.md'),
+        'utf8',
+      );
+      assert.ok(backend.includes('src/main/**/*.java'), 'Backend globs should contain src/main/**/*.java');
+
+      rmDir(tmpDir);
+    });
+
+    it('empty project defaults to TypeScript globs', async () => {
+      const tmpDir = makeTmpDir();
+
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--dir', tmpDir]);
+      console.log = origLog;
+
+      const backend = fs.readFileSync(
+        path.join(tmpDir, '.vscode/instructions/backend.instructions.md'),
+        'utf8',
+      );
+      assert.ok(backend.includes('src/**/*.ts'), 'Default backend globs should contain src/**/*.ts');
+
+      rmDir(tmpDir);
+    });
+
+    it('LANG_GLOBS covers all detected languages', () => {
+      const expectedLangs = ['typescript', 'python', 'go', 'java', 'rust', 'ruby'];
+      for (const lang of expectedLangs) {
+        assert.ok(LANG_GLOBS[lang], `Missing LANG_GLOBS entry for ${lang}`);
+        assert.ok(LANG_GLOBS[lang].backend, `Missing backend glob for ${lang}`);
+        assert.ok(LANG_GLOBS[lang].testing, `Missing testing glob for ${lang}`);
+      }
     });
   });
 });
