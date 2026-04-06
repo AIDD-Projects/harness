@@ -169,32 +169,29 @@ function generateCodex(targetDir, overwrite) {
   // AGENTS.md — dispatcher only
   writeFile(targetDir, 'AGENTS.md', readTemplate('core-rules.md'), overwrite);
 
-  // Skills (SKILL.md with frontmatter for slash commands)
+  // Skills (SKILL.md with frontmatter — invokable via $skill-name)
   writeSkills(targetDir, '.agents/skills', overwrite);
+
+  // Agents as skills
+  writeAgentsAsSkills(targetDir, '.agents/skills', overwrite);
 
   // State files
   writeStateFiles(targetDir, overwrite);
 }
 
 function generateWindsurf(targetDir, overwrite) {
-  // .windsurfrules — dispatcher only (rules are embedded in skills)
-  writeFile(targetDir, '.windsurfrules', readTemplate('core-rules.md'), overwrite);
-
-  // State files
-  writeStateFiles(targetDir, overwrite);
-}
-
-function generateAugment(targetDir, overwrite) {
-  // .augment/rules/core.md — dispatcher only
+  // .windsurf/rules/core.md — dispatcher (trigger: always_on)
   const coreRules = readTemplate('core-rules.md');
   const coreRule =
-    '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\ntype: always\n---\n\n' +
+    '---\ntrigger: always_on\n---\n\n' +
     coreRules;
-  writeFile(targetDir, '.augment/rules/core.md', coreRule, overwrite);
+  writeFile(targetDir, '.windsurf/rules/core.md', coreRule, overwrite);
 
-  // .augment/skills/ — SKILL.md format (enables / slash commands)
-  writeSkills(targetDir, '.augment/skills', overwrite);
-  writeAgentsAsSkills(targetDir, '.augment/skills', overwrite);
+  // Skills (.windsurf/skills — Agent Skills standard)
+  writeSkills(targetDir, '.windsurf/skills', overwrite);
+
+  // Agents as skills
+  writeAgentsAsSkills(targetDir, '.windsurf/skills', overwrite);
 
   // State files
   writeStateFiles(targetDir, overwrite);
@@ -223,7 +220,6 @@ const GENERATORS = {
   cursor:       { name: 'Cursor',                fn: generateCursor },
   codex:        { name: 'Codex (OpenAI)',         fn: generateCodex },
   windsurf:     { name: 'Windsurf',              fn: generateWindsurf },
-  augment:      { name: 'Augment Code',          fn: generateAugment },
   antigravity:  { name: 'Google Antigravity',    fn: generateAntigravity },
 };
 
@@ -264,7 +260,7 @@ function showHelp() {
     npx k-harness init [options]
 
   Options:
-    --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, augment, antigravity
+    --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
     --dir <path>     Target directory (default: current directory)
     --overwrite      Overwrite existing files
     --help           Show this help

@@ -279,9 +279,9 @@ learn ────────────────────────�
 - K-Harness: ~27 파일, 8 스킬 → 저성능 LLM(GPT-OSS-120B 등)에서도 안정 동작
 
 ### Q: 다른 IDE에서도 쓸 수 있나?
-**A**: 네. 7개 IDE를 지원합니다:
+**A**: 네. 6개 IDE를 지원합니다:
 ```
-npx k-harness init --ide <vscode|claude|cursor|codex|windsurf|augment|antigravity>
+npx k-harness init --ide <vscode|claude|cursor|codex|windsurf|antigravity>
 ```
 
 ### Q: 팀에서 쓸 때 주의할 점은?

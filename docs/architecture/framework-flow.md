@@ -198,13 +198,13 @@ Agent Memory (학습 축적) ←── 다음 에이전트 호출 시 읽힘
 
 `init.js`가 위 컴포넌트를 각 IDE 포맷으로 변환:
 
-| 컴포넌트 | VS Code | Claude Code | Cursor | Codex | Windsurf | Augment | Antigravity |
-|----------|---------|-------------|--------|-------|----------|---------|-------------|
-| Dispatcher | .github/copilot-instructions.md (22줄) | CLAUDE.md (22줄 디스패처) | .cursor/rules/core.mdc | AGENTS.md (22줄 디스패처) | .windsurfrules (디스패처 포함) | .augment/rules/core.md | .agent/rules/core.md |
-| Skills | .github/skills/{id}/SKILL.md | .claude/skills/{id}/SKILL.md | .cursor/rules/{id}.mdc | .agents/skills/{id}/SKILL.md | .windsurfrules 내 포함 | .augment/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
-| Agents | .github/agents/{id}.agent.md | — (스킬로 변환) | .cursor/rules/{id}.mdc | — (스킬로 변환) | .windsurfrules 내 포함 | .augment/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
-| State Files | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md |
-| Agent Memory | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md |
+| 컴포넌트 | VS Code | Claude Code | Cursor | Codex | Windsurf | Antigravity |
+|----------|---------|-------------|--------|-------|----------|-------------|
+| Dispatcher | .github/copilot-instructions.md (22줄) | .claude/rules/core.md | .cursor/rules/core.mdc | AGENTS.md (22줄 디스패처) | .windsurf/rules/core.md | .agent/rules/core.md |
+| Skills | .github/skills/{id}/SKILL.md | .claude/skills/{id}/SKILL.md | .cursor/skills/{id}/SKILL.md | .agents/skills/{id}/SKILL.md | .windsurf/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
+| Agents | .github/agents/{id}.agent.md | .claude/skills/{id}/SKILL.md | .cursor/skills/{id}/SKILL.md | .agents/skills/{id}/SKILL.md | .windsurf/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
+| State Files | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md |
+| Agent Memory | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md |
 
 ---
 

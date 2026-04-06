@@ -122,10 +122,9 @@ agent.md                 ──→  skills/*.md (명시적 참조: "test-integri
 |-----|------------------------|------|--------|
 | **VS Code** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
 | **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` |
-| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/rules/*.mdc` | `.cursor/rules/*.mdc` |
-| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | (merged) |
-| **Windsurf** | `.windsurfrules` | (merged) | (merged) |
-| **Augment** | `.augment/rules/core.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/skills/*/SKILL.md` |
+| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.agents/skills/*/SKILL.md` |
+| **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | `.windsurf/skills/*/SKILL.md` |
 | **Antigravity** | `.agent/rules/core.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
 
 > 모든 IDE에서 상태 파일은 `docs/` 디렉토리에 생성됩니다.

@@ -39,7 +39,6 @@ npx k-harness init --ide claude
 npx k-harness init --ide cursor
 npx k-harness init --ide codex
 npx k-harness init --ide windsurf
-npx k-harness init --ide augment
 npx k-harness init --ide antigravity
 ```
 
@@ -47,7 +46,7 @@ npx k-harness init --ide antigravity
 
 | Flag | Description |
 |------|-------------|
-| `--ide <name>` | Target IDE: `vscode`, `claude`, `cursor`, `codex`, `windsurf`, `augment`, `antigravity` |
+| `--ide <name>` | Target IDE: `vscode`, `claude`, `cursor`, `codex`, `windsurf`, `antigravity` |
 | `--dir <path>` | Target directory (default: current directory) |
 | `--overwrite` | Overwrite existing files |
 
@@ -58,9 +57,8 @@ npx k-harness init --ide antigravity
 | **VS Code Copilot** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
 | **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` |
 | **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/skills/*/SKILL.md` |
-| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | (merged into AGENTS.md) |
-| **Windsurf** | `.windsurfrules` | (merged) | (merged) |
-| **Augment Code** | `.augment/rules/core.md` | `.augment/skills/*/SKILL.md` | `.augment/skills/*/SKILL.md` |
+| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.agents/skills/*/SKILL.md` |
+| **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | `.windsurf/skills/*/SKILL.md` |
 | **Google Antigravity** | `.agent/rules/core.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
 
 All IDEs also get state files (`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`) in the `docs/` directory.
