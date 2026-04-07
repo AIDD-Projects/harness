@@ -1,6 +1,6 @@
 {
   "name": "k-harness",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "description": "LLM Development Harness — IDE-agnostic rules, skills, and agents that prevent common AI coding failures",
   "keywords": [
     "llm",
