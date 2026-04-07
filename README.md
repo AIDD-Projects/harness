@@ -127,7 +127,7 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 | Focus | Enterprise SDLC methodology | 1-person software factory | Full lifecycle automation | Project direction management |
 | Files | 200+ | ~40 | Hundreds | ~20 |
 | Dependencies | Node 20+ | Bun + Node + Playwright | Node 18+ | Zero |
-| IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 7 (native format) |
+| IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 6 (native format) |
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
 | Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (6 laws embedded in skills) |
 | Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`bootstrap` skill) |

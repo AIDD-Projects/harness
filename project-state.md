@@ -4,7 +4,7 @@
 
 ## Quick Summary
 
-K-Harness v0.3.0 npm 배포 완료. 7 IDE 지원 (antigravity, augment 추가). SKILL.md 포맷으로 `/` 슬래시 커맨드 지원. 다음 단계: 실제 프로젝트 검증.
+K-Harness v0.8.4 npm 배포 완료. 6 IDE 지원 (vscode, claude, cursor, codex, windsurf, antigravity). 22줄 디스패처 패턴, 규칙 임베딩, 69 테스트. 다음 단계: 실제 프로젝트 검증 (Gate 0).
 
 ## Current Sprint
 
@@ -42,7 +42,7 @@ K-Harness v0.3.0 npm 배포 완료. 7 IDE 지원 (antigravity, augment 추가). 
 | Module | Layer | Status |
 |--------|-------|--------|
 | bin/cli.js | entry | ✅ stable |
-| src/init.js | core | ✅ stable (7 IDE generators) |
+| src/init.js | core | ✅ stable (6 IDE generators) |
 | harness/ | templates | ✅ stable |
 
 ## Technical Decisions

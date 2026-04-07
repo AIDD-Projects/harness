@@ -6,7 +6,7 @@ A living document of all features in this project. Update whenever features are 
 
 | Feature | Status | Key Files | Test Files | Owner |
 |---------|--------|-----------|------------|-------|
-| CLI Init (7 IDE) | ✅ done | bin/cli.js, src/init.js | - | - |
+| CLI Init (6 IDE) | ✅ done | bin/cli.js, src/init.js | - | - |
 | VS Code Generator | ✅ done | src/init.js (generateVscode) | - | - |
 | Claude Generator | ✅ done | src/init.js (generateClaude) | - | - |
 | Cursor Generator | ✅ done | src/init.js (generateCursor) | - | - |
@@ -28,7 +28,7 @@ A living document of all features in this project. Update whenever features are 
 | Project Brief (project-brief.md) | ✅ done | harness/project-brief.md | - | - |
 | Direction Guard | ✅ done | harness/agents/planner.md (Step 2) | - | - |
 | npm Public Publish | ✅ done | package.json | - | - |
-| Augment Code Generator | ✅ done | src/init.js (generateAugment) | - | - |
+| Augment Code Generator | ❌ dropped | ~~src/init.js (generateAugment)~~ | - | v0.8.4에서 삭제 (공식 문서 검증 불가) |
 | Antigravity Generator | ✅ done | src/init.js (generateAntigravity) | - | - |
 
 ## Status Legend
