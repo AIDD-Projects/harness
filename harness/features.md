@@ -13,6 +13,7 @@ This is LLM's map to understand "what exists" — without this, features get for
 | Admin Dashboard | ⬜ planned | -                                       | -                             | - |
 | Legacy REST API | ❌ dropped | -                                       | -                             | - |
 -->
+<!-- Add new features above this line -->
 
 ## Status Legend
 

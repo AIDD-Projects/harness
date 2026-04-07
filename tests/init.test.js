@@ -125,7 +125,7 @@ describe('k-harness init', () => {
         // Suppress console output during tests
         const origLog = console.log;
         console.log = () => {};
-        await run(['init', '--ide', ide, '--dir', tmpDir]);
+        await run(['init', '--ide', ide, '--mode', 'solo', '--dir', tmpDir]);
         console.log = origLog;
       });
 
@@ -153,7 +153,7 @@ describe('k-harness init', () => {
       tmpDir = makeTmpDir();
       const origLog = console.log;
       console.log = () => {};
-      await run(['init', '--ide', 'vscode', '--dir', tmpDir]);
+      await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
       console.log = origLog;
     });
 
@@ -195,7 +195,7 @@ describe('k-harness init', () => {
     it('skips existing files without --overwrite', async () => {
       const origLog = console.log;
       console.log = () => {};
-      await run(['init', '--ide', 'windsurf', '--dir', tmpDir]);
+      await run(['init', '--ide', 'windsurf', '--mode', 'solo', '--dir', tmpDir]);
       console.log = origLog;
 
       // Modify a file
@@ -207,7 +207,7 @@ describe('k-harness init', () => {
       console.log = (msg) => {
         if (msg && msg.includes('Skipped')) skipped.push(msg);
       };
-      await run(['init', '--ide', 'windsurf', '--dir', tmpDir]);
+      await run(['init', '--ide', 'windsurf', '--mode', 'solo', '--dir', tmpDir]);
       console.log = origLog;
 
       assert.ok(skipped.length > 0, 'Should have skipped existing files');
@@ -307,7 +307,7 @@ describe('k-harness init', () => {
 
       const origLog = console.log;
       console.log = () => {};
-      await run(['init', '--ide', 'claude', '--dir', tmpDir]);
+      await run(['init', '--ide', 'claude', '--mode', 'solo', '--dir', tmpDir]);
       console.log = origLog;
 
       // core.md should only have core rules, not testing/backend
@@ -318,6 +318,248 @@ describe('k-harness init', () => {
       assert.ok(!core.includes('No `any` type casting'), 'core.md should NOT contain testing rules');
 
       rmDir(tmpDir);
+    });
+  });
+
+  // ─── Team mode tests ────────────────────────────────────────
+
+  describe('team mode', () => {
+    describe('file placement (vscode)', () => {
+      let tmpDir;
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'vscode', '--mode', 'team', '--dir', tmpDir]);
+        console.log = origLog;
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('places personal state files in .harness/', () => {
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/project-state.md')), 'Missing .harness/project-state.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/failure-patterns.md')), 'Missing .harness/failure-patterns.md');
+      });
+
+      it('places agent-memory in .harness/', () => {
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/reviewer.md')), 'Missing .harness/agent-memory/reviewer.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/planner.md')), 'Missing .harness/agent-memory/planner.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/sprint-manager.md')), 'Missing .harness/agent-memory/sprint-manager.md');
+      });
+
+      it('places shared state files in docs/', () => {
+        assert.ok(fs.existsSync(path.join(tmpDir, 'docs/features.md')), 'Missing docs/features.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, 'docs/dependency-map.md')), 'Missing docs/dependency-map.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, 'docs/project-brief.md')), 'Missing docs/project-brief.md');
+      });
+
+      it('does NOT place personal files in docs/', () => {
+        assert.ok(!fs.existsSync(path.join(tmpDir, 'docs/project-state.md')), 'docs/project-state.md should not exist in team mode');
+        assert.ok(!fs.existsSync(path.join(tmpDir, 'docs/failure-patterns.md')), 'docs/failure-patterns.md should not exist in team mode');
+      });
+
+      it('generates total 22 files (20 base + .gitignore + .gitattributes)', () => {
+        assert.equal(countFiles(tmpDir), 22);
+      });
+    });
+
+    describe('content resolution (vscode)', () => {
+      let tmpDir;
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'vscode', '--mode', 'team', '--dir', tmpDir]);
+        console.log = origLog;
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('core-rules contain Team Mode section', () => {
+        const content = fs.readFileSync(path.join(tmpDir, '.github/copilot-instructions.md'), 'utf8');
+        assert.ok(content.includes('## Team Mode'), 'Missing Team Mode section');
+        assert.ok(content.includes('.harness/'), 'Missing .harness/ reference');
+      });
+
+      it('skills reference .harness/ for personal files', () => {
+        const content = fs.readFileSync(path.join(tmpDir, '.github/skills/bootstrap/SKILL.md'), 'utf8');
+        assert.ok(content.includes('.harness/project-state.md') || !content.includes('docs/project-state.md'),
+          'Should reference .harness/ instead of docs/ for personal files');
+      });
+
+      it('skills still reference docs/ for shared files', () => {
+        const content = fs.readFileSync(path.join(tmpDir, '.github/skills/bootstrap/SKILL.md'), 'utf8');
+        if (content.includes('features.md')) {
+          assert.ok(content.includes('docs/features.md'), 'Shared files should remain in docs/');
+        }
+      });
+    });
+
+    describe('git helpers', () => {
+      let tmpDir;
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'cursor', '--mode', 'team', '--dir', tmpDir]);
+        console.log = origLog;
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('creates .gitignore with .harness/ entry', () => {
+        const content = fs.readFileSync(path.join(tmpDir, '.gitignore'), 'utf8');
+        assert.ok(content.includes('.harness/'), '.gitignore should contain .harness/');
+      });
+
+      it('creates .gitattributes with merge=union', () => {
+        const content = fs.readFileSync(path.join(tmpDir, '.gitattributes'), 'utf8');
+        assert.ok(content.includes('docs/features.md merge=union'), 'Missing features.md merge=union');
+        assert.ok(content.includes('docs/dependency-map.md merge=union'), 'Missing dependency-map.md merge=union');
+      });
+
+      it('does not duplicate .gitignore entry on re-run', async () => {
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'cursor', '--mode', 'team', '--dir', tmpDir]);
+        console.log = origLog;
+
+        const content = fs.readFileSync(path.join(tmpDir, '.gitignore'), 'utf8');
+        const matches = content.match(/\.harness\//g);
+        assert.equal(matches.length, 1, '.harness/ should appear only once in .gitignore');
+      });
+    });
+
+    describe('all 6 IDEs team mode file count', () => {
+      for (const ide of Object.keys(EXPECTED_FILES)) {
+        it(`--ide ${ide} --mode team generates 22 files`, async () => {
+          const tmpDir = makeTmpDir();
+          const origLog = console.log;
+          console.log = () => {};
+          await run(['init', '--ide', ide, '--mode', 'team', '--dir', tmpDir]);
+          console.log = origLog;
+
+          assert.equal(countFiles(tmpDir), 22, `${ide} team mode should have 22 files`);
+          rmDir(tmpDir);
+        });
+      }
+    });
+
+    describe('solo mode does NOT create team extras', () => {
+      let tmpDir;
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+        console.log = origLog;
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('does not create .gitignore', () => {
+        assert.ok(!fs.existsSync(path.join(tmpDir, '.gitignore')), '.gitignore should not exist in solo mode');
+      });
+
+      it('does not create .gitattributes', () => {
+        assert.ok(!fs.existsSync(path.join(tmpDir, '.gitattributes')), '.gitattributes should not exist in solo mode');
+      });
+
+      it('does not create .harness/ directory', () => {
+        assert.ok(!fs.existsSync(path.join(tmpDir, '.harness')), '.harness/ should not exist in solo mode');
+      });
+
+      it('core-rules do NOT contain Team Mode section', () => {
+        const content = fs.readFileSync(path.join(tmpDir, '.github/copilot-instructions.md'), 'utf8');
+        assert.ok(!content.includes('## Team Mode'), 'Solo mode should not have Team Mode section');
+      });
+    });
+  });
+
+  // ─── CLI parsing ───────────────────────────────────────────
+
+  describe('--team flag', () => {
+    it('--team flag sets mode to team', async () => {
+      const origExit = process.exit;
+      const origLog = console.log;
+      const origError = console.error;
+      let exitCode = null;
+
+      process.exit = (code) => {
+        exitCode = code;
+        throw new Error('EXIT');
+      };
+      console.error = () => {};
+      console.log = () => {};
+
+      // Use --team without a mode value but with valid IDE
+      const tmpDir = makeTmpDir();
+      try {
+        await run(['init', '--ide', 'vscode', '--team', '--dir', tmpDir]);
+      } catch (e) {
+        // only catch EXIT errors
+      }
+      process.exit = origExit;
+      console.error = origError;
+      console.log = origLog;
+
+      // If it didn't exit with error, team mode was accepted
+      if (exitCode === null) {
+        // Check that .harness/ was created (proof of team mode)
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness')), '--team should activate team mode');
+      }
+      rmDir(tmpDir);
+    });
+
+    it('--mode team and --team are equivalent', async () => {
+      const tmpDir1 = makeTmpDir();
+      const tmpDir2 = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'claude', '--mode', 'team', '--dir', tmpDir1]);
+      await run(['init', '--ide', 'claude', '--team', '--dir', tmpDir2]);
+      console.log = origLog;
+
+      assert.equal(countFiles(tmpDir1), countFiles(tmpDir2), '--mode team and --team should produce same file count');
+      rmDir(tmpDir1);
+      rmDir(tmpDir2);
+    });
+
+    it('invalid mode exits with error', async () => {
+      const origExit = process.exit;
+      const origError = console.error;
+      let exitCode = null;
+      let errorMsg = '';
+
+      process.exit = (code) => {
+        exitCode = code;
+        throw new Error('EXIT');
+      };
+      console.error = (msg) => { errorMsg += msg; };
+
+      try {
+        await run(['init', '--ide', 'vscode', '--mode', 'invalid']);
+      } catch (e) {
+        // expected
+      }
+
+      process.exit = origExit;
+      console.error = origError;
+
+      assert.equal(exitCode, 1);
+      assert.ok(errorMsg.includes('Unknown mode'), 'Should show unknown mode error');
     });
   });
 });

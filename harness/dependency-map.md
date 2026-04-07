@@ -12,6 +12,7 @@ A living document of module relationships. Update whenever modules are added or 
 | services   | application   | Business logic         | auth, database | api           |
 | database   | infrastructure| Data persistence       | -              | services      |
 -->
+<!-- Add new modules above this line -->
 
 ## Dependency Rules
 

@@ -100,3 +100,16 @@ Add an entry to the Decision Log section in docs/project-brief.md:
 - **Never update partially** — if you update docs/project-brief.md, you MUST check and update all other state files too
 - **Preserve history** — mark dropped features as `⛔ dropped`, don't delete rows
 - **Record the why** — every pivot must have a Decision Log entry with reasoning
+
+## Team Mode
+
+If `.harness/` directory exists (Team mode is active):
+
+- **pivot MUST be run on the main branch** by the team lead or architect only
+- Feature branches should NOT run pivot independently
+- If a direction change is needed from a feature branch:
+  1. Document the proposed change
+  2. Share with the team
+  3. Team lead runs pivot on main
+  4. All developers pull main to get updated shared state files
+  5. Each developer's `.harness/` personal state is unaffected (update manually if needed)

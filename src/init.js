@@ -57,7 +57,43 @@ const AGENT_MEMORY_FILES = [
   'agent-memory/sprint-manager.md',
 ];
 
+const PERSONAL_STATE_FILES = ['project-state.md', 'failure-patterns.md'];
+const PERSONAL_DIRS = ['agent-memory/'];
+
 const STATE_DEST_DIR = 'docs';
+const PERSONAL_DEST_DIR = '.harness';
+
+// ─── Team mode path resolver ─────────────────────────────────
+const TEAM_MODE_SECTION = `
+
+## Team Mode
+
+This project uses Team mode. State files are split into shared and personal.
+
+### File Locations
+- **Shared** (docs/, git committed): project-brief.md, features.md, dependency-map.md
+- **Personal** (.harness/, gitignored): project-state.md, failure-patterns.md, agent-memory/
+
+### Rules
+1. Shared files: only modify your own rows (check Owner column)
+2. Other developers' Owner rows are READ ONLY
+3. New rows go at the bottom of the table
+4. The \`pivot\` skill must be run on the main branch by the team lead only
+`;
+
+function resolveContent(content, mode) {
+  if (mode !== 'team') return content;
+  let result = content
+    .replaceAll('docs/project-state.md', '.harness/project-state.md')
+    .replaceAll('docs/failure-patterns.md', '.harness/failure-patterns.md')
+    .replaceAll('docs/agent-memory/', '.harness/agent-memory/');
+
+  // Append Team Mode section to core-rules (detected by the heading)
+  if (result.includes('## State Files') && result.includes('## Session Start')) {
+    result += TEAM_MODE_SECTION;
+  }
+  return result;
+}
 
 // ─── Language detection ──────────────────────────────────────
 function detectLanguage(targetDir) {
@@ -80,18 +116,22 @@ function detectLanguage(targetDir) {
 
 // ─── Shared writers ──────────────────────────────────────────
 
-function writeStateFiles(targetDir, overwrite) {
+function writeStateFiles(targetDir, overwrite, mode = 'solo') {
   for (const file of STATE_FILES) {
-    writeFile(targetDir, `${STATE_DEST_DIR}/${file}`, readTemplate(file), overwrite);
+    const isPersonal = PERSONAL_STATE_FILES.includes(file);
+    const destDir = (mode === 'team' && isPersonal) ? PERSONAL_DEST_DIR : STATE_DEST_DIR;
+    const content = resolveContent(readTemplate(file), mode);
+    writeFile(targetDir, `${destDir}/${file}`, content, overwrite);
   }
   for (const file of AGENT_MEMORY_FILES) {
-    writeFile(targetDir, `${STATE_DEST_DIR}/${file}`, readTemplate(file), overwrite);
+    const destDir = mode === 'team' ? PERSONAL_DEST_DIR : STATE_DEST_DIR;
+    writeFile(targetDir, `${destDir}/${file}`, readTemplate(file), overwrite);
   }
 }
 
-function writeSkills(targetDir, skillsDir, overwrite) {
+function writeSkills(targetDir, skillsDir, overwrite, mode = 'solo') {
   for (const skill of SKILLS) {
-    const content = readTemplate(`skills/${skill.id}.md`);
+    const content = resolveContent(readTemplate(`skills/${skill.id}.md`), mode);
     const skillMd =
       `---\nname: ${skill.id}\ndescription: '${skill.desc}'\n---\n\n` +
       content;
@@ -99,9 +139,9 @@ function writeSkills(targetDir, skillsDir, overwrite) {
   }
 }
 
-function writeAgentsAsSkills(targetDir, skillsDir, overwrite) {
+function writeAgentsAsSkills(targetDir, skillsDir, overwrite, mode = 'solo') {
   for (const agent of AGENTS) {
-    const content = readTemplate(agent.file);
+    const content = resolveContent(readTemplate(agent.file), mode);
     const skillMd =
       `---\nname: ${agent.id}\ndescription: '${agent.desc}'\n---\n\n` +
       content;
@@ -111,18 +151,18 @@ function writeAgentsAsSkills(targetDir, skillsDir, overwrite) {
 
 // ─── IDE Generators ──────────────────────────────────────────
 
-function generateVscode(targetDir, overwrite) {
-  const coreRules = readTemplate('core-rules.md');
+function generateVscode(targetDir, overwrite, mode = 'solo') {
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
 
   // Global instructions (dispatcher only — rules are embedded in skills)
   writeFile(targetDir, '.github/copilot-instructions.md', coreRules, overwrite);
 
   // Skills (.github/skills — VS Code default search path, SKILL.md with frontmatter)
-  writeSkills(targetDir, '.github/skills', overwrite);
+  writeSkills(targetDir, '.github/skills', overwrite, mode);
 
   // Agents (.github/agents — VS Code uses .agent.md format with frontmatter)
   for (const agent of AGENTS) {
-    const content = readTemplate(agent.file);
+    const content = resolveContent(readTemplate(agent.file), mode);
     const agentMd =
       `---\nname: ${agent.id}\ndescription: "${agent.desc}"\n---\n\n` +
       content;
@@ -130,87 +170,87 @@ function generateVscode(targetDir, overwrite) {
   }
 
   // State files
-  writeStateFiles(targetDir, overwrite);
+  writeStateFiles(targetDir, overwrite, mode);
 }
 
-function generateClaude(targetDir, overwrite) {
+function generateClaude(targetDir, overwrite, mode = 'solo') {
   // .claude/rules/core.md — dispatcher only (no paths = always loaded)
-  writeFile(targetDir, '.claude/rules/core.md', readTemplate('core-rules.md'), overwrite);
+  writeFile(targetDir, '.claude/rules/core.md', resolveContent(readTemplate('core-rules.md'), mode), overwrite);
 
   // Skills (SKILL.md with frontmatter)
-  writeSkills(targetDir, '.claude/skills', overwrite);
+  writeSkills(targetDir, '.claude/skills', overwrite, mode);
 
   // Agents as skills (Claude Code skills pattern)
-  writeAgentsAsSkills(targetDir, '.claude/skills', overwrite);
+  writeAgentsAsSkills(targetDir, '.claude/skills', overwrite, mode);
 
   // State files
-  writeStateFiles(targetDir, overwrite);
+  writeStateFiles(targetDir, overwrite, mode);
 }
 
-function generateCursor(targetDir, overwrite) {
+function generateCursor(targetDir, overwrite, mode = 'solo') {
   // .cursor/rules/core.mdc — dispatcher only (always active)
-  const coreRules = readTemplate('core-rules.md');
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
   const coreMdc =
     '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, overwrite);
 
   // Skills (.cursor/skills — invokable by mentioning skill name)
-  writeSkills(targetDir, '.cursor/skills', overwrite);
+  writeSkills(targetDir, '.cursor/skills', overwrite, mode);
 
   // Agents as skills
-  writeAgentsAsSkills(targetDir, '.cursor/skills', overwrite);
+  writeAgentsAsSkills(targetDir, '.cursor/skills', overwrite, mode);
 
   // State files
-  writeStateFiles(targetDir, overwrite);
+  writeStateFiles(targetDir, overwrite, mode);
 }
 
-function generateCodex(targetDir, overwrite) {
+function generateCodex(targetDir, overwrite, mode = 'solo') {
   // AGENTS.md — dispatcher only
-  writeFile(targetDir, 'AGENTS.md', readTemplate('core-rules.md'), overwrite);
+  writeFile(targetDir, 'AGENTS.md', resolveContent(readTemplate('core-rules.md'), mode), overwrite);
 
   // Skills (SKILL.md with frontmatter — invokable via $skill-name)
-  writeSkills(targetDir, '.agents/skills', overwrite);
+  writeSkills(targetDir, '.agents/skills', overwrite, mode);
 
   // Agents as skills
-  writeAgentsAsSkills(targetDir, '.agents/skills', overwrite);
+  writeAgentsAsSkills(targetDir, '.agents/skills', overwrite, mode);
 
   // State files
-  writeStateFiles(targetDir, overwrite);
+  writeStateFiles(targetDir, overwrite, mode);
 }
 
-function generateWindsurf(targetDir, overwrite) {
+function generateWindsurf(targetDir, overwrite, mode = 'solo') {
   // .windsurf/rules/core.md — dispatcher (trigger: always_on)
-  const coreRules = readTemplate('core-rules.md');
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
   const coreRule =
     '---\ntrigger: always_on\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.windsurf/rules/core.md', coreRule, overwrite);
 
   // Skills (.windsurf/skills — Agent Skills standard)
-  writeSkills(targetDir, '.windsurf/skills', overwrite);
+  writeSkills(targetDir, '.windsurf/skills', overwrite, mode);
 
   // Agents as skills
-  writeAgentsAsSkills(targetDir, '.windsurf/skills', overwrite);
+  writeAgentsAsSkills(targetDir, '.windsurf/skills', overwrite, mode);
 
   // State files
-  writeStateFiles(targetDir, overwrite);
+  writeStateFiles(targetDir, overwrite, mode);
 }
 
-function generateAntigravity(targetDir, overwrite) {
+function generateAntigravity(targetDir, overwrite, mode = 'solo') {
   // .agent/rules/core.md — dispatcher only
-  const coreRules = readTemplate('core-rules.md');
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
   const coreRule =
     '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\ntype: always\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.agent/rules/core.md', coreRule, overwrite);
 
   // .agent/skills/ — SKILL.md format (enables / slash commands)
-  writeSkills(targetDir, '.agent/skills', overwrite);
-  writeAgentsAsSkills(targetDir, '.agent/skills', overwrite);
+  writeSkills(targetDir, '.agent/skills', overwrite, mode);
+  writeAgentsAsSkills(targetDir, '.agent/skills', overwrite, mode);
 
   // State files
-  writeStateFiles(targetDir, overwrite);
+  writeStateFiles(targetDir, overwrite, mode);
 }
 
 // ─── IDE registry ────────────────────────────────────────────
@@ -251,6 +291,85 @@ async function promptIde() {
   return keys[idx];
 }
 
+async function promptMode() {
+  console.log('  Project mode:\n');
+  console.log('    1. Solo  — Single developer (all state files in docs/)');
+  console.log('    2. Team  — Multiple developers (personal state in .harness/, shared in docs/)');
+  console.log();
+
+  const answer = await askQuestion('  Choice (1-2, default: 1): ');
+  if (answer === '2' || answer.toLowerCase() === 'team') return 'team';
+  return 'solo';
+}
+
+// ─── Team mode helpers ───────────────────────────────────────
+function appendGitignore(targetDir) {
+  const gitignorePath = path.join(targetDir, '.gitignore');
+  const entry = '\n# K-Harness personal state (Team mode)\n.harness/\n';
+  if (fs.existsSync(gitignorePath)) {
+    const content = fs.readFileSync(gitignorePath, 'utf8');
+    if (content.includes('.harness/')) {
+      console.log('  ⏭  Skipped (exists): .gitignore entry');
+      return;
+    }
+    fs.appendFileSync(gitignorePath, entry);
+  } else {
+    fs.writeFileSync(gitignorePath, entry.trimStart());
+  }
+  console.log('  ✓  .gitignore — added .harness/');
+}
+
+function writeGitattributes(targetDir) {
+  const content =
+    '# K-Harness Team mode — merge strategy for shared state files\n' +
+    'docs/features.md merge=union\n' +
+    'docs/dependency-map.md merge=union\n';
+  writeFile(targetDir, '.gitattributes', content, false);
+}
+
+// ─── Post-install guide ──────────────────────────────────────
+function showPostInstallGuide(ideName, mode) {
+  const modeLabel = mode === 'team' ? 'Team' : 'Solo';
+  const lines = [
+    '',
+    '  ──────────────────────────────────────────',
+    '  ✅ K-Harness initialized successfully!',
+    '',
+    `  Mode: ${modeLabel}`,
+    `  IDE:  ${ideName}`,
+    '',
+  ];
+
+  if (mode === 'team') {
+    lines.push(
+      '  📁 Files:',
+      '     docs/           — shared state (git committed)',
+      '     .harness/       — personal state (gitignored)',
+      '     .gitignore      — .harness/ added',
+      '     .gitattributes  — merge=union for shared files',
+    );
+  } else {
+    lines.push(
+      '  📁 Files:',
+      '     docs/           — all state files',
+    );
+  }
+
+  lines.push(
+    '',
+    '  🚀 Next steps:',
+    '     1. Ask your AI: "Run bootstrap to onboard this project"',
+    '     2. AI scans your codebase and fills state files automatically',
+    '     3. Start coding with: @planner "Add [feature name]"',
+    '',
+    '  📖 Docs: https://www.npmjs.com/package/k-harness',
+    '  ──────────────────────────────────────────',
+    '',
+  );
+
+  console.log(lines.join('\n'));
+}
+
 // ─── CLI entry ───────────────────────────────────────────────
 function showHelp() {
   console.log(`
@@ -261,6 +380,7 @@ function showHelp() {
 
   Options:
     --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
+    --mode <mode>    Project mode: solo (default) or team
     --dir <path>     Target directory (default: current directory)
     --overwrite      Overwrite existing files
     --help           Show this help
@@ -268,16 +388,19 @@ function showHelp() {
   Examples:
     npx k-harness init
     npx k-harness init --ide vscode
+    npx k-harness init --ide vscode --mode team
     npx k-harness init --ide claude --dir ./my-project
 `);
 }
 
 function parseArgs(argv) {
-  const args = { command: null, ide: null, dir: process.cwd(), overwrite: false, help: false };
+  const args = { command: null, ide: null, mode: null, dir: process.cwd(), overwrite: false, help: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === 'init') args.command = 'init';
     else if (arg === '--ide' && argv[i + 1]) { args.ide = argv[++i]; }
+    else if (arg === '--mode' && argv[i + 1]) { args.mode = argv[++i]; }
+    else if (arg === '--team') { args.mode = 'team'; }
     else if (arg === '--dir' && argv[i + 1]) { args.dir = path.resolve(argv[++i]); }
     else if (arg === '--overwrite') args.overwrite = true;
     else if (arg === '--help' || arg === '-h') args.help = true;
@@ -307,11 +430,29 @@ async function run(argv) {
       ide = await promptIde();
     }
 
+    // Determine mode
+    let mode = args.mode;
+    if (mode && !['solo', 'team'].includes(mode)) {
+      console.error(`  Unknown mode: ${mode}`);
+      console.error('  Available: solo, team');
+      process.exit(1);
+    }
+    if (!mode) {
+      mode = await promptMode();
+    }
+
     const gen = GENERATORS[ide];
     const lang = detectLanguage(args.dir);
-    console.log(`\n  Installing for ${gen.name}... (detected language: ${lang})\n`);
-    gen.fn(args.dir, args.overwrite);
-    console.log(`\n  Done! Run "bootstrap" in your AI chat to auto-fill state files and rules.\n`);
+    console.log(`\n  Installing for ${gen.name} (${mode} mode)... (detected language: ${lang})\n`);
+    gen.fn(args.dir, args.overwrite, mode);
+
+    // Team mode extras
+    if (mode === 'team') {
+      appendGitignore(args.dir);
+      writeGitattributes(args.dir);
+    }
+
+    showPostInstallGuide(gen.name, mode);
   }
 }
 
