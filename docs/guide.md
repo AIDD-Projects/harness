@@ -294,3 +294,43 @@ npx k-harness init --ide <vscode|claude|cursor|codex|windsurf|antigravity>
 3. **종료**: `learn` (학습 저장)
 
 나머지 스킬(investigate, impact-analysis, pivot 등)은 필요한 상황에서만 씁니다.
+
+---
+
+## 8. Team Mode
+
+팀 단위로 K-Harness를 사용할 때는 `--team` 플래그로 초기화합니다:
+
+```bash
+npx k-harness init --ide vscode --team
+```
+
+### Solo vs Team 차이
+
+| 항목 | Solo | Team |
+|------|------|------|
+| 상태 파일 위치 | 전부 `docs/` | 공유: `docs/`, 개인: `.harness/` |
+| `.gitignore` | 변경 없음 | `.harness/` 자동 추가 |
+| `.gitattributes` | 변경 없음 | 공유 파일에 `merge=union` 설정 |
+| 파일 수 | 20개 | 22개 |
+
+### 파일 분리 규칙
+
+**공유 (docs/ — git 커밋):**
+- `project-brief.md` — 프로젝트 비전 (전원 동일)
+- `features.md` — 기능 레지스트리 (Owner 컬럼으로 구분)
+- `dependency-map.md` — 모듈 의존성 (Owner 컬럼으로 구분)
+
+**개인 (.harness/ — gitignored):**
+- `project-state.md` — 내 스프린트/스토리 상태
+- `failure-patterns.md` — 내가 겪은 실패 패턴
+- `agent-memory/*.md` — 에이전트별 학습 기록
+
+### Team Mode 6대 규칙
+
+1. 공유 파일 수정 전 `git pull` 필수
+2. 테이블 행에 Owner 컬럼 기입
+3. 개인 파일은 `.harness/`에만 저장
+4. `pivot` 실행 시 팀원에게 알림
+5. 공유 파일 충돌 시 `merge=union` 전략 적용
+6. 코드 리뷰에 `@reviewer` 에이전트 활용

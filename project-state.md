@@ -4,12 +4,12 @@
 
 ## Quick Summary
 
-K-Harness v0.8.4 npm 배포 완료. 6 IDE 지원 (vscode, claude, cursor, codex, windsurf, antigravity). 22줄 디스패처 패턴, 규칙 임베딩, 69 테스트. 다음 단계: 실제 프로젝트 검증 (Gate 0).
+K-Harness v0.9.2 npm 배포 완료. 6 IDE 지원 (vscode, claude, cursor, codex, windsurf, antigravity). 22줄 디스패처 패턴, 규칙 임베딩, Team Mode, 103 테스트. 다음 단계: 실제 프로젝트 파일럿 (Gate 1).
 
 ## Current Sprint
 
-- Sprint: 2 — Validation & Dogfooding
-- Started: 2026-04-01
+- Sprint: 3 — Team Mode & Pilot Prep
+- Started: 2026-04-07
 - Branch: main
 
 ## Story Status

@@ -23,7 +23,7 @@ K-Harness(Execution 하네스)와 kode:crew(Planning 포털)를 통합하여 KT 
 
 | 항목 | 상태 | 비고 |
 |---|---|---|
-| 코어 엔진 | ✅ 완성 | 8 스킬, 3 에이전트, 6 IDE, 93 테스트 |
+| 코어 엔진 | ✅ 완성 | 8 스킬, 3 에이전트, 6 IDE, 103 테스트 |
 | npm 배포 | ✅ 완료 | `npx k-harness init` |
 | Team Mode | ✅ v0.9.0 | `--team` 플래그, `.harness/` 개인 분리, merge 충돌 방지 |
 | 실사용 검증 | ❌ 미검증 | 단 한 번도 실제 개발 프로젝트에 적용하지 않음 |

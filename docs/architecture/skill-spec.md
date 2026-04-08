@@ -1,6 +1,6 @@
 # Skill / Agent 작성 스펙
 
-> K-Harness 파일의 구조, 규칙, 작성 가이드
+> v0.9.0 | K-Harness 파일의 구조, 규칙, 작성 가이드
 
 ---
 
@@ -258,7 +258,7 @@ v0.8.0 이전에는 `testing-rules.md`, `backend-rules.md` 등 path-scoped rules
 ## 3.5 Team Mode 마커 패턴
 
 ### 배경
-v0.10.0에서 멀티 개발자(Team Mode) 시나리오를 지원하기 위해 도입.
+v0.9.0에서 멀티 개발자(Team Mode) 시나리오를 지원하기 위해 도입.
 Solo/Team 모드에 따라 가이드가 분기되어야 하지만, 템플릿 파일을 분리하면 유지보수 비용이 증가한다.
 **하이브리드 마커 방식**(Track C)을 채택하여 하나의 템플릿에 두 모드를 공존시킨다.
 

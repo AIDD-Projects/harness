@@ -2,31 +2,23 @@
 
 ## Architecture
 
-<!-- TODO: Describe your project's architecture here.
-   Example:
-   TypeScript / Express / PostgreSQL
-   Hexagonal Architecture (Port + Adapter)
--->
+Node.js / Pure JavaScript / Zero Dependencies
+CLI tool architecture — single entry (bin/cli.js → src/init.js)
 
 ## Directory Structure
 
-<!-- TODO: Map your directory structure.
-   Example:
-   src/
-   ├── domain/           # Entities, Repository interfaces
-   ├── application/      # Use Cases
-   ├── infrastructure/   # DB, HTTP adapters
-   ├── presentation/     # Controllers, DTOs
-   └── shared/           # Utils, types, errors
--->
+src/           # Core logic (init.js)
+bin/           # CLI entry point
+harness/       # Template files (skills, agents, state files)
+templates/     # User-facing templates (agent.template.md, skill.template.md)
+tests/         # Test files (Node.js native test runner)
+docs/          # Documentation (architecture, analysis, strategy)
 
 ## Core Type Rules
 
-<!-- TODO: Document type decisions that LLMs frequently get wrong.
-   Example:
-   - `ServerType` is a union type ("stdio" | "sse"), NOT an enum.
-   - `UserRole` is a union type ("admin" | "user"), NOT an enum.
--->
+- `GENERATORS` is a plain object map (not a class or enum).
+- `mode` parameter is a string: `'solo'` or `'team'` (not boolean).
+- All file I/O uses synchronous `fs` methods (`writeFileSync`, `mkdirSync`).
 
 ## Iron Laws
 
@@ -36,6 +28,8 @@
 4. **Security**: Never include credentials, passwords, or API keys in code or commits.
 5. **3-Failure Stop**: If the same approach fails 3 times, stop and report to the user.
 6. **Dependency Map**: When adding or modifying a module, update dependency-map.md in the same commit. Register new modules, update relationship columns.
+7. **Feature Registry**: When adding a feature, register it in features.md in the same commit.
+8. **Session Handoff**: At session end, update project-state.md Quick Summary so the next session has context.
 
 ## Test Rules
 
