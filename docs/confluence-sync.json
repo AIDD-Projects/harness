@@ -1,13 +1,22 @@
 {
   "_meta": {
-    "description": "Local docs ↔ Confluence page mapping for automated sync",
+    "description": "Local docs ↔ Confluence page mapping for automated sync. 유저가 '컨플루언스 업데이트 해줘'라고 하면 이 파일을 읽고 모든 페이지를 동기화한다.",
     "cloudId": "1d9716a4-ece1-4638-9eb5-415dcaf359e6",
     "spaceKey": "CNCORE",
     "spaceId": "38731779",
     "parentPageId": "694258105",
-    "baseUrl": "https://ktspace.atlassian.net/wiki"
+    "baseUrl": "https://ktspace.atlassian.net/wiki",
+    "lastSyncVersion": "0.9.2"
   },
   "pages": [
+    {
+      "localPath": "README.md",
+      "pageId": "694258105",
+      "title": "K-Harness — LLM Development Harness",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694258105/K-Harness+LLM+Development+Harness",
+      "role": "parent",
+      "note": "최상위 부모 페이지 — README.md와 동기화"
+    },
     {
       "localPath": "docs/architecture/design-principles.md",
       "pageId": "693866385",
@@ -55,14 +64,47 @@
       "pageId": "698487072",
       "title": "K-Harness 개발 논의 로그",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/698487072",
-      "note": "Confluence-only parent page (discussion logs)"
+      "role": "discussion-parent",
+      "note": "Confluence-only — 논의 로그 모음 (하위 4개 페이지 포함)"
+    },
+    {
+      "localPath": null,
+      "pageId": "701073232",
+      "title": "kode:crew (AI Web Portal) 구조 분석 — K-Harness 연계 검토",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/701073232",
+      "parentId": "698487072",
+      "note": "Confluence-only — 논의 로그 하위"
+    },
+    {
+      "localPath": null,
+      "pageId": "701466186",
+      "title": "kode:crew ↔ K-Harness 통합 전략 설계 (100점 전략)",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/701466186",
+      "parentId": "698487072",
+      "note": "Confluence-only — 논의 로그 하위"
+    },
+    {
+      "localPath": null,
+      "pageId": "701011750",
+      "title": "멀티 개발자 환경에서의 K-Harness 전략",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/701011750",
+      "parentId": "698487072",
+      "note": "Confluence-only — 논의 로그 하위"
+    },
+    {
+      "localPath": null,
+      "pageId": "702316992",
+      "title": "K-Harness v0.9.0 — Team Mode 구현 완료",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/702316992",
+      "parentId": "698487072",
+      "note": "Confluence-only — 논의 로그 하위"
     },
     {
       "localPath": null,
       "pageId": "702777194",
       "title": "kode:musher — Musher Engineering 기반 AIDD Execution Layer 추진 현황",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/702777194",
-      "note": "Confluence-only report page"
+      "note": "Confluence-only — 추진 현황 보고서"
     },
     {
       "localPath": "docs/guide.md",
