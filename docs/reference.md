@@ -36,9 +36,11 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 2. Detects new failure patterns or increments existing ones
 3. Updates `docs/project-state.md` Quick Summary (3 lines)
 4. Updates `docs/features.md` if features were added/modified
-5. Updates Agent Memory (`docs/agent-memory/{name}.md`) with session learnings
+5. Verifies `docs/dependency-map.md` for orphaned modules (Step 4.5)
+6. Resolves `[STATE-AUDIT]` flags from reviewer (Step 4.6)
+7. Updates Agent Memory (`docs/agent-memory/{name}.md`) with session learnings
 
-**Output**: Updated `docs/failure-patterns.md`, `docs/project-state.md`, and `docs/agent-memory/{name}.md`.
+**Output**: Updated `docs/failure-patterns.md`, `docs/project-state.md`, `docs/dependency-map.md`, and `docs/agent-memory/{name}.md`.
 
 ---
 
@@ -63,10 +65,13 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 **Purpose**: Decompose a feature into dependency-ordered implementation tasks.
 
+**Invoked By**: planner (Step 8)
+
 **When**: Starting a new feature, a feature touches 3+ modules, unsure which module to build first.
 
 **What it does**:
-1. Reads `docs/dependency-map.md` for current module relationships
+1. Reads `docs/project-brief.md` for Direction Guard (prevents breakdown of out-of-scope features)
+2. Reads `docs/dependency-map.md` for current module relationships
 2. Identifies affected modules and classifies changes (NEW_MODULE, INTERFACE_CHANGE, INTERNAL_CHANGE, TEST_ONLY)
 3. Builds dependency order and groups into implementation waves
 4. Creates numbered task sequence with files, tests, and dependencies per task
@@ -79,17 +84,21 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 **Purpose**: Trace all affected modules before modifying a module's interface. Prevents cascade failures.
 
+**Invoked By**: planner (Step 9), reviewer (Step 7)
+
 **When**: Changing a module's public interface, modifying shared types/DTOs, refactoring 2+ files.
 
 **What it does**:
 1. Finds the target module in `docs/dependency-map.md`
-2. Lists all dependent modules (the blast radius)
-3. For interface changes: traces each dependent's imports and identifies breaking changes
-4. Creates a task list of all files that need modification
-5. Verifies changes are within current Story scope
-6. Updates Interface Change Log (mandatory — do not skip)
+2. Reads `docs/failure-patterns.md` for active patterns (FP-001, FP-002)
+3. Lists all dependent modules (the blast radius)
+4. Reads `docs/features.md` to identify affected features
+5. For interface changes: traces each dependent's imports and identifies breaking changes
+6. Creates a task list of all files that need modification
+7. Verifies changes are within current Story scope (`docs/project-state.md`)
+8. Updates Interface Change Log (mandatory — do not skip)
 
-**Updates**: `docs/dependency-map.md` Interface Change Log, `docs/project-state.md`.
+**Updates**: `docs/dependency-map.md` Interface Change Log, `docs/features.md`, `docs/project-state.md`.
 
 ---
 
@@ -101,7 +110,7 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 **What it does**:
 1. **Phase 1 (Evidence)**: Collects error messages, stack traces, recent changes. NO fixes.
-2. **Phase 2 (Scope Lock)**: Identifies the root cause module, excludes unrelated files.
+2. **Phase 2 (Scope Lock)**: Identifies the root cause module. Reads `docs/dependency-map.md` for blast radius. Reads `docs/project-state.md` for Story scope verification (Iron Law #3). Excludes unrelated files.
 3. **Phase 3 (Hypothesis + Fix)**: States root cause hypothesis, implements minimal fix.
 4. **Phase 4 (Verify + Record)**: Runs tests, adds regression test, records pattern if applicable.
 
@@ -113,15 +122,18 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 **Purpose**: Inspect for security risks before committing code.
 
+**Invoked By**: reviewer (Step 4)
+
 **When**: Before `git add` or commit, when creating/modifying config or auth files.
 
 **What it does**:
 1. Checks staging area for forbidden files (`.env`, `*.pem`, `*.key`)
-2. Scans staged code for hardcoded secrets (passwords, API keys, tokens)
-3. Verifies `.gitignore` covers sensitive patterns
-4. Checks for temp files (`tmp_*`, `debug_*`, `coverage_*`)
+2. Reads `docs/failure-patterns.md` for FP-004 history — if frequency > 0, applies extra scrutiny
+3. Scans staged code for hardcoded secrets (passwords, API keys, tokens)
+4. Verifies `.gitignore` covers sensitive patterns
+5. Checks for temp files (`tmp_*`, `debug_*`, `coverage_*`)
 
-**Updates**: `docs/failure-patterns.md` (if a security issue was found).
+**Updates**: `docs/failure-patterns.md` (if a security issue was found), `docs/project-state.md`.
 
 ---
 
@@ -129,15 +141,18 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 **Purpose**: Ensure test mocks stay synchronized when interfaces change.
 
+**Invoked By**: reviewer (Step 3)
+
 **When**: Adding/removing/modifying methods on a repository/service interface, creating new services.
 
 **What it does**:
-1. Identifies changed interfaces
-2. Maps to corresponding mock files
-3. Verifies every interface method exists in the mock with correct return types
-4. Checks that use case tests configure the mock correctly for new methods
+1. Reads `docs/failure-patterns.md` for FP-001 history — if frequency > 0, applies extra scrutiny
+2. Identifies changed interfaces
+3. Maps to corresponding mock files
+4. Verifies every interface method exists in the mock with correct return types (FP-002: watch for type confusion)
+5. Checks that use case tests configure the mock correctly for new methods
 
-**Updates**: `docs/failure-patterns.md` (if mock sync was missed), `docs/dependency-map.md` (if module relationships changed).
+**Updates**: `docs/failure-patterns.md` (if mock sync was missed), `docs/dependency-map.md` (if module relationships changed), `docs/project-state.md`.
 
 ---
 
@@ -161,6 +176,8 @@ Agents are role-based personas that enforce the workflow. Each reads state files
 - Runs `feature-breakdown` and `impact-analysis` skills internally.
 - Updates `docs/project-state.md` and `docs/features.md` with the plan.
 
+**Referenced Files**: `docs/project-brief.md`, `docs/features.md`, `docs/dependency-map.md`, `docs/project-state.md`, `docs/failure-patterns.md`, `docs/agent-memory/planner.md`.
+
 **Output**: Implementation plan with waves, dependency map changes, and risk notes.
 
 ---
@@ -177,6 +194,8 @@ Agents are role-based personas that enforce the workflow. Each reads state files
 - **Step 7**: Dependency map check — new modules must be in `docs/dependency-map.md`.
 - **Step 8 (State File Audit)**: Verifies that ALL 5 state files AND `docs/agent-memory/*.md` were actually updated. Flags missing updates as `[STATE-AUDIT]`.
 
+**Referenced Files**: `docs/project-brief.md`, `docs/features.md`, `docs/failure-patterns.md`, `docs/project-state.md`, `docs/dependency-map.md`, `docs/agent-memory/reviewer.md`.
+
 **Output**: Review result with auto-fixes, warnings, and pass/fail per category.
 
 ---
@@ -191,6 +210,10 @@ Agents are role-based personas that enforce the workflow. Each reads state files
 - **Step 0**: Checks if `docs/project-state.md` has content. If empty → recommends `bootstrap`.
 - **Next Step Recommendation**: After every status check, recommends the next action based on context (e.g., "Run `learn`", "Continue Story S1-2", "Run `pivot`").
 - **Scope Check**: Warns if a file modification is outside current Story scope.
+
+**Referenced Skills**: bootstrap, learn, pivot, investigate.
+
+**Referenced Files**: `docs/project-state.md`, `docs/project-brief.md`, `docs/features.md`, `docs/dependency-map.md`, `docs/failure-patterns.md`, `docs/agent-memory/sprint-manager.md`.
 
 **Output**: Sprint status table with progress, next action recommendation.
 

@@ -26,8 +26,10 @@ Debug bugs systematically. Prevent "symptom patching" — fixing without underst
 ### Phase 2: Scope Lock
 
 1. Identify the module/directory containing the root cause
-2. Exclude files outside that scope from modification
-3. Check docs/failure-patterns.md for matching patterns
+2. **Read docs/dependency-map.md**: Find the target module's row. Check "Depended By" column to understand which other modules might be affected by the same root cause or by your fix.
+3. **Read docs/project-state.md**: Verify the fix scope is within the current Story scope. If the root cause is in a module outside the current Story, **warn the user** before proceeding (Iron Law #3: Scope Compliance).
+4. Exclude files outside that scope from modification
+5. Check docs/failure-patterns.md for matching patterns
 
 ### Phase 3: Hypothesis + Fix
 
@@ -45,6 +47,8 @@ Debug bugs systematically. Prevent "symptom patching" — fixing without underst
 
 - [ ] Root cause hypothesis is stated explicitly
 - [ ] Did NOT skip Phase 1 (evidence collection) and jump straight to fixing
+- [ ] docs/dependency-map.md consulted for blast radius understanding
+- [ ] Fix scope verified against current Story in docs/project-state.md
 - [ ] Fix scope is limited to the problem's scope
 - [ ] All related tests pass after the fix
 - [ ] Regression test is added
@@ -82,5 +86,6 @@ After the fix is verified (Phase 4):
 
 ## Related Failure Patterns
 
-- FP-002: Type confusion → Phase 1 requires verifying actual types
 - FP-001: Mock not updated → Phase 4 requires checking mock sync
+- FP-002: Type confusion → Phase 1 requires verifying actual types
+- FP-003: Scope drift → Phase 2 Scope Lock must verify fix is within current Story scope

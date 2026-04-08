@@ -9,6 +9,8 @@ Read `docs/project-state.md` first. If all state files are empty, run `bootstrap
 
 ## Workflow
 
+- First time / empty state → run `bootstrap`
+- Session start → run `sprint-manager` to check status
 - New feature → run `planner` before coding
 - Before commit → run `reviewer`
 - Bug or issue → run `investigate`

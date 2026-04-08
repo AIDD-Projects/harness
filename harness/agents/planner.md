@@ -18,6 +18,7 @@ The Planner is the entry point for new features — use it BEFORE writing code.
 - docs/dependency-map.md
 - docs/project-state.md
 - docs/failure-patterns.md
+- docs/agent-memory/planner.md — Past estimation accuracy and architecture insights
 
 ## Input
 
@@ -37,6 +38,17 @@ Before proceeding, verify that required state files have content (not just TODO 
 
 If ALL files are empty/placeholder-only → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
 If `docs/project-brief.md` alone is empty → Warn the user but proceed (the plan will lack direction guard).
+
+### Step 0.5: Load Agent Memory
+
+Read `docs/agent-memory/planner.md` for past learnings:
+- Estimation accuracy from previous sprints (did Wave estimates match reality?)
+- Architecture patterns that worked or failed in this project
+- Repeated planning mistakes to avoid
+
+Apply these insights when creating the implementation plan. If the memory file is empty or contains only placeholders, skip this step.
+
+> **Team Mode**: In Team mode, agent memory is personal (`.harness/agent-memory/`). Each developer accumulates their own planning insights.
 
 ### For New Feature
 

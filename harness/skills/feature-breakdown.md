@@ -5,6 +5,10 @@
 Decompose a feature into implementation tasks ordered by dependency.
 Ensures bottom-up implementation: foundations first, then layers that depend on them.
 
+## Invoked By
+
+- **planner** agent — Step 8: Create ordered task list for new features
+
 ## When to Apply
 
 - Starting a new feature or Story
@@ -15,24 +19,26 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 ## Procedure
 
 1. **Describe the feature** in one sentence
-2. **Read docs/dependency-map.md** to understand current module relationships
-3. **Identify affected modules**: List every module that needs changes
-4. **Classify changes per module**:
+2. **Read docs/project-brief.md** — verify the feature aligns with Goals and does not violate Non-Goals. If it conflicts with Non-Goals, **stop and warn the user** before proceeding. (Direction Guard — prevents breakdown of out-of-scope features even when invoked directly without planner)
+3. **Read docs/dependency-map.md** to understand current module relationships
+4. **Identify affected modules**: List every module that needs changes
+5. **Classify changes per module**:
    - NEW_MODULE: Entirely new module to create
    - INTERFACE_CHANGE: Existing module's public interface changes
    - INTERNAL_CHANGE: Only internal implementation changes
    - TEST_ONLY: Only test updates needed
-5. **Build dependency order**:
+6. **Build dependency order**:
    - Draw a mini dependency graph for just the affected modules
    - Sort topologically: modules with no dependencies come first
    - Group into implementation waves (parallel-safe batches)
-6. **Create task sequence**: Convert waves into numbered tasks
-7. **Annotate each task** with:
+7. **Create task sequence**: Convert waves into numbered tasks
+8. **Annotate each task** with:
    - Module name
-   - Change type (from step 4)
+   - Change type (from step 5)
    - Files to create/modify
    - Tests to write
    - Dependency (which prior task must finish first)
+   - ⚠️ Relevant failure patterns (check docs/failure-patterns.md)
 
 ## Output Format
 
@@ -87,3 +93,9 @@ After completing the breakdown, update these files in the same session:
 | Skip dependency-map registration | Register immediately when creating module |
 | Tests "later" | Tests in the same task |
 | Produce breakdown but skip state file updates | State file updates are part of the breakdown, not a separate step |
+
+## Related Failure Patterns
+
+- FP-001: Interface changed, mock not updated → When creating tasks that modify interfaces, include "Update mock" as an explicit sub-task
+- FP-002: Type confusion → When annotating tasks, specify expected types for new interfaces
+- FP-003: Scope drift → If the breakdown exceeds the current Story scope, stop and report

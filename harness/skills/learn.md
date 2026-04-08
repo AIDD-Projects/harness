@@ -60,6 +60,22 @@ For each issue/error that occurred in this session:
 2. If existing features were modified → update Key Files and Test Files columns
 3. If features were completed → update Status to `✅ done`
 
+### Step 4.5: Verify docs/dependency-map.md (mandatory)
+
+1. Check if any new modules were created in this session (scan `git diff --stat` for new directories)
+2. Check if any module interfaces changed
+3. For each finding:
+   - New module without dependency-map entry → **add it now**
+   - Interface change without Interface Change Log entry → **add it now**
+4. Cross-reference `docs/features.md` Key Files against `docs/dependency-map.md` modules — flag orphaned modules
+
+### Step 4.6: Resolve STATE-AUDIT Flags (if applicable)
+
+If the `reviewer` agent was run in this session and produced `[STATE-AUDIT]` flags:
+1. Review each flagged item
+2. Apply the recommended state file update
+3. If the flag was already resolved during the session, skip it
+
 ### Step 5: Update Agent Memory (if applicable)
 
 If an agent (reviewer, planner, sprint-manager) was used in this session, update its memory file in `docs/agent-memory/`:
@@ -88,9 +104,10 @@ Present a summary of all updates made.
 - [FP-NNN] (new/updated): [description]
 
 ### State Files Updated:
-- [x]docs/project-state.md — Quick Summary refreshed
-- [x]docs/failure-patterns.md — [N] patterns added/updated
-- [x]docs/features.md — [N] features updated (if applicable)
+- [x] docs/project-state.md — Quick Summary refreshed
+- [x] docs/failure-patterns.md — [N] patterns added/updated
+- [x] docs/features.md — [N] features updated (if applicable)
+- [x] docs/dependency-map.md — [N] modules verified/added (if applicable)
 - [x] docs/agent-memory/{name}.md — [N] agents updated (if applicable)
 
 ### Next Session Should:

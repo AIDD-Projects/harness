@@ -5,10 +5,21 @@
 Manage Sprint/Story state, guide development sequence, and prevent scope drift.
 Keeps the LLM focused on the current work item.
 
+## Referenced Skills
+
+- bootstrap — Recommended when state files are empty
+- learn — Recommended at session end or when all stories are done
+- pivot — Recommended when direction change is detected
+- investigate — Recommended when bug is blocking progress
+
 ## Referenced Files
 
 - docs/project-state.md — Current state (this is the core file)
+- docs/project-brief.md — Project vision and goals (for direction checks)
+- docs/features.md — Feature registry (for progress overview)
+- docs/dependency-map.md — Module graph (for scope validation)
 - docs/failure-patterns.md — Recurring failure tracking
+- docs/agent-memory/sprint-manager.md — Past velocity and scope drift data
 
 ## Procedure
 
@@ -18,7 +29,18 @@ Before handling any request, verify `docs/project-state.md` has content:
 - Quick Summary must not be all TODO placeholders
 - Story Status table must have at least one row
 
-If `docs/project-state.md` is empty/placeholder-only → **Recommend running `bootstrap` skill first.** Report: docs/project-state.md is empty. Run bootstrap to initialize project state before tracking sprints."
+If `docs/project-state.md` is empty/placeholder-only → **Recommend running `bootstrap` skill first.** Report: "docs/project-state.md is empty. Run bootstrap to initialize project state before tracking sprints."
+
+### Step 0.5: Load Agent Memory
+
+Read `docs/agent-memory/sprint-manager.md` for past learnings:
+- Team velocity data (stories per sprint)
+- Scope drift history (how often did scope expand?)
+- Story sizing accuracy (were estimates correct?)
+
+Use these insights when recommending story order and estimating sprint capacity. If the memory file is empty or contains only placeholders, skip this step.
+
+> **Team Mode**: In Team mode, agent memory is personal (`.harness/agent-memory/`). Each developer tracks their own velocity and scope drift patterns.
 
 ### Input
 
@@ -63,8 +85,10 @@ After every status check, recommend the next action based on current context:
 **Request: "new story" / "next task"**
 1. Find next `todo` Story in docs/project-state.md
 2. Change its status to `in-progress`
-3. Specify Story scope (related files/directories)
-4. Alert relevant docs/failure-patterns.md items
+3. Read `docs/dependency-map.md` to identify modules involved in this Story
+4. Specify Story scope (related files/directories from dependency-map)
+5. Alert relevant docs/failure-patterns.md items
+6. Recommend relevant skill: "Consider running `planner` if this story needs detailed breakdown"
 
 **Request: "new sprint"**
 1. Check all Stories in current Sprint
@@ -108,3 +132,7 @@ STATUS: DONE
 - Do not modify code directly — manage state only
 - Only write to docs/project-state.md; read-only for all other files
 - Always confirm with user before modifying scope boundaries
+
+## Related Failure Patterns
+
+- FP-003: Scope drift → Scope Check handler detects out-of-scope modifications and warns the user before proceeding

@@ -13,9 +13,12 @@ Finds issues and auto-fixes where safe, escalates where not.
 
 ## Referenced Files
 
+- docs/project-brief.md — Project vision, goals, non-goals, and Decision Log
+- docs/features.md — Feature registry (for Step 6 Feature Registry Check)
 - docs/failure-patterns.md — Project failure patterns
 - docs/project-state.md — Current Story scope
 - docs/dependency-map.md — Module dependency graph
+- docs/agent-memory/reviewer.md — Past review patterns and frequently missed items
 
 ## Procedure
 
@@ -26,6 +29,15 @@ Before reviewing, verify that required state files exist and are not empty:
 - `docs/project-state.md` — Must have current Sprint info (needed for scope check)
 
 If state files are empty/placeholder-only → Warn: "State files are not filled. Review will proceed but scope check and failure pattern cross-check will be limited. Consider running `bootstrap` skill."
+
+### Step 0.5: Load Agent Memory
+
+Read `docs/agent-memory/reviewer.md` for past learnings:
+- Frequently missed review items in this project
+- Common code patterns that caused issues
+- Review statistics (pass rate, common failure categories)
+
+Pay extra attention to items flagged in past reviews. If the memory file is empty or contains only placeholders, skip this step.
 
 ### Input
 
@@ -138,3 +150,10 @@ Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT*
 - Do not refactor beyond the review scope
 - Auto-apply security fixes but always record them in output
 - Escalate with NEEDS_CONTEXT after 3 uncertain judgments
+
+## STATE-AUDIT Handoff
+
+When Step 8 (State File Audit) produces `[STATE-AUDIT]` flags:
+1. List all flagged items in the review output
+2. The `learn` skill (run at session end) will verify and resolve these flags
+3. If a flag is critical (missing module in dependency-map, unregistered feature), recommend fixing immediately rather than deferring to learn
