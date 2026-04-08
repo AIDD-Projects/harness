@@ -20,7 +20,11 @@ K-Harness manages your **project's direction** — goals, decisions, scope — s
 ## Quick Start
 
 ```bash
+# Solo mode (default)
 npx k-harness init
+
+# Team mode (multi-developer)
+npx k-harness init --team
 ```
 
 Select your IDE when prompted. Files are installed into the current directory.
@@ -48,6 +52,7 @@ npx k-harness init --ide antigravity
 |------|-------------|
 | `--ide <name>` | Target IDE: `vscode`, `claude`, `cursor`, `codex`, `windsurf`, `antigravity` |
 | `--dir <path>` | Target directory (default: current directory) |
+| `--team` | Enable Team Mode (multi-developer, personal state in `.harness/`) |
 | `--overwrite` | Overwrite existing files |
 
 ## Supported IDEs
@@ -115,6 +120,22 @@ When goals, technology, or scope changes, run the `pivot` skill:
 - Updates ALL 5 state files consistently
 - Records the decision with reasoning in Decision Log
 - Prevents silent inconsistencies across files
+
+## Team Mode
+
+Since v0.9.0, K-Harness supports multi-developer environments with the `--team` flag.
+
+| | Solo Mode | Team Mode |
+|---|---|---|
+| State Files | `docs/` (git tracked) | `.harness/` (gitignored) |
+| Agent Memory | `docs/agent-memory/` | `.harness/agent-memory/` |
+| Target | Solo developer | Team (each developer maintains personal state) |
+| Team Rules | — | Pre-Pull, Owner, Read-Only, Append-Only, Pivot Lock, FP Promotion |
+
+In Team Mode:
+- **Personal state** (project-state, features, dependency-map) goes to `.harness/` — gitignored, per-developer
+- **Shared state** (project-brief, failure-patterns) stays in `docs/` — git tracked, team-wide
+- **6 team rules** are auto-injected into core-rules and 11 skill/agent templates include team-specific guidance via `TEAM_MODE` markers
 
 ## Documentation
 
