@@ -163,3 +163,27 @@ When starting a NEW session (not during bootstrap), read these files in order:
 | Leave rules file TODOs unfilled | Phase 3.5 fills ALL TODO sections — no manual editing needed |
 | Use TypeScript globs for non-TS projects | Detect language in Phase 1 and set correct globs |
 | Only fill state files, skip rules | Bootstrap fills BOTH — state files AND rules files |
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Onboarding
+
+When running bootstrap in Team mode:
+
+### New Project (first developer)
+1. Run `k-harness init --team` to create shared + personal state files
+2. Fill all state files via normal bootstrap procedure
+3. Commit shared files (docs/) to git
+4. Push to remote — teammates will clone this
+
+### Joining Developer (existing project)
+1. Clone the repository (shared docs/ already exist)
+2. Run `k-harness init --team` — only personal files (.harness/) are created; shared files are skipped
+3. **DO NOT re-run bootstrap interviews** — shared state is already filled by the first developer
+4. Review docs/project-brief.md to understand project goals
+5. Create your personal .harness/project-state.md with your current Story assignment
+
+### Rules
+- **Never overwrite shared files** when joining an existing project
+- Set your Owner name in docs/features.md and docs/dependency-map.md rows you create
+- Personal state (.harness/) is yours alone — no coordination needed
+<!-- TEAM_MODE_END -->

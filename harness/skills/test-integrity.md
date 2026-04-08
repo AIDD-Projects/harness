@@ -68,3 +68,10 @@ After synchronizing mocks:
 
 - FP-001: Interface changed, mock not updated → Checklist item 2
 - FP-002: Type confusion → Step 5 return type verification
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Test Integrity
+
+- If the interface you changed is owned by another developer (check docs/dependency-map.md Owner), notify them about the mock update requirement
+- When updating shared test fixtures or mocks, run `git pull` first to avoid overwriting teammates' changes
+<!-- TEAM_MODE_END -->

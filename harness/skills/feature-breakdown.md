@@ -99,3 +99,20 @@ After completing the breakdown, update these files in the same session:
 - FP-001: Interface changed, mock not updated → When creating tasks that modify interfaces, include "Update mock" as an explicit sub-task
 - FP-002: Type confusion → When annotating tasks, specify expected types for new interfaces
 - FP-003: Scope drift → If the breakdown exceeds the current Story scope, stop and report
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Feature Breakdown
+
+### Pre-Pull
+Before updating shared state files, run `git pull origin main` to get the latest docs/features.md and docs/dependency-map.md.
+
+### Owner Assignment
+- When adding new rows to docs/features.md, set the Owner column to your name
+- When adding new modules to docs/dependency-map.md, set the Owner column to your name
+- Do NOT modify rows owned by other developers — if there is a dependency, note it in your task description instead
+
+### Cross-Developer Dependencies
+If your feature depends on a module owned by another developer:
+1. Note the dependency in the task description (e.g., "Depends on [module] owned by [dev]")
+2. Coordinate with the module owner before implementation
+<!-- TEAM_MODE_END -->

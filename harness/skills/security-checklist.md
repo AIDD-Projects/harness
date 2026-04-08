@@ -60,3 +60,11 @@ After completing the security check:
 ## Related Failure Patterns
 
 - FP-004: Dangerous file committed → Checklist items 2, 5 (no forbidden files, no temp files)
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Security
+
+- Personal state files (.harness/) are gitignored — they cannot leak via git
+- When committing shared config files (docs/), verify no team credentials or shared secrets are included
+- If a security issue is found in a shared module, notify the module Owner before fixing
+<!-- TEAM_MODE_END -->

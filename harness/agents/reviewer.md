@@ -157,3 +157,19 @@ When Step 8 (State File Audit) produces `[STATE-AUDIT]` flags:
 1. List all flagged items in the review output
 2. The `learn` skill (run at session end) will verify and resolve these flags
 3. If a flag is critical (missing module in dependency-map, unregistered feature), recommend fixing immediately rather than deferring to learn
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Review
+
+### Pre-Pull
+Before running review, run `git pull origin main` to get the latest shared state files.
+
+### Owner-Scoped Audit
+- **Step 6 (Feature Registry)**: only check that YOUR new features are registered — do not modify other developers' rows
+- **Step 7 (Dependency Map)**: only check that YOUR new modules are registered — do not modify other developers' rows
+- **Step 8 (State File Audit)**: verify that personal state files (docs/project-state.md, docs/failure-patterns.md, docs/agent-memory/) are updated; for shared files, only audit your own Owner rows
+
+### Cross-Owner Changes
+- If your changes affect modules owned by other developers (check docs/dependency-map.md Owner), flag these as "⚠️ Cross-Owner Impact" in the review output
+- Recommend getting the affected Owner's review before merging
+<!-- TEAM_MODE_END -->

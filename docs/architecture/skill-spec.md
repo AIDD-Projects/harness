@@ -255,6 +255,58 @@ v0.8.0 이전에는 `testing-rules.md`, `backend-rules.md` 등 path-scoped rules
 
 ---
 
+## 3.5 Team Mode 마커 패턴
+
+### 배경
+v0.10.0에서 멀티 개발자(Team Mode) 시나리오를 지원하기 위해 도입.
+Solo/Team 모드에 따라 가이드가 분기되어야 하지만, 템플릿 파일을 분리하면 유지보수 비용이 증가한다.
+**하이브리드 마커 방식**(Track C)을 채택하여 하나의 템플릿에 두 모드를 공존시킨다.
+
+### 동작 원리
+
+```
+<!-- TEAM_MODE_START -->
+Team 전용 가이드 내용
+<!-- TEAM_MODE_END -->
+```
+
+| 모드 | 동작 |
+|------|------|
+| Solo | 마커 + 내용 전체 제거 (regex strip) |
+| Team | 마커만 제거, 내용 유지 |
+
+### `resolveContent()` 처리 순서
+1. **Solo**: `content.replace(/<!-- TEAM_MODE_START -->[\s\S]*?<!-- TEAM_MODE_END -->\n?/g, '')` → 즉시 반환
+2. **Team**:
+   - `docs/project-state.md` → `.harness/project-state.md` 경로 치환
+   - `docs/failure-patterns.md` → `.harness/failure-patterns.md` 경로 치환
+   - `docs/agent-memory/` → `.harness/agent-memory/` 경로 치환
+   - `TEAM_MODE_START/END` 마커만 제거 (내용 유지)
+   - core-rules에 `TEAM_MODE_SECTION` 자동 추가
+
+### 마커 적용 파일 목록
+| 파일 | Team 블록 핵심 내용 |
+|------|-------------------|
+| bootstrap.md | 신규 프로젝트 vs 합류 개발자 온보딩 |
+| learn.md | Pre-Pull, Owner-Scoped Updates, FP Promotion |
+| pivot.md | Pivot Lock, Branch Check, After Pivot 알림 |
+| investigate.md | Owner Awareness, 모듈 소유자 협의 |
+| feature-breakdown.md | Owner Assignment, 교차 의존성 |
+| impact-analysis.md | Owner-Aware Blast Radius |
+| security-checklist.md | .harness/ gitignore, 공유 설정 비밀 |
+| test-integrity.md | Owner 통보, 공유 fixture 동기화 |
+| planner.md | Owner-Aware Planning, Agent Memory 분리 |
+| reviewer.md | Owner-Scoped Audit, Cross-Owner 변경 감지 |
+| sprint-manager.md | Personal vs Shared State, Scope Check with Ownership |
+
+### 작성 규칙
+- 마커는 파일 **마지막 섹션**에 배치
+- 마커 내부에 `---` 헤더를 사용하여 구조화
+- 마커 블록 포함 총 줄 수 ≤ 200줄 제한 유지
+- Solo 사용자에게 불필요한 복잡도 노출 금지
+
+---
+
 ## 4. docs/failure-patterns.md 스펙
 
 ### 위치

@@ -78,3 +78,16 @@ After completing the analysis, update these files:
 
 - FP-001: Interface changed, mock not updated → Checklist item 7 (mock/test updates planned)
 - FP-002: Type confusion across modules → Step 7 (trace each dependent, verify types)
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Impact Analysis
+
+### Owner-Aware Blast Radius
+- When listing affected modules from docs/dependency-map.md, check the Owner column
+- If a dependent module is owned by another developer, the blast radius extends to their scope
+- Flag cross-owner impacts: "⚠️ Module [X] owned by [dev] will be affected"
+
+### Notification
+- For interface changes affecting modules owned by other developers, **list them explicitly** in the analysis output
+- Recommend notifying affected module owners before proceeding with changes
+<!-- TEAM_MODE_END -->

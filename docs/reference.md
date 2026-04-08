@@ -333,3 +333,29 @@ Templates are in `templates/` for creating custom skills and agents:
 
 - `skill.template.md` — Skill file template with required sections
 - `agent.template.md` — Agent file template with role, skills, procedure
+
+---
+
+## Team Mode
+
+Team Mode(`--mode team`)에서는 개인 상태와 공유 상태가 분리되고, 멀티 개발자 협업 가이드가 자동 주입됩니다.
+
+### 파일 분리
+| 유형 | Solo | Team |
+|------|------|------|
+| Personal State | `docs/project-state.md`, `docs/failure-patterns.md` | `.harness/project-state.md`, `.harness/failure-patterns.md` |
+| Agent Memory | `docs/agent-memory/` | `.harness/agent-memory/` |
+| Shared State | `docs/features.md`, `docs/dependency-map.md`, `docs/project-brief.md` | 동일 |
+
+### TEAM_MODE 마커
+스킬/에이전트 템플릿에 `<!-- TEAM_MODE_START -->` / `<!-- TEAM_MODE_END -->` 마커로 Team 전용 가이드가 포함됩니다.
+- **Solo**: 마커 + 내용 전체 제거
+- **Team**: 마커만 제거, 내용 유지
+
+### Team Mode 6대 규칙 (core-rules 자동 추가)
+1. **Pre-Pull** — 공유 파일 수정 전 `git pull`
+2. **Owner** — Story 테이블에서 본인 Owner 행만 수정
+3. **Read-Only** — 다른 개발자의 Owner 행은 읽기만
+4. **Append-Only** — 새 행은 테이블 맨 아래에 추가
+5. **Pivot Lock** — `pivot` 스킬은 team lead만 main 브랜치에서 실행
+6. **FP Promotion** — 개인 실패 패턴이 팀에 영향 시 공유 문서/채널로 승격

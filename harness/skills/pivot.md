@@ -113,3 +113,22 @@ If `.harness/` directory exists (Team mode is active):
   3. Team lead runs pivot on main
   4. All developers pull main to get updated shared state files
   5. Each developer's `.harness/` personal state is unaffected (update manually if needed)
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Pivot Lock
+
+### Who Can Run Pivot
+- **Only the team lead** runs pivot, and **only on the main branch**
+- If you are not the team lead, propose the direction change to the team lead instead of running pivot yourself
+
+### Branch Check
+Before running pivot, verify:
+1. You are on the `main` branch: `git branch --show-current` must return `main`
+2. Your working tree is clean: `git status` must show no uncommitted changes
+3. You have pulled the latest: `git pull origin main`
+
+### After Pivot
+1. Commit and push the updated shared files
+2. Notify all team members to run `git pull origin main`
+3. Each developer's personal .harness/ files are NOT auto-updated — developers should review the pivot changes and manually update their personal state if needed
+<!-- TEAM_MODE_END -->

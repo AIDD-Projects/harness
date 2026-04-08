@@ -136,3 +136,20 @@ STATUS: DONE
 ## Related Failure Patterns
 
 - FP-003: Scope drift → Scope Check handler detects out-of-scope modifications and warns the user before proceeding
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Sprint Management
+
+### Personal vs Shared State
+- Your sprint progress is tracked in personal docs/project-state.md
+- Shared docs/features.md and docs/dependency-map.md reflect the entire team's work
+- When reporting status, read BOTH personal and shared state for a complete picture
+
+### Scope Check with Ownership
+- When checking scope, also verify the module's Owner in docs/dependency-map.md
+- If work is being done on a module owned by another developer, flag it as a potential scope drift AND an ownership concern
+
+### Next Step Recommendation
+- Consider other developers' active stories when recommending next steps
+- If a dependency on another developer's work is detected, recommend coordination before proceeding
+<!-- TEAM_MODE_END -->

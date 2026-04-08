@@ -144,3 +144,21 @@ STATUS: DONE
 | Write vague descriptions ("something broke") | Be specific: file name, error message, root cause |
 | Skip this skill because "nothing went wrong" | Still update Quick Summary and Story Status |
 | Update docs/failure-patterns.md but not docs/project-state.md | Always update both — they serve different purposes |
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Session Wrap-up
+
+### Pre-Pull (mandatory before any shared file edit)
+1. Run `git pull origin main` before updating docs/features.md or docs/dependency-map.md
+2. If merge conflicts occur, resolve them BEFORE proceeding
+
+### Owner-Scoped Updates
+- **docs/features.md**: only update rows where Owner = you
+- **docs/dependency-map.md**: only update rows where Owner = you; if adding a new module, append at the bottom
+- **Personal files** (.harness/project-state.md, .harness/failure-patterns.md, .harness/agent-memory/): update freely — no coordination needed
+
+### Failure Pattern Promotion
+If a personal failure pattern (FP-NNN in .harness/failure-patterns.md) is likely to affect other developers:
+1. Discuss with the team (Slack, PR comment, etc.)
+2. If agreed, add it to a shared location (team wiki, PR description) so others can add it to their personal .harness/failure-patterns.md
+<!-- TEAM_MODE_END -->

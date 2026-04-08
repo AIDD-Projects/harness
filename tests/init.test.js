@@ -562,4 +562,179 @@ describe('k-harness init', () => {
       assert.ok(errorMsg.includes('Unknown mode'), 'Should show unknown mode error');
     });
   });
+
+  // ─── TEAM_MODE marker tests ──────────────────────────────────
+
+  describe('TEAM_MODE marker handling', () => {
+    describe('Solo mode strips Team blocks entirely', () => {
+      let tmpDir;
+      let soloFiles = {};
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+        console.log = origLog;
+
+        // Read all skills
+        const skillDir = path.join(tmpDir, '.github/skills');
+        for (const skill of fs.readdirSync(skillDir)) {
+          const skillFile = path.join(skillDir, skill, 'SKILL.md');
+          if (fs.existsSync(skillFile)) {
+            soloFiles[`skill:${skill}`] = fs.readFileSync(skillFile, 'utf8');
+          }
+        }
+        // Read agents
+        const agentDir = path.join(tmpDir, '.github/agents');
+        if (fs.existsSync(agentDir)) {
+          for (const agent of fs.readdirSync(agentDir)) {
+            const agentFile = path.join(agentDir, agent);
+            if (agentFile.endsWith('.md')) {
+              soloFiles[`agent:${path.basename(agent, '.agent.md')}`] = fs.readFileSync(agentFile, 'utf8');
+            }
+          }
+        }
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('no Solo file contains TEAM_MODE markers', () => {
+        for (const [name, content] of Object.entries(soloFiles)) {
+          assert.ok(!content.includes('TEAM_MODE_START'), `${name} should not contain TEAM_MODE_START`);
+          assert.ok(!content.includes('TEAM_MODE_END'), `${name} should not contain TEAM_MODE_END`);
+        }
+      });
+
+      it('Solo skills do NOT contain Team guidance keywords', () => {
+        const teamKeywords = ['Pre-Pull', 'Owner-Scoped', 'Pivot Lock', 'FP Promotion', 'Joining Developer'];
+        for (const [name, content] of Object.entries(soloFiles)) {
+          for (const kw of teamKeywords) {
+            assert.ok(!content.includes(kw), `${name} should not contain Team keyword "${kw}"`);
+          }
+        }
+      });
+    });
+
+    describe('Team mode keeps content, removes markers', () => {
+      let tmpDir;
+      let teamFiles = {};
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'vscode', '--mode', 'team', '--dir', tmpDir]);
+        console.log = origLog;
+
+        // Read all skills
+        const skillDir = path.join(tmpDir, '.github/skills');
+        for (const skill of fs.readdirSync(skillDir)) {
+          const skillFile = path.join(skillDir, skill, 'SKILL.md');
+          if (fs.existsSync(skillFile)) {
+            teamFiles[`skill:${skill}`] = fs.readFileSync(skillFile, 'utf8');
+          }
+        }
+        // Read agents
+        const agentDir = path.join(tmpDir, '.github/agents');
+        if (fs.existsSync(agentDir)) {
+          for (const agent of fs.readdirSync(agentDir)) {
+            const agentFile = path.join(agentDir, agent);
+            if (agentFile.endsWith('.md')) {
+              teamFiles[`agent:${path.basename(agent, '.agent.md')}`] = fs.readFileSync(agentFile, 'utf8');
+            }
+          }
+        }
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('no Team file contains TEAM_MODE markers', () => {
+        for (const [name, content] of Object.entries(teamFiles)) {
+          assert.ok(!content.includes('TEAM_MODE_START'), `${name} should not contain TEAM_MODE_START`);
+          assert.ok(!content.includes('TEAM_MODE_END'), `${name} should not contain TEAM_MODE_END`);
+        }
+      });
+
+      it('Team bootstrap contains onboarding guidance', () => {
+        const content = teamFiles['skill:bootstrap'];
+        assert.ok(content, 'bootstrap skill should exist');
+        assert.ok(content.includes('Joining Developer'), 'Team bootstrap should have Joining Developer guidance');
+      });
+
+      it('Team learn contains Pre-Pull guidance', () => {
+        const content = teamFiles['skill:learn'];
+        assert.ok(content, 'learn skill should exist');
+        assert.ok(content.includes('Pre-Pull'), 'Team learn should have Pre-Pull guidance');
+      });
+
+      it('Team pivot contains Pivot Lock guidance', () => {
+        const content = teamFiles['skill:pivot'];
+        assert.ok(content, 'pivot skill should exist');
+        assert.ok(content.includes('Pivot Lock'), 'Team pivot should have Pivot Lock guidance');
+      });
+
+      it('Team reviewer contains Owner-Scoped guidance', () => {
+        const content = teamFiles['agent:reviewer'];
+        assert.ok(content, 'reviewer agent should exist');
+        assert.ok(content.includes('Owner-Scoped'), 'Team reviewer should have Owner-Scoped guidance');
+      });
+
+      it('Team planner contains team coordination', () => {
+        const content = teamFiles['agent:planner'];
+        assert.ok(content, 'planner agent should exist');
+        assert.ok(content.includes('Owner-Aware'), 'Team planner should have Owner-Aware guidance');
+      });
+
+      it('Team sprint-manager has ownership context', () => {
+        const content = teamFiles['agent:sprint-manager'];
+        assert.ok(content, 'sprint-manager agent should exist');
+        assert.ok(content.includes('Ownership'), 'Team sprint-manager should have Ownership guidance');
+      });
+    });
+
+    describe('Team mode content line count > Solo', () => {
+      let soloLen = 0;
+      let teamLen = 0;
+
+      before(async () => {
+        const soloDir = makeTmpDir();
+        const teamDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'claude', '--mode', 'solo', '--dir', soloDir]);
+        await run(['init', '--ide', 'claude', '--mode', 'team', '--dir', teamDir]);
+        console.log = origLog;
+
+        // Sum up all skill file lengths
+        for (const dir of ['.claude/skills']) {
+          const base = path.join(soloDir, dir);
+          if (fs.existsSync(base)) {
+            for (const skill of fs.readdirSync(base)) {
+              const f = path.join(base, skill, 'SKILL.md');
+              if (fs.existsSync(f)) soloLen += fs.readFileSync(f, 'utf8').length;
+            }
+          }
+          const baseT = path.join(teamDir, dir);
+          if (fs.existsSync(baseT)) {
+            for (const skill of fs.readdirSync(baseT)) {
+              const f = path.join(baseT, skill, 'SKILL.md');
+              if (fs.existsSync(f)) teamLen += fs.readFileSync(f, 'utf8').length;
+            }
+          }
+        }
+
+        rmDir(soloDir);
+        rmDir(teamDir);
+      });
+
+      it('Team skills have more content than Solo (Team blocks preserved)', () => {
+        assert.ok(teamLen > soloLen, `Team content (${teamLen}) should be larger than Solo (${soloLen})`);
+      });
+    });
+  });
 });

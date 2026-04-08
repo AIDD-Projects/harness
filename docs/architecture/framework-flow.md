@@ -219,3 +219,50 @@ Agent Memory (학습 축적) ←── 다음 에이전트 호출 시 읽힘
 - [ ] 새 state 파일 추가 시: 접근 매트릭스(2.2) + 크기 제한(core-rules.md) 업데이트
 - [ ] 워크플로우 변경 시: 파이프라인(3.x) + 데이터 순환(5) 업데이트
 - [ ] IDE 제너레이터 변경 시: 매핑 표(7) 업데이트
+- [ ] Team Mode 관련 변경 시: TEAM_MODE 마커 블록(8) + resolveContent 로직 업데이트
+
+---
+
+## 8. Team Mode 아키텍처
+
+### 8.1 `resolveContent()` 처리 파이프라인
+
+```
+                    ┌────── Solo ──────┐
+Template ─→ resolveContent() ─┤                    ├─→ 최종 파일
+                    └────── Team ──────┘
+
+Solo: TEAM_MODE 블록 strip → 반환
+Team: 경로 치환 → TEAM_MODE 마커 제거 → TEAM_MODE_SECTION 추가(core-rules만)
+```
+
+### 8.2 State File 분리 (Team Mode)
+
+```
+docs/ (shared, git tracked)          .harness/ (personal, gitignored)
+├── project-brief.md                 ├── project-state.md
+├── features.md                      ├── failure-patterns.md
+├── dependency-map.md                └── agent-memory/
+└── (nothing else)                       ├── reviewer.md
+                                         ├── planner.md
+                                         └── sprint-manager.md
+```
+
+### 8.3 접근 매트릭스 (Team Mode 변형)
+
+Team Mode에서는 2.2의 경로가 변경됨:
+- `project-state` → `.harness/project-state.md` (개인)
+- `failure-patterns` → `.harness/failure-patterns.md` (개인)
+- `agent-memory/*` → `.harness/agent-memory/*` (개인)
+- `project-brief`, `features`, `dependency-map` → `docs/` 유지 (공유)
+
+### 8.4 Team 전용 가이드 (TEAM_MODE 마커)
+
+11개 스킬/에이전트에 `<!-- TEAM_MODE_START/END -->` 마커로 팀 협업 가이드가 포함됨.
+Solo에서는 자동 제거되어 사용자에게 노출되지 않음.
+
+핵심 가이드:
+- **Pre-Pull**: 공유 파일 수정 전 `git pull`
+- **Owner-Scoped**: 본인 Owner 행만 수정
+- **Pivot Lock**: team lead만 main에서 pivot 실행
+- **FP Promotion**: 개인 FP가 팀 영향 시 공유 승격

@@ -134,3 +134,19 @@ Apply these insights when creating the implementation plan. If the memory file i
 - All plans must include test tasks (no code without tests)
 - If a feature affects 5+ modules, flag as High Risk
 - If the plan exceeds one Sprint's worth of work, suggest splitting into sub-features
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Planning
+
+### Pre-Pull
+Before reading or updating shared state files, run `git pull origin main`.
+
+### Owner-Aware Planning
+- When assigning tasks, check docs/dependency-map.md Owner column to identify module ownership
+- For features that cross module boundaries, identify all affected Owners and flag coordination needs
+- Set Owner on new rows you create in docs/features.md and docs/dependency-map.md
+
+### Agent Memory
+- Your personal docs/agent-memory/planner.md contains your individual estimation accuracy
+- Team velocity estimates should be coordinated through sprint planning meetings, not derived from personal metrics alone
+<!-- TEAM_MODE_END -->

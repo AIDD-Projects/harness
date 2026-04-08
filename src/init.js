@@ -75,18 +75,30 @@ This project uses Team mode. State files are split into shared and personal.
 - **Personal** (.harness/, gitignored): project-state.md, failure-patterns.md, agent-memory/
 
 ### Rules
-1. Shared files: only modify your own rows (check Owner column)
-2. Other developers' Owner rows are READ ONLY
-3. New rows go at the bottom of the table
-4. The \`pivot\` skill must be run on the main branch by the team lead only
+1. **Pre-Pull**: before modifying any shared file (docs/), run \`git pull\` to get latest changes
+2. **Owner Column**: shared files use Owner columns — only modify your own rows
+3. **Read-Only**: other developers' Owner rows are READ ONLY
+4. **Append-Only**: new rows go at the bottom of the table
+5. **Pivot Lock**: the \`pivot\` skill must be run on the main branch by the team lead only
+6. **FP Promotion**: if a personal failure pattern (FP-NNN) affects the team, promote it to a shared doc or team channel
 `;
 
 function resolveContent(content, mode) {
-  if (mode !== 'team') return content;
+  if (mode !== 'team') {
+    // Solo mode: strip Team-only blocks entirely
+    return content.replace(/<!-- TEAM_MODE_START -->[\s\S]*?<!-- TEAM_MODE_END -->\n?/g, '');
+  }
   let result = content
     .replaceAll('docs/project-state.md', '.harness/project-state.md')
     .replaceAll('docs/failure-patterns.md', '.harness/failure-patterns.md')
     .replaceAll('docs/agent-memory/', '.harness/agent-memory/');
+
+  // Remove markers, keep Team content
+  result = result
+    .replaceAll('<!-- TEAM_MODE_START -->\n', '')
+    .replaceAll('<!-- TEAM_MODE_START -->', '')
+    .replaceAll('<!-- TEAM_MODE_END -->\n', '')
+    .replaceAll('<!-- TEAM_MODE_END -->', '');
 
   // Append Team Mode section to core-rules (detected by the heading)
   if (result.includes('## State Files') && result.includes('## Session Start')) {

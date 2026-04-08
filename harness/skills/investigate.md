@@ -89,3 +89,16 @@ After the fix is verified (Phase 4):
 - FP-001: Mock not updated → Phase 4 requires checking mock sync
 - FP-002: Type confusion → Phase 1 requires verifying actual types
 - FP-003: Scope drift → Phase 2 Scope Lock must verify fix is within current Story scope
+
+<!-- TEAM_MODE_START -->
+## Team Mode: Investigation
+
+### Owner Awareness
+- In Phase 2 (Scope Lock), check docs/dependency-map.md Owner column for the affected module
+- If the root cause module is owned by another developer, **notify them** before applying a fix
+- If the bug is in a shared module (no single Owner), document the fix in your PR description so the team can review
+
+### Personal State
+- Record new failure patterns in your personal .harness/failure-patterns.md
+- If the pattern affects the whole team, promote it (see learn skill Team Mode section)
+<!-- TEAM_MODE_END -->
