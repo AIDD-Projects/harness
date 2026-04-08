@@ -2,6 +2,9 @@
 
 > LLM이 실수하지 않도록 만드는 프레임워크의 5가지 핵심 원칙
 
+**GitHub 원본**: `docs/architecture/design-principles.md`  
+**버전**: v0.9.0
+
 ---
 
 ## 원칙 1: 1 Skill = 1 File
@@ -81,6 +84,8 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 | 파일 수 | 30+ | 1 (docs/failure-patterns.md) |
 | 효과 | 낮음 (MCPHub에서 같은 실수 4번 반복) | 높음 (구체적 체크리스트) |
 
+> **Team Mode (v0.9.0)**: Team mode에서 `failure-patterns.md`는 `.harness/`로 이동하여 개인별로 관리됨. 팀원 각자의 LLM이 자기만의 실패 패턴을 축적하므로 서로의 패턴 파일이 충돌하지 않음.
+
 ---
 
 ## 원칙 4: IDE Native (IDE 네이티브)
@@ -125,7 +130,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 
 ### 규칙
 - 1인 팀: copilot-instructions.md (디스패처) + skills 2~3개 = 충분
-- 2~3인 팀: + agents 2개 + docs/failure-patterns.md 추가
+- 2~3인 팀: + agents 3개 + `docs/` 상태 파일 추가
 - 4인+ 팀: 이 프레임워크 범위 밖. BMAD나 전용 PM 도구 권장.
 
 ### 1인 팀 최소 구성 (3개 파일)
@@ -138,33 +143,25 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ### 2~3인 팀 표준 구성 (~20개 파일)
 ```
 .github/copilot-instructions.md
-
-.github/skills/
-  bootstrap/SKILL.md
-  feature-breakdown/SKILL.md
-  impact-analysis/SKILL.md
-  investigate/SKILL.md
-  learn/SKILL.md
-  pivot/SKILL.md
-  security-checklist/SKILL.md
-  test-integrity/SKILL.md
-
-.github/agents/
-  planner.agent.md
-  reviewer.agent.md
-  sprint-manager.agent.md
-
-docs/
-  project-brief.md
-  project-state.md
-  features.md
-  dependency-map.md
-  failure-patterns.md
-  agent-memory/
-    planner.md
-    reviewer.md
-    sprint-manager.md
+.github/skills/ (8개 스킬)
+.github/agents/ (3개 에이전트)
+docs/ (5개 상태 파일 + agent-memory 3개)
 ```
+
+### v0.9.0 Team Mode — Solo/Team 분리
+
+v0.9.0에서 `k-harness init --team`으로 팀 모드를 명시적으로 선택할 수 있게 됨:
+
+| 모드 | 대상 | State 파일 위치 | 충돌 관리 |
+|---|---|---|---|
+| **Solo** (기본) | 1인 개발자 | 모두 `docs/` | 불필요 |
+| **Team** | 2~3인 팀 | 공유 3개 `docs/` + 개인 2+α `.harness/` | `.harness/` gitignored, `.gitattributes` merge=union |
+
+**핵심 메커니즘**:
+
+- 공유 파일 (`docs/project-brief.md`, `features.md`, `dependency-map.md`): git committed, 팀 전체 공유
+- 개인 파일 (`.harness/project-state.md`, `failure-patterns.md`, `agent-memory/`): gitignored, 충돌 원천 차단
+- `resolveContent()`: init 시점에 스킬/에이전트 내 `docs/` 경로를 `.harness/`로 자동 치환
 
 ---
 
@@ -189,3 +186,4 @@ docs/
 | 일반적 지식 주입 | "TDD 원칙" 30페이지 | 프로젝트 특화 문제 해결 안 됨 |
 | IDE 외부 체계 | 별도 CLI, 커스텀 파서 요구 | 도입 장벽 상승 |
 | 미래 대비 설계 | "나중에 10인 팀이 되면..." | 현재 복잡도만 증가 |
+| 전체 공유 State | 모든 state 파일을 git commit | 다인 팀에서 merge 충돌 빈발 |
