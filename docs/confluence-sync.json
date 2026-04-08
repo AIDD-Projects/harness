@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "description": "Local docs ↔ Confluence page mapping for automated sync",
+    "cloudId": "1d9716a4-ece1-4638-9eb5-415dcaf359e6",
+    "spaceKey": "CNCORE",
+    "spaceId": "38731779",
+    "parentPageId": "694258105",
+    "baseUrl": "https://ktspace.atlassian.net/wiki"
+  },
+  "pages": [
+    {
+      "localPath": "docs/architecture/design-principles.md",
+      "pageId": "693866385",
+      "title": "K-Harness 설계 원칙",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/693866385/K-Harness"
+    },
+    {
+      "localPath": "docs/architecture/file-structure.md",
+      "pageId": "693866413",
+      "title": "K-Harness 파일 구조",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/693866413/K-Harness"
+    },
+    {
+      "localPath": "docs/architecture/skill-spec.md",
+      "pageId": "694518985",
+      "title": "K-Harness Skill/Agent 작성 스펙",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694518985/K-Harness+Skill+Agent"
+    },
+    {
+      "localPath": "docs/architecture/framework-flow.md",
+      "pageId": "694519025",
+      "title": "K-Harness 프레임워크 연계 플로우",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694519025"
+    },
+    {
+      "localPath": "docs/reference.md",
+      "pageId": "694258191",
+      "title": "K-Harness 레퍼런스",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694258191"
+    },
+    {
+      "localPath": "docs/strategy/full-lifecycle-integration.md",
+      "pageId": "697992565",
+      "title": "K-Harness Full Lifecycle 통합 전략서",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/697992565"
+    },
+    {
+      "localPath": "docs/analysis/comparison.md",
+      "pageId": "699664792",
+      "title": "경쟁 분석: BMAD vs gstack vs GSD vs K-Harness",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/699664792"
+    },
+    {
+      "localPath": null,
+      "pageId": "698487072",
+      "title": "K-Harness 개발 논의 로그",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/698487072",
+      "note": "Confluence-only parent page (discussion logs)"
+    },
+    {
+      "localPath": null,
+      "pageId": "702777194",
+      "title": "kode:musher — Musher Engineering 기반 AIDD Execution Layer 추진 현황",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/702777194",
+      "note": "Confluence-only report page"
+    },
+    {
+      "localPath": "docs/guide.md",
+      "pageId": null,
+      "title": null,
+      "url": null,
+      "note": "Local-only: 사용자 가이드 (no Confluence page)"
+    },
+    {
+      "localPath": "docs/guide/mcphub-pilot-guide.md",
+      "pageId": null,
+      "title": null,
+      "url": null,
+      "note": "Local-only: MCPHub Pilot Guide (no Confluence page)"
+    }
+  ]
+}
