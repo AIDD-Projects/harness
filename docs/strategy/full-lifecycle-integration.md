@@ -200,6 +200,8 @@ Gate 0        Gate 1         Gate 2          Gate 3         Gate 4
 - 기술 스택이 KT 표준과 호환 (Spring Boot / React)
 - 3개월 이내 완료 가능한 규모
 
+> **v0.9.0 활용**: 팀 파일럿에서 `npx k-harness init --team`으로 Team Mode 사용. 각 팀원의 State File 충돌 없이 협업 가능.
+
 **파일럿 프로토콜**:
 1. K-Harness 설치 + 30분 온보딩 세션
 2. 팀이 자율적으로 사용 (강제하지 않음)
