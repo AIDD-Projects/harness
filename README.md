@@ -150,7 +150,7 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 | Dependencies | Node 20+ | Bun + Node + Playwright | Node 18+ | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 6 (native format) |
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
-| Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (6 laws embedded in skills) |
+| Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (8 laws embedded in skills) |
 | Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`bootstrap` skill) |
 | Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (22-line dispatcher) |
 

@@ -112,13 +112,6 @@
       "title": null,
       "url": null,
       "note": "Local-only: 사용자 가이드 (no Confluence page)"
-    },
-    {
-      "localPath": "docs/guide/mcphub-pilot-guide.md",
-      "pageId": null,
-      "title": null,
-      "url": null,
-      "note": "Local-only: MCPHub Pilot Guide (no Confluence page)"
     }
   ]
 }

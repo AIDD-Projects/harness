@@ -54,7 +54,7 @@
 |---|---|---|---|---|
 | 규칙 관리 | YAML 매니페스트 + knowledge 파일 | 없음 (skill 프롬프트에 내장) | 없음 (프롬프트가 곧 규칙) | 22줄 디스패처 + 스킬/에이전트 임베딩 |
 | 자동 로드 | 매니페스트 기반 간접 참조 | SKILL.md가 자동 로드 | agents 디렉토리 자동 로드 | copilot-instructions.md 자동 로드 |
-| Iron Laws 개념 | 없음 | 없음 | 없음 | ✅ (6개 Iron Laws, 스킬에 임베딩) |
+| Iron Laws 개념 | 없음 | 없음 | 없음 | ✅ (8개 Iron Laws, 스킬에 임베딩) |
 | 규칙 토큰 비용 | 높음 (YAML+MD 다수) | 낮음 | 중간 (agent 프롬프트가 김) | 최소 (22줄 디스패처) |
 
 ### 3.3 IDE 지원
@@ -106,7 +106,7 @@
 | 의존성 맵 갱신 강제 | ❌ | ❌ | ❌ | ✅ Iron Law 6 |
 | 코드 리뷰 | Adversarial Review | ❌ | /gsd-review | ✅ reviewer 에이전트 |
 
-> **판정**: K-Harness가 가장 체계적. Iron Laws 6개는 다른 프레임워크에 없는 독자적 개념.
+> **판정**: K-Harness가 가장 체계적. Iron Laws 8개는 다른 프레임워크에 없는 독자적 개념.
 
 ### 4.4 Context Engineering
 
@@ -224,7 +224,7 @@
 - planner의 Direction Alignment: 새 기능이 프로젝트 방향에 부합하는지 자동 검증
 - BMAD, gstack, GSD 어디에도 이 수준의 명시적 방향 관리는 없음
 
-### Iron Laws (6개 불변 규칙)
+### Iron Laws (8개 불변 규칙)
 
 1. Mock Sync — 인터페이스 변경 시 mock 동기화 강제
 2. Type Check — 생성자/팩토리 호출 전 실제 소스 확인 강제
@@ -232,6 +232,8 @@
 4. Security — 코드/커밋에 credential 금지
 5. 3-Failure Stop — 동일 접근 3회 실패 시 중단 보고
 6. Dependency Map — 모듈 추가/변경 시 dependency-map 갱신 강제
+7. Feature Registry — 기능 추가 시 features.md 등록 강제
+8. Session Handoff — 세션 종료 시 project-state.md Quick Summary 갱신 강제
 
 > 다른 프레임워크에서 "규칙"을 명시적으로 코드화한 사례 없음
 
