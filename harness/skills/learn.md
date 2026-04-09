@@ -93,7 +93,7 @@ If the `reviewer` agent was run in this session and produced `[STATE-AUDIT]` fla
 
 ### Step 6: Update Agent Memory (if applicable)
 
-If an agent (reviewer, planner, sprint-manager) was used in this session, update its memory file in `docs/agent-memory/`:
+If an agent (reviewer, planner, sprint-manager, architect) was used in this session, update its memory file in `docs/agent-memory/`:
 
 1. Read `docs/agent-memory/{agent-name}.md`
 2. **Auto-initialize if needed**: If the file only contains `<!-- Example entries` placeholder comments and no real data:
@@ -108,6 +108,7 @@ If an agent (reviewer, planner, sprint-manager) was used in this session, update
    - **reviewer.md**: Add review patterns found, update statistics (total reviews +1, auto-fixes, escalations)
    - **planner.md**: Record estimation accuracy (planned vs actual), note architecture discoveries
    - **sprint-manager.md**: Update velocity (stories done/planned), record any scope drift incidents
+   - **architect.md**: Record design decisions made, module boundary insights, anti-patterns observed
 4. Keep entries concise — one line per learning, prefixed with `[S{sprint}-{story}]`
 5. Prune entries older than 5 sprints to stay within the 100-line limit
 6. If no agent was used in this session, skip this step

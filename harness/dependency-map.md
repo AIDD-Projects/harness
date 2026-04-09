@@ -4,13 +4,13 @@ A living document of module relationships. Update whenever modules are added or 
 
 ## Module Registry
 
-| Module | Layer | Purpose | Depends On | Depended By |
-|--------|-------|---------|------------|-------------|
+| Module | Layer | Purpose | Depends On | Depended By | Owner |
+|--------|-------|---------|------------|-------------|-------|
 <!-- Example:
-| auth       | domain        | User authentication    | -              | api, admin    |
-| api        | presentation  | REST endpoints         | auth, services | frontend      |
-| services   | application   | Business logic         | auth, database | api           |
-| database   | infrastructure| Data persistence       | -              | services      |
+| auth       | domain        | User authentication    | -              | api, admin    | Alice |
+| api        | presentation  | REST endpoints         | auth, services | frontend      | Bob   |
+| services   | application   | Business logic         | auth, database | api           | Alice |
+| database   | infrastructure| Data persistence       | -              | services      | Carol |
 -->
 <!-- Add new modules above this line -->
 

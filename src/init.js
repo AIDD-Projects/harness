@@ -480,9 +480,11 @@ function runValidate(targetDir) {
   let warnings = 0;
 
   // Each state file has a known sentinel that only exists in unfilled templates
+  // Note: failure-patterns.md keeps FP-001~004 as templates intentionally after bootstrap.
+  // We check whether ALL four patterns are still at Frequency: 0 (zero real failures logged).
   const templateSentinels = {
     'project-state.md': 'S1-1 | Project scaffolding',
-    'failure-patterns.md': 'Template — activate when first occurrence is logged',
+    'failure-patterns.md': '<!-- Sprint/Story where this happened -->',
     'dependency-map.md': 'Add new modules above this line',
     'features.md': 'Add new features above this line',
     'project-brief.md': 'This is the north star for all decisions',

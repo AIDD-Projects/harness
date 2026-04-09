@@ -17,6 +17,7 @@ The Architect is invoked when changes affect multiple modules, introduce new lay
 - docs/dependency-map.md — Module dependency graph (the authoritative architecture source)
 - docs/features.md — Feature registry
 - docs/failure-patterns.md — Past architectural mistakes
+- docs/agent-memory/architect.md — Past design decisions and structural insights
 
 ## Procedure
 
@@ -29,6 +30,25 @@ One of:
 - **Dependency Question**: "Can [module A] depend on [module B]?"
 
 ### Steps
+
+**Step 0: State File Readiness**
+
+Before proceeding, verify that required state files have content:
+- `docs/dependency-map.md` — Must have at least one module row (for existing projects)
+- `docs/project-brief.md` — Must have Vision and Goals filled
+
+If ALL files are empty/placeholder-only → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
+
+**Step 0.5: Load Agent Memory**
+
+Read `docs/agent-memory/architect.md` for past learnings:
+- Design decisions made in previous sessions
+- Module boundary insights (coupling hotspots, stable layers)
+- Architectural anti-patterns observed in this project
+
+Apply these insights when evaluating the current proposal. If the memory file is empty or contains only placeholders, skip this step.
+
+> **Team Mode**: In Team mode, agent memory is personal (`.harness/agent-memory/`). Each developer accumulates their own architectural insights.
 
 **Step 1: Load Architecture Context**
 1. Read `docs/dependency-map.md` — understand current module graph

@@ -11,9 +11,12 @@ Read `docs/project-state.md` first. If all state files are empty, run `bootstrap
 
 - First time / empty state → run `bootstrap`
 - Session start → run `sprint-manager` to check status
+- Structural / design change → run `architect` before planner
 - New feature → run `planner` before coding
 - Before commit → run `reviewer`
+- PR review → run `code-review-pr`
 - Bug or issue → run `investigate`
+- Before deploy / release → run `deployment`
 - Session end → run `learn`
 - Direction change → run `pivot`
 
