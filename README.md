@@ -21,10 +21,10 @@ Musher manages your **project's direction** — goals, decisions, scope — so L
 
 ```bash
 # Solo mode (default)
-npx musher init
+npx musher-engineering init
 
 # Team mode (multi-developer)
-npx musher init --team
+npx musher-engineering init --team
 ```
 
 Select your IDE when prompted. Files are installed into the current directory.
@@ -38,12 +38,12 @@ This scans your codebase and fills all 5 state files automatically.
 ### Non-interactive
 
 ```bash
-npx musher init --ide vscode
-npx musher init --ide claude
-npx musher init --ide cursor
-npx musher init --ide codex
-npx musher init --ide windsurf
-npx musher init --ide antigravity
+npx musher-engineering init --ide vscode
+npx musher-engineering init --ide claude
+npx musher-engineering init --ide cursor
+npx musher-engineering init --ide codex
+npx musher-engineering init --ide windsurf
+npx musher-engineering init --ide antigravity
 ```
 
 ### Options

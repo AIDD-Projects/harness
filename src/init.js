@@ -404,10 +404,10 @@ function showPostInstallGuide(ideName, mode) {
 // ─── CLI entry ───────────────────────────────────────────────
 function showHelp() {
   console.log(`
-  Musher — LLM Development Harness
+  Musher Engineering — IDE-agnostic AI Harness
 
   Usage:
-    npx musher init [options]
+    npx musher-engineering init [options]
 
   Options:
     --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
@@ -417,10 +417,10 @@ function showHelp() {
     --help           Show this help
 
   Examples:
-    npx musher init
-    npx musher init --ide vscode
-    npx musher init --ide vscode --mode team
-    npx musher init --ide claude --dir ./my-project
+    npx musher-engineering init
+    npx musher-engineering init --ide vscode
+    npx musher-engineering init --ide vscode --mode team
+    npx musher-engineering init --ide claude --dir ./my-project
 `);
 }
 
@@ -448,7 +448,7 @@ async function run(argv) {
   }
 
   if (args.command === 'init') {
-    console.log('\n  Musher — LLM Development Harness\n');
+    console.log('\n  Musher Engineering — IDE-agnostic AI Harness\n');
 
     // Determine IDE
     let ide = args.ide;

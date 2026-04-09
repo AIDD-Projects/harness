@@ -20,18 +20,20 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OG056501-Opensource-Poc/k-harness.git"
+    "url": "git+https://github.com/KTcorp-Opensource-Projects/musher-engineering.git"
   },
   "license": "MIT",
   "author": "KTcorp-Opensource-Projects",
   "main": "src/init.js",
   "bin": {
-    "musher": "bin/cli.js"
+    "musher": "bin/cli.js",
+    "musher-engineering": "bin/cli.js"
   },
   "files": [
     "bin/",
     "src/",
     "harness/",
+    "templates/",
     "README.md",
     "LICENSE"
   ],
