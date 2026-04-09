@@ -35,12 +35,15 @@ const SKILLS = [
   { id: 'bootstrap', desc: 'Onboard project into Musher. Scans codebase and fills state files. Use after musher init or when state files are empty.' },
   { id: 'learn', desc: 'Capture session lessons and update state files. Use at the end of every session.' },
   { id: 'pivot', desc: 'Propagate direction changes across all state files. Use when project goals, technology, scope, or architecture changes.' },
+  { id: 'code-review-pr', desc: 'Review external Pull Requests for quality, security, and direction alignment. Use when reviewing incoming PRs.' },
+  { id: 'deployment', desc: 'Pre-deployment validation checklist. Use before deploying, publishing, or creating release tags.' },
 ];
 
 const AGENTS = [
   { id: 'reviewer', file: 'agents/reviewer.md', desc: 'Code review + auto-fix. Validates quality, security, and test integrity before commits.' },
   { id: 'sprint-manager', file: 'agents/sprint-manager.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
   { id: 'planner', file: 'agents/planner.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
+  { id: 'architect', file: 'agents/architect.md', desc: 'Design review gate. Validates structural changes against project direction and module boundaries.' },
 ];
 
 const STATE_FILES = [
@@ -55,6 +58,7 @@ const AGENT_MEMORY_FILES = [
   'agent-memory/reviewer.md',
   'agent-memory/planner.md',
   'agent-memory/sprint-manager.md',
+  'agent-memory/architect.md',
 ];
 
 const PERSONAL_STATE_FILES = ['project-state.md', 'failure-patterns.md'];
@@ -401,6 +405,116 @@ function showPostInstallGuide(ideName, mode) {
   console.log(lines.join('\n'));
 }
 
+// ─── Doctor command ──────────────────────────────────────────
+function runDoctor(targetDir) {
+  console.log('\n  Musher Doctor — Installation Health Check\n');
+  const checks = [];
+  let passed = 0;
+  let failed = 0;
+
+  // Check state files
+  for (const file of STATE_FILES) {
+    const docsPath = path.join(targetDir, 'docs', file);
+    const harnessPath = path.join(targetDir, '.harness', file);
+    const exists = fs.existsSync(docsPath) || fs.existsSync(harnessPath);
+    if (exists) {
+      checks.push(`  ✅  ${file}`);
+      passed++;
+    } else {
+      checks.push(`  ❌  ${file} — not found`);
+      failed++;
+    }
+  }
+
+  // Check agent-memory files
+  for (const file of AGENT_MEMORY_FILES) {
+    const docsPath = path.join(targetDir, 'docs', file);
+    const harnessPath = path.join(targetDir, '.harness', file);
+    const exists = fs.existsSync(docsPath) || fs.existsSync(harnessPath);
+    if (exists) {
+      checks.push(`  ✅  ${file}`);
+      passed++;
+    } else {
+      checks.push(`  ❌  ${file} — not found`);
+      failed++;
+    }
+  }
+
+  // Check for IDE-specific files (detect which IDE was used)
+  const ideChecks = [
+    ['.github/copilot-instructions.md', 'vscode'],
+    ['.claude/rules/core.md', 'claude'],
+    ['.cursor/rules/core.mdc', 'cursor'],
+    ['AGENTS.md', 'codex'],
+    ['.windsurf/rules/core.md', 'windsurf'],
+    ['GEMINI.md', 'antigravity'],
+  ];
+
+  let detectedIde = null;
+  for (const [file, ide] of ideChecks) {
+    if (fs.existsSync(path.join(targetDir, file))) {
+      detectedIde = ide;
+      checks.push(`  ✅  IDE detected: ${GENERATORS[ide].name}`);
+      passed++;
+      break;
+    }
+  }
+  if (!detectedIde) {
+    checks.push('  ❌  No IDE configuration found — run `musher init` first');
+    failed++;
+  }
+
+  // Detect mode
+  const isTeam = fs.existsSync(path.join(targetDir, '.harness'));
+  checks.push(`  ℹ️   Mode: ${isTeam ? 'Team' : 'Solo'}`);
+
+  console.log(checks.join('\n'));
+  console.log(`\n  Result: ${passed} passed, ${failed} failed\n`);
+  return failed === 0;
+}
+
+// ─── Validate command ────────────────────────────────────────
+function runValidate(targetDir) {
+  console.log('\n  Musher Validate — State File Content Check\n');
+  const results = [];
+  let warnings = 0;
+
+  // Each state file has a known sentinel that only exists in unfilled templates
+  const templateSentinels = {
+    'project-state.md': 'S1-1 | Project scaffolding',
+    'failure-patterns.md': 'Template — activate when first occurrence is logged',
+    'dependency-map.md': 'Add new modules above this line',
+    'features.md': 'Add new features above this line',
+    'project-brief.md': 'This is the north star for all decisions',
+  };
+
+  for (const file of STATE_FILES) {
+    const docsPath = path.join(targetDir, 'docs', file);
+    const harnessPath = path.join(targetDir, '.harness', file);
+    const filePath = fs.existsSync(docsPath) ? docsPath : (fs.existsSync(harnessPath) ? harnessPath : null);
+
+    if (!filePath) {
+      results.push(`  ❌  ${file} — not found`);
+      warnings++;
+      continue;
+    }
+
+    const content = fs.readFileSync(filePath, 'utf8');
+    const sentinel = templateSentinels[file];
+
+    if (sentinel && content.includes(sentinel)) {
+      results.push(`  ⚠️   ${file} — placeholder only. Run \`bootstrap\` to fill.`);
+      warnings++;
+    } else {
+      results.push(`  ✅  ${file} — has content`);
+    }
+  }
+
+  console.log(results.join('\n'));
+  console.log(`\n  Result: ${warnings === 0 ? 'All state files have content' : `${warnings} file(s) need attention`}\n`);
+  return warnings === 0;
+}
+
 // ─── CLI entry ───────────────────────────────────────────────
 function showHelp() {
   console.log(`
@@ -408,12 +522,20 @@ function showHelp() {
 
   Usage:
     npx musher-engineering init [options]
+    npx musher-engineering doctor [--dir <path>]
+    npx musher-engineering validate [--dir <path>]
+
+  Commands:
+    init             Install Musher files for your IDE
+    doctor           Check if Musher files are installed and healthy
+    validate         Verify state files have content (not just placeholders)
 
   Options:
     --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
     --mode <mode>    Project mode: solo (default) or team
     --dir <path>     Target directory (default: current directory)
     --overwrite      Overwrite existing files
+    --batch          Non-interactive mode (requires --ide; defaults to solo mode)
     --help           Show this help
 
   Examples:
@@ -421,19 +543,24 @@ function showHelp() {
     npx musher-engineering init --ide vscode
     npx musher-engineering init --ide vscode --mode team
     npx musher-engineering init --ide claude --dir ./my-project
+    npx musher-engineering doctor
+    npx musher-engineering validate
 `);
 }
 
 function parseArgs(argv) {
-  const args = { command: null, ide: null, mode: null, dir: process.cwd(), overwrite: false, help: false };
+  const args = { command: null, ide: null, mode: null, dir: process.cwd(), overwrite: false, help: false, batch: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === 'init') args.command = 'init';
+    else if (arg === 'doctor') args.command = 'doctor';
+    else if (arg === 'validate') args.command = 'validate';
     else if (arg === '--ide' && argv[i + 1]) { args.ide = argv[++i]; }
     else if (arg === '--mode' && argv[i + 1]) { args.mode = argv[++i]; }
     else if (arg === '--team') { args.mode = 'team'; }
     else if (arg === '--dir' && argv[i + 1]) { args.dir = path.resolve(argv[++i]); }
     else if (arg === '--overwrite') args.overwrite = true;
+    else if (arg === '--batch') args.batch = true;
     else if (arg === '--help' || arg === '-h') args.help = true;
   }
   return args;
@@ -447,6 +574,16 @@ async function run(argv) {
     process.exit(args.help ? 0 : 1);
   }
 
+  if (args.command === 'doctor') {
+    const ok = runDoctor(args.dir);
+    process.exit(ok ? 0 : 1);
+  }
+
+  if (args.command === 'validate') {
+    const ok = runValidate(args.dir);
+    process.exit(ok ? 0 : 1);
+  }
+
   if (args.command === 'init') {
     console.log('\n  Musher Engineering — IDE-agnostic AI Harness\n');
 
@@ -458,6 +595,10 @@ async function run(argv) {
       process.exit(1);
     }
     if (!ide) {
+      if (args.batch) {
+        console.error('  --batch requires --ide to be specified');
+        process.exit(1);
+      }
       ide = await promptIde();
     }
 
@@ -469,7 +610,11 @@ async function run(argv) {
       process.exit(1);
     }
     if (!mode) {
-      mode = await promptMode();
+      if (args.batch) {
+        mode = 'solo';
+      } else {
+        mode = await promptMode();
+      }
     }
 
     const gen = GENERATORS[ide];
@@ -487,4 +632,4 @@ async function run(argv) {
   }
 }
 
-module.exports = { run, detectLanguage };
+module.exports = { run, detectLanguage, runDoctor, runValidate };

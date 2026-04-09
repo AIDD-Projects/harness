@@ -23,7 +23,22 @@ This is Musher's memory mechanism — without it, the same mistakes repeat acros
 2. Identify what was accomplished in this session
 3. Identify any errors, failures, or unexpected issues that occurred
 
-### Step 2: Failure Pattern Detection
+### Step 2: Direction Drift Check
+
+Before recording failures, verify that the session's work stayed aligned with project direction:
+
+1. Read `docs/project-brief.md` — focus on **Goals**, **Non-Goals**, and **Decision Log**
+2. Compare this session's changes (from Step 1) against the brief:
+   - Did any change serve a Non-Goal? → Flag as potential direction drift
+   - Did any change contradict a Decision Log entry? → Flag as decision reversal
+   - Did the user explicitly change direction during this session? → Note for pivot recommendation
+3. **If drift detected**:
+   - Add a warning to the Step 6 Report: `⚠️ Direction drift: [description of misalignment]`
+   - Recommend: "Consider running `pivot` skill to formally update project direction"
+   - Do NOT block — the learn skill always completes
+4. **If no drift**: Proceed silently (no output for this step)
+
+### Step 3: Failure Pattern Detection
 
 For each issue/error that occurred in this session:
 
@@ -45,7 +60,7 @@ For each issue/error that occurred in this session:
 
 3. If the failure relates to a specific skill or agent, note it for that skill's checklist
 
-### Step 3: Update docs/project-state.md
+### Step 4: Update docs/project-state.md
 
 1. Update **Quick Summary** (3 lines):
    - Line 1: What was accomplished in this session
@@ -54,13 +69,13 @@ For each issue/error that occurred in this session:
 2. Update **Story Status** table if any stories changed
 3. Add to **Recent Changes** section with date and summary
 
-### Step 4: Update docs/features.md (if applicable)
+### Step 5: Update docs/features.md (if applicable)
 
 1. If new features were added → add row to Feature List
 2. If existing features were modified → update Key Files and Test Files columns
 3. If features were completed → update Status to `✅ done`
 
-### Step 4.5: Verify docs/dependency-map.md (mandatory)
+### Step 5.5: Verify docs/dependency-map.md (mandatory)
 
 1. Check if any new modules were created in this session (scan `git diff --stat` for new directories)
 2. Check if any module interfaces changed
@@ -69,29 +84,35 @@ For each issue/error that occurred in this session:
    - Interface change without Interface Change Log entry → **add it now**
 4. Cross-reference `docs/features.md` Key Files against `docs/dependency-map.md` modules — flag orphaned modules
 
-### Step 4.6: Resolve STATE-AUDIT Flags (if applicable)
+### Step 5.6: Resolve STATE-AUDIT Flags (if applicable)
 
 If the `reviewer` agent was run in this session and produced `[STATE-AUDIT]` flags:
 1. Review each flagged item
 2. Apply the recommended state file update
 3. If the flag was already resolved during the session, skip it
 
-### Step 5: Update Agent Memory (if applicable)
+### Step 6: Update Agent Memory (if applicable)
 
 If an agent (reviewer, planner, sprint-manager) was used in this session, update its memory file in `docs/agent-memory/`:
 
 1. Read `docs/agent-memory/{agent-name}.md`
-2. If the file only contains placeholder comments (`<!-- 예시:... -->`), initialize it by replacing the comments with actual entries. Example:
-   - Before: `<!-- 예시: Wave 1 추정: 정확 -->`
-   - After: `- [S1-2] Wave 1 추정: 정확 (3 tasks, 실제 소요 1일)`
-3. Add session-specific learnings to the appropriate section:
-   - **reviewer.md**: Review patterns, frequently missed items, statistics
-   - **planner.md**: Estimation accuracy, architecture insights, repeated patterns
-   - **sprint-manager.md**: Velocity data, scope drift incidents, sizing recommendations
-3. Keep entries concise — one line per learning
-4. If no agent was used in this session, skip this step
+2. **Auto-initialize if needed**: If the file only contains `<!-- Example entries` placeholder comments and no real data:
+   - Replace the placeholder block with actual entries from this session
+   - Initialize statistics counters with real values
+   - Example transformation:
+     ```
+     Before: <!-- Example entries (replace with real findings after first review):
+     After:  - [S1-1] Mock sync missed for UserService interface change
+     ```
+3. **Append session learnings** to the appropriate section:
+   - **reviewer.md**: Add review patterns found, update statistics (total reviews +1, auto-fixes, escalations)
+   - **planner.md**: Record estimation accuracy (planned vs actual), note architecture discoveries
+   - **sprint-manager.md**: Update velocity (stories done/planned), record any scope drift incidents
+4. Keep entries concise — one line per learning, prefixed with `[S{sprint}-{story}]`
+5. Prune entries older than 5 sprints to stay within the 100-line limit
+6. If no agent was used in this session, skip this step
 
-### Step 6: Report
+### Step 7: Report
 
 Present a summary of all updates made.
 
@@ -150,7 +171,23 @@ STATUS: DONE
 
 ### Pre-Pull (mandatory before any shared file edit)
 1. Run `git pull origin main` before updating docs/features.md or docs/dependency-map.md
-2. If merge conflicts occur, resolve them BEFORE proceeding
+2. If merge conflicts occur, follow the **Merge Conflict SOP** below
+
+### Merge Conflict SOP
+
+When `git pull` causes merge conflicts in shared state files:
+
+1. **Identify conflict files**: `git diff --name-only --diff-filter=U`
+2. **Resolution strategy by file type**:
+   | File | Strategy |
+   |------|----------|
+   | `docs/features.md` | Keep BOTH entries (merge=union should handle; if not, manually keep all rows) |
+   | `docs/dependency-map.md` | Keep BOTH entries (merge=union should handle; if not, manually keep all rows) |
+   | `docs/project-brief.md` | Use the REMOTE version (team lead's direction wins) |
+   | `docs/failure-patterns.md` | Keep BOTH entries, deduplicate by FP-NNN number |
+3. **After resolving**: `git add <resolved-files> && git commit`
+4. **Verify**: Re-read the resolved file and confirm no data was lost
+5. **If unsure**: Do NOT force-resolve. Ask the team lead or the Owner of the conflicting rows.
 
 ### Owner-Scoped Updates
 - **docs/features.md**: only update rows where Owner = you

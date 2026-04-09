@@ -1,36 +1,36 @@
 ---
 name: {agent-name}
-description: {에이전트의 한 줄 설명}
+description: {One-line description of the agent}
 ---
 
-# {Agent 이름}
+# {Agent Name}
 
-## 역할
-{이 에이전트의 책임과 권한을 2~3문장으로 정의}
+## Role
+{Define this agent's responsibilities and authority in 2-3 sentences}
 
-## 참조 Skills
+## Referenced Skills
 - {skill-name-1}.md
 - {skill-name-2}.md
 
-## 참조 파일
+## Referenced Files
 - failure-patterns.md
 - project-state.md
 
-## 절차
+## Procedure
 
-### 입력
-사용자가 제공해야 하는 정보:
-- {입력 1}
-- {입력 2}
+### Input
+Information the user must provide:
+- {input 1}
+- {input 2}
 
-### 실행 단계
-1. {단계 1}
-2. {단계 2}
-3. {단계 3}
+### Steps
+1. {Step 1}
+2. {Step 2}
+3. {Step 3}
 
-### 출력 형식
-{결과 형태 정의}
+### Output Format
+{Define the expected output structure}
 
-## 제약 사항
-- {이 에이전트가 하지 않아야 할 것 1}
-- {권한 범위 밖의 작업}
+## Constraints
+- {What this agent must NOT do}
+- {Actions outside this agent's authority}

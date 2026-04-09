@@ -1,34 +1,34 @@
-# {Skill 이름}
+# {Skill Name}
 
-## 목적
-{이 skill이 해결하는 구체적 문제를 1~2문장으로}
+## Purpose
+{Describe the specific problem this skill solves in 1-2 sentences}
 
-## 적용 조건
-이 skill을 사용해야 하는 상황:
-- {트리거 조건 1}
-- {트리거 조건 2}
+## When to Apply
+Situations where this skill should be used:
+- {Trigger condition 1}
+- {Trigger condition 2}
 
-## 절차
-1. {첫 번째 단계}
-2. {두 번째 단계}
-3. {세 번째 단계}
+## Procedure
+1. {First step}
+2. {Second step}
+3. {Third step}
 
-## 체크리스트
-- [ ] {필수 확인 항목 1}
-- [ ] {필수 확인 항목 2}
-- [ ] (FP-NNN) {실패 패턴에서 온 항목}
+## Checklist
+- [ ] {Required check 1}
+- [ ] {Required check 2}
+- [ ] (FP-NNN) {Item derived from a failure pattern}
 
-## 예시
+## Examples
 
 ### Good
 ```typescript
-// 올바른 구현 예시
+// Correct implementation example
 ```
 
 ### Bad
 ```typescript
-// 흔한 실수 예시
+// Common mistake example
 ```
 
-## 관련 실패 패턴
-- FP-NNN: {설명} → 체크리스트 항목 X에 반영됨
+## Related Failure Patterns
+- FP-NNN: {description} → reflected in checklist item X

@@ -6,7 +6,7 @@
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.5.0** — Core framework is functional. Actively seeking feedback from real-world team usage.
+> **v0.6.0** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
 
 ## The Problem
 
@@ -61,7 +61,18 @@ npx musher-engineering init --ide antigravity
 | `--ide <name>` | Target IDE: `vscode`, `claude`, `cursor`, `codex`, `windsurf`, `antigravity` |
 | `--dir <path>` | Target directory (default: current directory) |
 | `--team` | Enable Team Mode (multi-developer, personal state in `.harness/`) |
+| `--batch` | Non-interactive mode (requires `--ide`; defaults to solo mode) |
 | `--overwrite` | Overwrite existing files |
+
+### Health Check
+
+```bash
+# Verify Musher files are installed
+npx musher-engineering doctor
+
+# Verify state files have real content (not just placeholders)
+npx musher-engineering validate
+```
 
 ## Supported IDEs
 
@@ -79,22 +90,25 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 ## What Gets Installed
 
 ### Dispatcher (always active)
-- **Core Rules** — 22-line dispatcher: session start guidance, workflow references, state file list. Detailed rules are embedded in each skill/agent that enforces them.
+- **Core Rules** — 39-line dispatcher: session start guidance, workflow references, state file list, and Iron Laws. Detailed rules are embedded in each skill/agent that enforces them.
 
 ### Skills (on-demand procedures)
 - **bootstrap** — Onboard project into Musher: scans codebase + fills state files automatically
-- **learn** — End-of-session wrap-up: captures failure patterns, updates project state
+- **learn** — End-of-session wrap-up: captures failure patterns, updates project state, detects direction drift
 - **pivot** — Propagate direction changes across all state files when goals/tech/scope changes
 - **test-integrity** — Verify mock/interface synchronization before committing
 - **security-checklist** — Pre-commit security risk scan
 - **investigate** — 4-phase systematic debugging (evidence → scope → fix → verify)
 - **impact-analysis** — Assess change blast radius before modifying shared modules
 - **feature-breakdown** — Decompose features into dependency-ordered implementation tasks
+- **code-review-pr** — Review incoming Pull Requests for quality, security, and direction alignment
+- **deployment** — Pre-deployment validation checklist (tests, state files, security, versioning)
 
 ### Agents (role-based personas)
 - **planner** — Feature planning, dependency analysis, Direction Alignment (goal/non-goal/decision check)
 - **reviewer** — Code review + State File Audit (verifies state files were actually updated)
 - **sprint-manager** — Sprint/Story state management, scope drift prevention, Next Step Recommendation
+- **architect** — Design review gate: validates structural changes against project direction and module boundaries
 
 ### State Files (project memory)
 - **project-brief.md** — Project vision, goals, non-goals, Decision Log (the "why")
@@ -153,6 +167,21 @@ npx musher-engineering init --team
 - **FP Promotion** — Local failure patterns get promoted to shared `failure-patterns.md` so the whole team learns from each developer's mistakes
 - **Owner Tracking** — Dependency map marks module owners to prevent accidental cross-team overwrites
 
+## Iron Laws
+
+These 8 rules are enforced across all skills and agents. They form the quality backbone of every Musher-managed project.
+
+| # | Law | Enforced By |
+|---|-----|-------------|
+| 1 | **Mock Sync** — Interface change → update mocks in the same commit | `reviewer`, `test-integrity` |
+| 2 | **Type Check** — Read the source before calling constructors. Never trust memory. | `reviewer` |
+| 3 | **Scope Compliance** — Stay within current Story scope. Report before modifying out-of-scope files. | `sprint-manager`, `reviewer` |
+| 4 | **Security** — No credentials, passwords, or API keys in code or commits. | `security-checklist`, `reviewer` |
+| 5 | **3-Failure Stop** — Same approach fails 3 times → stop and report. | All agents |
+| 6 | **Dependency Map** — New/modified module → update `dependency-map.md` in the same commit. | `reviewer`, `learn` |
+| 7 | **Feature Registry** — New feature → register in `features.md` in the same commit. | `reviewer`, `learn` |
+| 8 | **Session Handoff** — Session end → update `project-state.md` Quick Summary. | `learn` |
+
 ## Documentation
 
 See [docs/reference.md](docs/reference.md) for detailed descriptions of every skill, agent, rule, and state file.
@@ -168,7 +197,7 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 | | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | Musher |
 |---|---|---|---|---|
 | Focus | Enterprise SDLC methodology | 1-person software factory | Full lifecycle automation | **Multi-developer direction alignment** |
-| Files | 200+ | ~40 | Hundreds | ~20 |
+| Files | 200+ | ~40 | Hundreds | ~25 |
 | Dependencies | Node 20+ | Bun + Node + Playwright | Node 18+ | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 6 (native format) |
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
@@ -178,13 +207,13 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 
 ## Roadmap
 
-Musher is at **v0.5.0** — the core framework works, but we're actively hardening it based on real-world usage.
+Musher is at **v0.6.0** — the framework has been hardened with additional skills, agents, and CLI tools.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
-| **Foundation** | v0.5.0 | ✅ Current | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
-| **Hardening** | v0.6.0 | 🔜 Next | Git hooks for Pre-Pull enforcement, CI/CD direction guard checks, automated Owner validation |
-| **Intelligence** | v0.7.0 | Planned | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
+| **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
+| **Hardening** | v0.6.0 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
+| **Intelligence** | v0.7.0 | 🔜 Next | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
 | **Ecosystem** | v0.8.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
 | **Production** | v1.0.0 | Planned | Battle-tested across enterprise teams, comprehensive docs, stable API guarantee |
 

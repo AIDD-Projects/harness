@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
-const { run, detectLanguage } = require('../src/init');
+const { run, detectLanguage, runDoctor, runValidate } = require('../src/init');
 
 // Helper: create a temp directory and clean up after
 function makeTmpDir() {
@@ -19,7 +19,7 @@ function rmDir(dir) {
 // ─── File count expectations per IDE ────────────────────────
 const EXPECTED_FILES = {
   vscode: {
-    count: 20,
+    count: 24,
     required: [
       '.github/copilot-instructions.md',
       '.github/skills/test-integrity/SKILL.md',
@@ -27,13 +27,17 @@ const EXPECTED_FILES = {
       '.github/skills/bootstrap/SKILL.md',
       '.github/skills/learn/SKILL.md',
       '.github/skills/pivot/SKILL.md',
+      '.github/skills/code-review-pr/SKILL.md',
+      '.github/skills/deployment/SKILL.md',
       '.github/agents/reviewer.agent.md',
+      '.github/agents/architect.agent.md',
       'docs/project-state.md',
       'docs/features.md',
+      'docs/agent-memory/architect.md',
     ],
   },
   claude: {
-    count: 20,
+    count: 24,
     required: [
       '.claude/rules/core.md',
       '.claude/skills/test-integrity/SKILL.md',
@@ -41,26 +45,32 @@ const EXPECTED_FILES = {
       '.claude/skills/bootstrap/SKILL.md',
       '.claude/skills/learn/SKILL.md',
       '.claude/skills/pivot/SKILL.md',
+      '.claude/skills/code-review-pr/SKILL.md',
+      '.claude/skills/deployment/SKILL.md',
       '.claude/agents/reviewer.md',
       '.claude/agents/planner.md',
       '.claude/agents/sprint-manager.md',
+      '.claude/agents/architect.md',
       'docs/project-state.md',
     ],
   },
   cursor: {
-    count: 20,
+    count: 24,
     required: [
       '.cursor/rules/core.mdc',
       '.cursor/skills/test-integrity/SKILL.md',
       '.cursor/skills/bootstrap/SKILL.md',
       '.cursor/skills/learn/SKILL.md',
       '.cursor/skills/pivot/SKILL.md',
+      '.cursor/skills/code-review-pr/SKILL.md',
+      '.cursor/skills/deployment/SKILL.md',
       '.cursor/agents/reviewer.md',
+      '.cursor/agents/architect.md',
       'docs/project-state.md',
     ],
   },
   codex: {
-    count: 20,
+    count: 24,
     required: [
       'AGENTS.md',
       '.agents/skills/test-integrity/SKILL.md',
@@ -68,33 +78,42 @@ const EXPECTED_FILES = {
       '.agents/skills/bootstrap/SKILL.md',
       '.agents/skills/learn/SKILL.md',
       '.agents/skills/pivot/SKILL.md',
+      '.agents/skills/code-review-pr/SKILL.md',
+      '.agents/skills/deployment/SKILL.md',
       '.codex/agents/reviewer.toml',
       '.codex/agents/planner.toml',
       '.codex/agents/sprint-manager.toml',
+      '.codex/agents/architect.toml',
       'docs/project-state.md',
     ],
   },
   windsurf: {
-    count: 20,
+    count: 24,
     required: [
       '.windsurf/rules/core.md',
       '.windsurf/skills/test-integrity/SKILL.md',
       '.windsurf/skills/bootstrap/SKILL.md',
       '.windsurf/skills/learn/SKILL.md',
       '.windsurf/skills/pivot/SKILL.md',
+      '.windsurf/skills/code-review-pr/SKILL.md',
+      '.windsurf/skills/deployment/SKILL.md',
       '.windsurf/skills/reviewer/SKILL.md',
+      '.windsurf/skills/architect/SKILL.md',
       'docs/project-state.md',
     ],
   },
   antigravity: {
-    count: 20,
+    count: 24,
     required: [
       'GEMINI.md',
       '.gemini/skills/test-integrity/SKILL.md',
       '.gemini/skills/bootstrap/SKILL.md',
       '.gemini/skills/learn/SKILL.md',
       '.gemini/skills/pivot/SKILL.md',
+      '.gemini/skills/code-review-pr/SKILL.md',
+      '.gemini/skills/deployment/SKILL.md',
       '.gemini/agents/planner.md',
+      '.gemini/agents/architect.md',
       'docs/project-state.md',
     ],
   },
@@ -348,6 +367,7 @@ describe('musher init', () => {
         assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/reviewer.md')), 'Missing .harness/agent-memory/reviewer.md');
         assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/planner.md')), 'Missing .harness/agent-memory/planner.md');
         assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/sprint-manager.md')), 'Missing .harness/agent-memory/sprint-manager.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/architect.md')), 'Missing .harness/agent-memory/architect.md');
       });
 
       it('places shared state files in docs/', () => {
@@ -361,8 +381,8 @@ describe('musher init', () => {
         assert.ok(!fs.existsSync(path.join(tmpDir, 'docs/failure-patterns.md')), 'docs/failure-patterns.md should not exist in team mode');
       });
 
-      it('generates total 22 files (20 base + .gitignore + .gitattributes)', () => {
-        assert.equal(countFiles(tmpDir), 22);
+      it('generates total 26 files (24 base + .gitignore + .gitattributes)', () => {
+        assert.equal(countFiles(tmpDir), 26);
       });
     });
 
@@ -441,14 +461,14 @@ describe('musher init', () => {
 
     describe('all 6 IDEs team mode file count', () => {
       for (const ide of Object.keys(EXPECTED_FILES)) {
-        it(`--ide ${ide} --mode team generates 22 files`, async () => {
+        it(`--ide ${ide} --mode team generates 26 files`, async () => {
           const tmpDir = makeTmpDir();
           const origLog = console.log;
           console.log = () => {};
           await run(['init', '--ide', ide, '--mode', 'team', '--dir', tmpDir]);
           console.log = origLog;
 
-          assert.equal(countFiles(tmpDir), 22, `${ide} team mode should have 22 files`);
+          assert.equal(countFiles(tmpDir), 26, `${ide} team mode should have 26 files`);
           rmDir(tmpDir);
         });
       }
@@ -748,6 +768,196 @@ describe('musher init', () => {
       it('Team skills have more content than Solo (Team blocks preserved)', () => {
         assert.ok(teamLen > soloLen, `Team content (${teamLen}) should be larger than Solo (${soloLen})`);
       });
+    });
+  });
+
+  // ─── Batch mode tests ──────────────────────────────────────
+
+  describe('--batch mode', () => {
+    it('--batch with --ide works without interactive prompts', async () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--batch', '--dir', tmpDir]);
+      console.log = origLog;
+
+      assert.equal(countFiles(tmpDir), 24, 'Batch mode should generate 24 files (solo default)');
+      rmDir(tmpDir);
+    });
+
+    it('--batch without --ide exits with error', async () => {
+      const origExit = process.exit;
+      const origError = console.error;
+      const origLog = console.log;
+      let exitCode = null;
+      let errorMsg = '';
+
+      process.exit = (code) => {
+        exitCode = code;
+        throw new Error('EXIT');
+      };
+      console.error = (msg) => { errorMsg += msg; };
+      console.log = () => {};
+
+      try {
+        await run(['init', '--batch']);
+      } catch (e) {
+        // expected
+      }
+
+      process.exit = origExit;
+      console.error = origError;
+      console.log = origLog;
+
+      assert.equal(exitCode, 1);
+      assert.ok(errorMsg.includes('--batch requires --ide'), 'Should show batch requires IDE error');
+    });
+
+    it('--batch defaults to solo mode', async () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'claude', '--batch', '--dir', tmpDir]);
+      console.log = origLog;
+
+      assert.ok(!fs.existsSync(path.join(tmpDir, '.harness')), 'Batch default should be solo (no .harness/)');
+      rmDir(tmpDir);
+    });
+
+    it('--batch with --team works', async () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'cursor', '--batch', '--team', '--dir', tmpDir]);
+      console.log = origLog;
+
+      assert.ok(fs.existsSync(path.join(tmpDir, '.harness')), 'Batch with --team should create .harness/');
+      rmDir(tmpDir);
+    });
+  });
+
+  // ─── Doctor command tests ──────────────────────────────────
+
+  describe('doctor command', () => {
+    it('returns true for a fully installed project', async () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+
+      const result = runDoctor(tmpDir);
+      console.log = origLog;
+
+      assert.equal(result, true, 'Doctor should pass for fully installed project');
+      rmDir(tmpDir);
+    });
+
+    it('returns false for empty directory', () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+
+      const result = runDoctor(tmpDir);
+      console.log = origLog;
+
+      assert.equal(result, false, 'Doctor should fail for empty directory');
+      rmDir(tmpDir);
+    });
+
+    it('detects team mode', async () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      const logs = [];
+      console.log = (msg) => { if (msg) logs.push(msg); };
+      await run(['init', '--ide', 'claude', '--mode', 'team', '--dir', tmpDir]);
+      logs.length = 0;
+
+      runDoctor(tmpDir);
+      console.log = origLog;
+
+      const output = logs.join('\n');
+      assert.ok(output.includes('Team'), 'Doctor should detect team mode');
+      rmDir(tmpDir);
+    });
+  });
+
+  // ─── Validate command tests ────────────────────────────────
+
+  describe('validate command', () => {
+    it('returns false for placeholder-only state files', async () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+
+      const result = runValidate(tmpDir);
+      console.log = origLog;
+
+      // Freshly installed state files only have placeholders/TODOs
+      assert.equal(result, false, 'Validate should fail for placeholder-only files');
+      rmDir(tmpDir);
+    });
+
+    it('returns false for missing state files', () => {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+
+      const result = runValidate(tmpDir);
+      console.log = origLog;
+
+      assert.equal(result, false, 'Validate should fail for missing files');
+      rmDir(tmpDir);
+    });
+  });
+
+  // ─── New skills and agents content tests ───────────────────
+
+  describe('new skills and agents', () => {
+    let tmpDir;
+
+    before(async () => {
+      tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+      console.log = origLog;
+    });
+
+    after(() => {
+      rmDir(tmpDir);
+    });
+
+    it('code-review-pr skill has direction alignment step', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/skills/code-review-pr/SKILL.md'),
+        'utf8',
+      );
+      assert.ok(content.includes('Direction Alignment'), 'code-review-pr should have direction alignment');
+    });
+
+    it('deployment skill has version check step', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/skills/deployment/SKILL.md'),
+        'utf8',
+      );
+      assert.ok(content.includes('Version Check'), 'deployment should have version check');
+    });
+
+    it('architect agent has design evaluation', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/agents/architect.agent.md'),
+        'utf8',
+      );
+      assert.ok(content.includes('Design Evaluation'), 'architect should have design evaluation');
+    });
+
+    it('core-rules contains Iron Laws', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/copilot-instructions.md'),
+        'utf8',
+      );
+      assert.ok(content.includes('Iron Laws'), 'core-rules should contain Iron Laws');
     });
   });
 });
