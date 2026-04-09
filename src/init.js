@@ -479,12 +479,11 @@ function runValidate(targetDir) {
   const results = [];
   let warnings = 0;
 
-  // Each state file has a known sentinel that only exists in unfilled templates
-  // Note: failure-patterns.md keeps FP-001~004 as templates intentionally after bootstrap.
-  // We check whether ALL four patterns are still at Frequency: 0 (zero real failures logged).
+  // Each state file has a known sentinel that only exists in unfilled templates.
+  // failure-patterns.md is excluded: it intentionally keeps FP-001~004 as templates
+  // after bootstrap (Frequency: 0 is the normal initial state, not a placeholder).
   const templateSentinels = {
     'project-state.md': 'S1-1 | Project scaffolding',
-    'failure-patterns.md': '<!-- Sprint/Story where this happened -->',
     'dependency-map.md': 'Add new modules above this line',
     'features.md': 'Add new features above this line',
     'project-brief.md': 'This is the north star for all decisions',
@@ -504,7 +503,10 @@ function runValidate(targetDir) {
     const content = fs.readFileSync(filePath, 'utf8');
     const sentinel = templateSentinels[file];
 
-    if (sentinel && content.includes(sentinel)) {
+    if (!sentinel) {
+      // failure-patterns.md: no sentinel check — template state is normal
+      results.push(`  ✅  ${file} — ok (no failures logged yet is normal)`);
+    } else if (content.includes(sentinel)) {
       results.push(`  ⚠️   ${file} — placeholder only. Run \`bootstrap\` to fill.`);
       warnings++;
     } else {

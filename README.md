@@ -6,7 +6,7 @@
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.6.1** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
+> **v0.6.2** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
 
 ## The Problem
 
@@ -207,12 +207,12 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 
 ## Roadmap
 
-Musher is at **v0.6.1** — the framework has been hardened with additional skills, agents, and CLI tools.
+Musher is at **v0.6.2** — the framework has been hardened with additional skills, agents, and CLI tools.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
-| **Hardening** | v0.6.1 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
+| **Hardening** | v0.6.2 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Intelligence** | v0.7.0 | 🔜 Next | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
 | **Ecosystem** | v0.8.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
 | **Production** | v1.0.0 | Planned | Battle-tested across enterprise teams, comprehensive docs, stable API guarantee |
