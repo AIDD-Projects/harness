@@ -1,8 +1,8 @@
-# Musher 파일 구조
+# kode:musher 파일 구조
 
 IDE 네이티브 커스터마이징 파일의 배치와 역할
 
-> **버전**: v0.9.2 (IDE Agent Placement 수정)  
+> **버전**: v1.0.0 (IDE Agent Placement 수정)  
 > **최종 업데이트**: 2026-04-09
 
 ---
@@ -110,7 +110,7 @@ project-root/
 
 ## 3. Team Mode 경로 치환 (resolveContent)
 
-Team 모드에서 `npx musher init --team` 실행 시, 모든 스킬·에이전트 파일 내용에서 경로가 자동 치환됩니다:
+Team 모드에서 `npx musher-engineering init --team` 실행 시, 모든 스킬·에이전트 파일 내용에서 경로가 자동 치환됩니다:
 
 | 원본 경로 | Team 모드 치환 |
 |---|---|
@@ -201,7 +201,7 @@ docs/                              (3개, 공유만)
 
 ## 7. BMAD 대비 파일 수 비교
 
-| 범주 | BMAD | Musher Full |
+| 범주 | BMAD | kode:musher Full |
 |------|------|---------------|
 | 에이전트 정의 | 11 | 3 |
 | 워크플로우 | 3 | 0 (agent 내 인라인) |
@@ -215,4 +215,4 @@ docs/                              (3개, 공유만)
 
 ---
 
-_이 문서는 Musher v0.9.0 파일 구조의 레퍼런스입니다. Solo/Team 모드에 따라 State File 배치가 달라집니다._
+_이 문서는 kode:musher v1.0.0 파일 구조의 레퍼런스입니다. Solo/Team 모드에 따라 State File 배치가 달라집니다._

@@ -4,7 +4,7 @@
 
 ## Quick Summary
 
-Musher v0.9.2 npm 배포 완료. 6 IDE 지원 (vscode, claude, cursor, codex, windsurf, antigravity). 22줄 디스패처 패턴, 규칙 임베딩, Team Mode, 103 테스트. 다음 단계: 실제 프로젝트 파일럿 (Gate 1).
+kode:musher v1.0.0 npm 배포 완료. 6 IDE 지원 (vscode, claude, cursor, codex, windsurf, antigravity). 22줄 디스패쳐 패턴, 규칙 임베딩, Team Mode, 103 테스트. 다음 단계: 실제 프로젝트 파일럿 (Gate 1).
 
 ## Current Sprint
 
@@ -16,7 +16,7 @@ Musher v0.9.2 npm 배포 완료. 6 IDE 지원 (vscode, claude, cursor, codex, wi
 
 | ID | Title | Status | Assignee |
 |----|-------|--------|----------|
-| S2-1 | Musher 자체에 harness 적용 (dogfooding) | ✅ done | - |
+| S2-1 | kode:musher 자체에 harness 적용 (dogfooding) | ✅ done | - |
 | S2-2 | Antigravity 제너레이터 + SKILL.md 포맷 | ✅ done | - |
 | S2-3 | Augment 제너레이터 Skills 추가 | ✅ done | - |
 | S2-4 | npm publish v0.3.0 | ✅ done | - |

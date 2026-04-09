@@ -6,7 +6,7 @@ LLM 코딩 에이전트의 반복 실패를 방지하는 IDE-agnostic 개발 하
 
 ## Goals
 
-- 5개 IDE(VS Code, Claude, Cursor, Codex, Windsurf) 지원 — `npx musher init`으로 원커맨드 설치
+- 6개 IDE(VS Code, Claude, Cursor, Codex, Windsurf, Gemini CLI) 지원 — `npx musher-engineering init`으로 원커맨드 설치
 - 세션 간 컨텍스트 유지 — Session Handoff Protocol, New Session Bootstrap
 - 기능 추적 — features.md로 LLM이 프로젝트 전체 기능을 파악
 - 프로젝트별 맞춤 — project-brief.md로 방향성, failure-patterns.md로 실패 학습
