@@ -1,6 +1,6 @@
 {
   "name": "musher-engineering",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Musher Engineering — Keep every developer's AI aligned on one project direction. Direction management framework for multi-developer LLM-driven development.",
   "keywords": [
     "llm",

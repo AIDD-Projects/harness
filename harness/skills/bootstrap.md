@@ -99,6 +99,25 @@ Using language/framework detected in Phase 1 + user answers from Phase 2, enrich
 3. Apply corrections if any
 4. Report completion
 
+<!-- TEAM_MODE_START -->
+## Team Mode: File Locations
+
+In Team mode, state files are split between shared and personal directories:
+
+### Shared (docs/, git committed)
+- `docs/project-brief.md` — project vision, goals, non-goals
+- `docs/features.md` — feature registry
+- `docs/dependency-map.md` — module dependency graph
+
+### Personal (.harness/, gitignored)
+- `.harness/project-state.md` — current sprint/story progress
+- `.harness/failure-patterns.md` — personal failure patterns
+- `.harness/agent-memory/` — agent memory files
+
+When filling state files in Phase 3, write to the correct directories based on this split.
+After bootstrap completes, remind the user that shared files require `git pull` before editing (Pre-Pull Protocol).
+<!-- TEAM_MODE_END -->
+
 ## Output Format
 
 ```

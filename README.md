@@ -6,7 +6,7 @@
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.6.2** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
+> **v0.6.3** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
 
 ## The Problem
 
@@ -59,10 +59,12 @@ npx musher-engineering init --ide antigravity
 | Flag | Description |
 |------|-------------|
 | `--ide <name>` | Target IDE: `vscode`, `claude`, `cursor`, `codex`, `windsurf`, `antigravity` |
+| `--mode <mode>` | Project mode: `solo` (default) or `team` |
 | `--dir <path>` | Target directory (default: current directory) |
-| `--team` | Enable Team Mode (multi-developer, personal state in `.harness/`) |
+| `--team` | Shorthand for `--mode team` |
 | `--batch` | Non-interactive mode (requires `--ide`; defaults to solo mode) |
-| `--overwrite` | Overwrite existing files |
+| `--overwrite` | Overwrite existing files (including state files) |
+| `--version` | Show version number |
 
 ### Health Check
 
@@ -82,7 +84,7 @@ npx musher-engineering validate
 | **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/agents/*.md` |
 | **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/agents/*.md` |
 | **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.toml` |
-| **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | `.windsurf/skills/*/SKILL.md` |
+| **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | *(agents installed as skills)* |
 | **Gemini CLI** | `GEMINI.md` | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` |
 
 All IDEs also get state files (`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`) in the `docs/` directory.
@@ -90,7 +92,7 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 ## What Gets Installed
 
 ### Dispatcher (always active)
-- **Core Rules** — 39-line dispatcher: session start guidance, workflow references, state file list, and Iron Laws. Detailed rules are embedded in each skill/agent that enforces them.
+- **Core Rules** — 42-line dispatcher: session start guidance, workflow references, state file list, and Iron Laws. Detailed rules are embedded in each skill/agent that enforces them.
 
 ### Skills (on-demand procedures)
 - **bootstrap** — Onboard project into Musher: scans codebase + fills state files automatically
@@ -153,15 +155,16 @@ npx musher-engineering init --team
 
 | | Solo Mode | Team Mode |
 |---|---|---|
-| State Files | `docs/` (git tracked) | `.harness/` (gitignored) |
+| Shared State | `docs/` (git tracked) | `docs/` (git tracked): project-brief, features, dependency-map |
+| Personal State | `docs/` (git tracked) | `.harness/` (gitignored): project-state, failure-patterns |
 | Agent Memory | `docs/agent-memory/` | `.harness/agent-memory/` |
 | Target | Solo developer | Enterprise team |
 | Team Rules | — | Pre-Pull, Owner, Read-Only, Append-Only, Pivot Lock, FP Promotion |
 
 **How it keeps everyone aligned:**
 
-- **Shared state** (`project-brief.md`, `failure-patterns.md`) is git-tracked — every developer's AI reads the same goals, non-goals, and decisions
-- **Personal state** (`project-state.md`, `features.md`, `dependency-map.md`) goes to `.harness/` (gitignored) — each developer tracks their own sprint progress without conflicts
+- **Shared state** (`project-brief.md`, `features.md`, `dependency-map.md`) is git-tracked — every developer's AI reads the same goals, non-goals, and decisions
+- **Personal state** (`project-state.md`, `failure-patterns.md`) goes to `.harness/` (gitignored) — each developer tracks their own sprint progress without conflicts
 - **Pre-Pull Protocol** — Before every session, AI pulls latest shared state so no one works on stale direction
 - **Pivot Lock** — Direction changes require the `pivot` skill, which updates ALL state files atomically and records the decision with reasoning
 - **FP Promotion** — Local failure patterns get promoted to shared `failure-patterns.md` so the whole team learns from each developer's mistakes
@@ -203,16 +206,16 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
 | Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (8 laws embedded in skills) |
 | Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`bootstrap` skill) |
-| Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (22-line dispatcher) |
+| Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (42-line dispatcher) |
 
 ## Roadmap
 
-Musher is at **v0.6.2** — the framework has been hardened with additional skills, agents, and CLI tools.
+Musher is at **v0.6.3** — the framework has been hardened with additional skills, agents, and CLI tools.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
-| **Hardening** | v0.6.2 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
+| **Hardening** | v0.6.3 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Intelligence** | v0.7.0 | 🔜 Next | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
 | **Ecosystem** | v0.8.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
 | **Production** | v1.0.0 | Planned | Battle-tested across enterprise teams, comprehensive docs, stable API guarantee |

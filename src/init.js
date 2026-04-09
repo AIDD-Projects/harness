@@ -14,13 +14,14 @@ function readTemplate(name) {
 // ─── File writer (mkdir -p + conflict check) ─────────────────
 function writeFile(targetDir, relPath, content, overwrite) {
   const fullPath = path.join(targetDir, relPath);
-  if (fs.existsSync(fullPath) && !overwrite) {
+  const exists = fs.existsSync(fullPath);
+  if (exists && !overwrite) {
     console.log(`  ⏭  Skipped (exists): ${relPath}`);
     return false;
   }
   fs.mkdirSync(path.dirname(fullPath), { recursive: true });
   fs.writeFileSync(fullPath, content, 'utf8');
-  console.log(`  ✓  ${relPath}`);
+  console.log(`  ${exists ? '↻' : '✓'}  ${relPath}`);
   return true;
 }
 
@@ -119,6 +120,10 @@ function detectLanguage(targetDir) {
     ['java', ['pom.xml', 'build.gradle', 'build.gradle.kts']],
     ['rust', ['Cargo.toml']],
     ['ruby', ['Gemfile']],
+    ['csharp', ['global.json', 'Directory.Build.props', 'nuget.config']],
+    ['php', ['composer.json']],
+    ['swift', ['Package.swift']],
+    ['dart', ['pubspec.yaml']],
   ];
   for (const [lang, files] of markers) {
     for (const f of files) {
@@ -192,10 +197,10 @@ function generateVscode(targetDir, overwrite, mode = 'solo') {
   const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
 
   // Global instructions (dispatcher only — rules are embedded in skills)
-  writeFile(targetDir, '.github/copilot-instructions.md', coreRules, overwrite);
+  writeFile(targetDir, '.github/copilot-instructions.md', coreRules, true);
 
   // Skills (.github/skills — VS Code default search path, SKILL.md with frontmatter)
-  writeSkills(targetDir, '.github/skills', overwrite, mode);
+  writeSkills(targetDir, '.github/skills', true, mode);
 
   // Agents (.github/agents — VS Code uses .agent.md format with frontmatter)
   for (const agent of AGENTS) {
@@ -203,24 +208,24 @@ function generateVscode(targetDir, overwrite, mode = 'solo') {
     const agentMd =
       `---\nname: ${agent.id}\ndescription: "${agent.desc}"\n---\n\n` +
       content;
-    writeFile(targetDir, `.github/agents/${agent.id}.agent.md`, agentMd, overwrite);
+    writeFile(targetDir, `.github/agents/${agent.id}.agent.md`, agentMd, true);
   }
 
-  // State files
+  // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode);
 }
 
 function generateClaude(targetDir, overwrite, mode = 'solo') {
   // .claude/rules/core.md — dispatcher only (no paths = always loaded)
-  writeFile(targetDir, '.claude/rules/core.md', resolveContent(readTemplate('core-rules.md'), mode), overwrite);
+  writeFile(targetDir, '.claude/rules/core.md', resolveContent(readTemplate('core-rules.md'), mode), true);
 
   // Skills (SKILL.md with frontmatter)
-  writeSkills(targetDir, '.claude/skills', overwrite, mode);
+  writeSkills(targetDir, '.claude/skills', true, mode);
 
   // Agents (.claude/agents/ — Claude Code agent definition files)
-  writeAgentsAsMd(targetDir, '.claude/agents', overwrite, mode);
+  writeAgentsAsMd(targetDir, '.claude/agents', true, mode);
 
-  // State files
+  // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode);
 }
 
@@ -230,29 +235,29 @@ function generateCursor(targetDir, overwrite, mode = 'solo') {
   const coreMdc =
     '---\ndescription: Musher dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
-  writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, overwrite);
+  writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, true);
 
   // Skills (.cursor/skills — invokable by mentioning skill name)
-  writeSkills(targetDir, '.cursor/skills', overwrite, mode);
+  writeSkills(targetDir, '.cursor/skills', true, mode);
 
   // Agents (.cursor/agents/ — Cursor subagent definition files)
-  writeAgentsAsMd(targetDir, '.cursor/agents', overwrite, mode);
+  writeAgentsAsMd(targetDir, '.cursor/agents', true, mode);
 
-  // State files
+  // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode);
 }
 
 function generateCodex(targetDir, overwrite, mode = 'solo') {
   // AGENTS.md — dispatcher only
-  writeFile(targetDir, 'AGENTS.md', resolveContent(readTemplate('core-rules.md'), mode), overwrite);
+  writeFile(targetDir, 'AGENTS.md', resolveContent(readTemplate('core-rules.md'), mode), true);
 
   // Skills (SKILL.md with frontmatter — invokable via $skill-name)
-  writeSkills(targetDir, '.agents/skills', overwrite, mode);
+  writeSkills(targetDir, '.agents/skills', true, mode);
 
   // Agents (.codex/agents/ — Codex TOML agent definition files)
-  writeAgentsAsToml(targetDir, '.codex/agents', overwrite, mode);
+  writeAgentsAsToml(targetDir, '.codex/agents', true, mode);
 
-  // State files
+  // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode);
 }
 
@@ -262,29 +267,29 @@ function generateWindsurf(targetDir, overwrite, mode = 'solo') {
   const coreRule =
     '---\ntrigger: always_on\n---\n\n' +
     coreRules;
-  writeFile(targetDir, '.windsurf/rules/core.md', coreRule, overwrite);
+  writeFile(targetDir, '.windsurf/rules/core.md', coreRule, true);
 
   // Skills (.windsurf/skills — Agent Skills standard)
-  writeSkills(targetDir, '.windsurf/skills', overwrite, mode);
+  writeSkills(targetDir, '.windsurf/skills', true, mode);
 
   // Agents as skills
-  writeAgentsAsSkills(targetDir, '.windsurf/skills', overwrite, mode);
+  writeAgentsAsSkills(targetDir, '.windsurf/skills', true, mode);
 
-  // State files
+  // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode);
 }
 
 function generateAntigravity(targetDir, overwrite, mode = 'solo') {
   // GEMINI.md — project context (always loaded by Gemini CLI)
-  writeFile(targetDir, 'GEMINI.md', resolveContent(readTemplate('core-rules.md'), mode), overwrite);
+  writeFile(targetDir, 'GEMINI.md', resolveContent(readTemplate('core-rules.md'), mode), true);
 
   // Skills (.gemini/skills/ — SKILL.md format)
-  writeSkills(targetDir, '.gemini/skills', overwrite, mode);
+  writeSkills(targetDir, '.gemini/skills', true, mode);
 
   // Agents (.gemini/agents/ — Gemini CLI subagent definition files)
-  writeAgentsAsMd(targetDir, '.gemini/agents', overwrite, mode);
+  writeAgentsAsMd(targetDir, '.gemini/agents', true, mode);
 
-  // State files
+  // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode);
 }
 
@@ -295,7 +300,7 @@ const GENERATORS = {
   cursor:       { name: 'Cursor',                fn: generateCursor },
   codex:        { name: 'Codex (OpenAI)',         fn: generateCodex },
   windsurf:     { name: 'Windsurf',              fn: generateWindsurf },
-  antigravity:  { name: 'Google Antigravity',    fn: generateAntigravity },
+  antigravity:  { name: 'Gemini CLI',            fn: generateAntigravity },
 };
 
 // ─── Interactive prompt ──────────────────────────────────────
@@ -395,7 +400,7 @@ function showPostInstallGuide(ideName, mode) {
     '  🚀 Next steps:',
     '     1. Ask your AI: "Run bootstrap to onboard this project"',
     '     2. AI scans your codebase and fills state files automatically',
-    '     3. Start coding with: @planner "Add [feature name]"',
+    '     3. Start coding: ask your AI to plan a new feature',
     '',
     '  📖 Docs: https://www.npmjs.com/package/musher-engineering',
     '  ──────────────────────────────────────────',
@@ -538,8 +543,9 @@ function showHelp() {
     --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
     --mode <mode>    Project mode: solo (default) or team
     --dir <path>     Target directory (default: current directory)
-    --overwrite      Overwrite existing files
+    --overwrite      Overwrite existing files (including state files)
     --batch          Non-interactive mode (requires --ide; defaults to solo mode)
+    --version        Show version number
     --help           Show this help
 
   Examples:
@@ -553,7 +559,7 @@ function showHelp() {
 }
 
 function parseArgs(argv) {
-  const args = { command: null, ide: null, mode: null, dir: process.cwd(), overwrite: false, help: false, batch: false };
+  const args = { command: null, ide: null, mode: null, dir: process.cwd(), overwrite: false, help: false, batch: false, version: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === 'init') args.command = 'init';
@@ -566,12 +572,19 @@ function parseArgs(argv) {
     else if (arg === '--overwrite') args.overwrite = true;
     else if (arg === '--batch') args.batch = true;
     else if (arg === '--help' || arg === '-h') args.help = true;
+    else if (arg === '--version') args.version = true;
   }
   return args;
 }
 
 async function run(argv) {
   const args = parseArgs(argv);
+
+  if (args.version) {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+    console.log(pkg.version);
+    process.exit(0);
+  }
 
   if (args.help || !args.command) {
     showHelp();
