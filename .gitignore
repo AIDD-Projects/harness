@@ -6,3 +6,14 @@ coverage/
 tmp_*
 debug_*
 .npmrc
+
+# Internal-only files (local development, not for OSS)
+docs/confluence-sync.json
+docs/analysis/comparison.md
+docs/strategy/
+project-state.md
+project-brief.md
+features.md
+dependency-map.md
+failure-patterns.md
+.vscode/instructions/

@@ -1,4 +1,4 @@
-# kode:musher Reference
+# Musher Reference
 
 All skills, agents, rules, and state files in one document.
 
@@ -10,7 +10,7 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 ### bootstrap
 
-**Purpose**: Onboard a project into kode:musher. Solves the cold-start problem.
+**Purpose**: Onboard a project into Musher. Solves the cold-start problem.
 
 **When**: Right after `musher init`, when state files are empty, or when joining an existing project.
 

@@ -4,11 +4,19 @@
 [![npm downloads](https://img.shields.io/npm/dm/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Project Direction Management Framework for LLM-Driven Development.
+**Keep every developer's AI aligned on one project direction.**
+
+> **v0.5.0** — Core framework is functional. Actively seeking feedback from real-world team usage.
+
+## The Problem
+
+When one developer uses an AI coding assistant, direction stays consistent. But in **enterprise teams**, each developer runs their own AI sessions — and each AI drifts independently. Developer A's AI refactors toward microservices while Developer B's AI doubles down on the monolith. Without shared direction management, **AI agents across multiple developers pull the project apart.**
+
+Musher Engineering solves this. It gives every developer's AI the same goals, non-goals, decisions, and project state — so all AI sessions converge on **one direction**, regardless of who's coding or which IDE they use.
 
 ## What It Does
 
-Musher manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned across sessions. It combines BMAD's systematic project management with gstack's simplicity: zero dependencies, IDE-native format generation, and minimal context overhead.
+Musher manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned **across developers and sessions**. Zero dependencies, 6 IDE support, native format generation.
 
 - **Direction Guard** — Every coding request is checked against project goals/non-goals before execution
 - **State Files** — 5 markdown files that persist project knowledge across LLM sessions
@@ -123,19 +131,27 @@ When goals, technology, or scope changes, run the `pivot` skill:
 
 ## Team Mode
 
-Since v0.9.0, Musher supports multi-developer environments with the `--team` flag.
+This is where Musher Engineering shines. When multiple developers each run their own AI sessions, direction divergence is inevitable — unless you have shared guardrails.
+
+```bash
+npx musher-engineering init --team
+```
 
 | | Solo Mode | Team Mode |
 |---|---|---|
 | State Files | `docs/` (git tracked) | `.harness/` (gitignored) |
 | Agent Memory | `docs/agent-memory/` | `.harness/agent-memory/` |
-| Target | Solo developer | Team (each developer maintains personal state) |
+| Target | Solo developer | Enterprise team |
 | Team Rules | — | Pre-Pull, Owner, Read-Only, Append-Only, Pivot Lock, FP Promotion |
 
-In Team Mode:
-- **Personal state** (project-state, features, dependency-map) goes to `.harness/` — gitignored, per-developer
-- **Shared state** (project-brief, failure-patterns) stays in `docs/` — git tracked, team-wide
-- **6 team rules** are auto-injected into core-rules and 11 skill/agent templates include team-specific guidance via `TEAM_MODE` markers
+**How it keeps everyone aligned:**
+
+- **Shared state** (`project-brief.md`, `failure-patterns.md`) is git-tracked — every developer's AI reads the same goals, non-goals, and decisions
+- **Personal state** (`project-state.md`, `features.md`, `dependency-map.md`) goes to `.harness/` (gitignored) — each developer tracks their own sprint progress without conflicts
+- **Pre-Pull Protocol** — Before every session, AI pulls latest shared state so no one works on stale direction
+- **Pivot Lock** — Direction changes require the `pivot` skill, which updates ALL state files atomically and records the decision with reasoning
+- **FP Promotion** — Local failure patterns get promoted to shared `failure-patterns.md` so the whole team learns from each developer's mistakes
+- **Owner Tracking** — Dependency map marks module owners to prevent accidental cross-team overwrites
 
 ## Documentation
 
@@ -143,9 +159,15 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 
 ## Why Musher?
 
+### The Core Insight
+
+Existing AI coding frameworks focus on **what the AI does** (generate code, run tests, deploy). Musher focuses on **where the AI is going** — ensuring every developer's AI moves in the same direction. This is the difference between a dog sled where each dog runs wherever it wants, and one where a musher keeps the whole team on course.
+
+### Comparison
+
 | | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | Musher |
 |---|---|---|---|---|
-| Focus | Enterprise SDLC methodology | 1-person software factory | Full lifecycle automation | Project direction management |
+| Focus | Enterprise SDLC methodology | 1-person software factory | Full lifecycle automation | **Multi-developer direction alignment** |
 | Files | 200+ | ~40 | Hundreds | ~20 |
 | Dependencies | Node 20+ | Bun + Node + Playwright | Node 18+ | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 6 (native format) |
@@ -153,6 +175,40 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 | Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (8 laws embedded in skills) |
 | Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`bootstrap` skill) |
 | Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (22-line dispatcher) |
+
+## Roadmap
+
+Musher is at **v0.5.0** — the core framework works, but we're actively hardening it based on real-world usage.
+
+| Phase | Version | Status | Focus |
+|---|---|---|---|
+| **Foundation** | v0.5.0 | ✅ Current | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
+| **Hardening** | v0.6.0 | 🔜 Next | Git hooks for Pre-Pull enforcement, CI/CD direction guard checks, automated Owner validation |
+| **Intelligence** | v0.7.0 | Planned | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
+| **Ecosystem** | v0.8.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
+| **Production** | v1.0.0 | Planned | Battle-tested across enterprise teams, comprehensive docs, stable API guarantee |
+
+### What We're Working On Now
+
+- [ ] Git hook integration for automatic Pre-Pull verification
+- [ ] CI pipeline to detect Direction Guard violations in PRs
+- [ ] Real-world case studies from enterprise team adoption
+- [ ] Automated state file conflict resolution for Team Mode
+- [ ] Performance benchmarks: with vs without Musher Engineering
+
+## Contributing & Feedback
+
+Musher is in active development and we'd love your input.
+
+- **Bug reports & feature requests** → [GitHub Issues](https://github.com/KTcorp-Opensource-Projects/musher-engineering/issues)
+- **Discussions & ideas** → [GitHub Discussions](https://github.com/KTcorp-Opensource-Projects/musher-engineering/discussions)
+- **Try it on your project** → `npx musher-engineering init` and tell us what works (or doesn't)
+
+We're especially interested in:
+- How Direction Guard performs in teams of 3+ developers
+- Whether the 6 Team Rules (Pre-Pull, Owner, Read-Only, etc.) are sufficient or need more
+- Which IDE integrations need improvement
+- What skills or agents are missing for your workflow
 
 ## License
 

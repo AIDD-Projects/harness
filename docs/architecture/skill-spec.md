@@ -1,6 +1,6 @@
 # Skill / Agent 작성 스펙
 
-> v1.0.0 | kode:musher 파일의 구조, 규칙, 작성 가이드
+> v0.9.0 | Musher 파일의 구조, 규칙, 작성 가이드
 
 ---
 
@@ -105,7 +105,7 @@ description: {한 줄 설명}
 - 권한 범위 밖의 작업
 ```
 
-### kode:musher 표준 에이전트
+### Musher 표준 에이전트
 
 #### `reviewer.agent.md`
 ```markdown
