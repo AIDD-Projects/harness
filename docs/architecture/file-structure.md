@@ -2,7 +2,7 @@
 
 IDE 네이티브 커스터마이징 파일의 배치와 역할
 
-> **버전**: v0.9.2 (IDE Agent Placement 수정)  
+> **버전**: v0.6.3 (IDE Agent Placement 수정)  
 > **최종 업데이트**: 2026-04-09
 
 ---
@@ -15,7 +15,7 @@ IDE 네이티브 커스터마이징 파일의 배치와 역할
 project-root/
 │
 ├── .github/
-│   ├── copilot-instructions.md          # 22줄 디스패처 (자동 주입)
+│   ├── copilot-instructions.md          # 42줄 디스패처 (자동 주입)
 │   ├── skills/                          # 스킬 (온디맨드 절차)
 │   │   ├── bootstrap/SKILL.md
 │   │   ├── feature-breakdown/SKILL.md
@@ -24,11 +24,14 @@ project-root/
 │   │   ├── learn/SKILL.md
 │   │   ├── pivot/SKILL.md
 │   │   ├── security-checklist/SKILL.md
-│   │   └── test-integrity/SKILL.md
-│   └── agents/                          # 전문 에이전트 (3개)
+│   │   ├── test-integrity/SKILL.md
+│   │   ├── code-review-pr/SKILL.md
+│   │   └── deployment/SKILL.md
+│   └── agents/                          # 전문 에이전트 (4개)
 │       ├── planner.agent.md
 │       ├── reviewer.agent.md
-│       └── sprint-manager.agent.md
+│       ├── sprint-manager.agent.md
+│       └── architect.agent.md
 │
 ├── docs/                                # State Files (영속 상태)
 │   ├── project-brief.md                 # 프로젝트 방향
@@ -39,7 +42,8 @@ project-root/
 │   └── agent-memory/                    # 에이전트 메모리
 │       ├── planner.md
 │       ├── reviewer.md
-│       └── sprint-manager.md
+│       ├── sprint-manager.md
+│       └── architect.md
 │
 ├── .claude/rules/core.md + skills/ + agents/     # Claude Code
 ├── .cursor/rules/core.mdc + skills/ + agents/     # Cursor
@@ -64,7 +68,8 @@ project-root/
 │   └── agent-memory/                    # 내 AI 메모리
 │       ├── planner.md
 │       ├── reviewer.md
-│       └── sprint-manager.md
+│       ├── sprint-manager.md
+│       └── architect.md
 │
 ├── .github/skills/                      # 스킬 (경로 자동 치환됨)
 ├── .github/agents/                      # 에이전트 (경로 자동 치환됨)
@@ -79,10 +84,10 @@ project-root/
 
 ## 2. 각 파일의 역할
 
-### `.github/copilot-instructions.md` — 디스패처 (22줄)
+### `.github/copilot-instructions.md` — 디스패처 (42줄)
 - **주입 시점**: 모든 Copilot Chat 대화에 자동
-- **내용**: 워크플로우 안내 (어떤 스킬/에이전트를 언제 호출할지), state 파일 목록
-- **크기 제한**: 30줄 이하 (매번 주입되므로 최소화 필수)
+- **내용**: 워크플로우 안내 (어떤 스킬/에이전트를 언제 호출할지), state 파일 목록, Iron Laws
+- **크기 제한**: 50줄 이하 (매번 주입되므로 최소화 필수)
 - **설계 철학**: 상세 규칙(Iron Laws, Testing Rules 등)은 각 스킬/에이전트에 임베딩. 디스패처는 워크플로우 안내만 담당.
 
 ### `.github/skills/` — 스킬 (온디맨드 절차)
@@ -153,8 +158,6 @@ agent.md                 ──→  skills/*.md (명시적 참조: "test-integri
 | **Codex (OpenAI)** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.toml` (TOML format) |
 | **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | `.windsurf/skills/*/SKILL.md` (에이전트도 스킬로) |
 | **Gemini CLI** | `GEMINI.md` | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` (YAML frontmatter) |
-
-> 6개 IDE에서 동일한 규칙/스킬/에이전트 콘텐츠를 각 IDE 네이티브 형식으로 생성합니다.
 > Windsurf는 별도 에이전트 개념이 없어 에이전트를 스킬로 배치합니다.
 
 ---
@@ -179,22 +182,22 @@ docs/                              (5개)
 ### Full Solo (1~2인, 장기 프로젝트)
 ```
 .github/copilot-instructions.md    (1개)
-.github/skills/                    (8개)
-.github/agents/                    (3개)
-docs/                              (5개 + agent-memory 3개)
-                                   ── 총 20개 파일
+.github/skills/                    (10개)
+.github/agents/                    (4개)
+docs/                              (5개 + agent-memory 4개)
+                                   ── 총 24개 파일
 ```
 
 ### Full Team (2~4인, 장기 프로젝트) — v0.9.0
 ```
 .github/copilot-instructions.md    (1개)
-.github/skills/                    (8개)
-.github/agents/                    (3개)
+.github/skills/                    (10개)
+.github/agents/                    (4개)
 docs/                              (3개, 공유만)
-.harness/                          (2개 + agent-memory 3개, 개인)
+.harness/                          (2개 + agent-memory 4개, 개인)
 .gitignore                         (.harness/ 추가)
 .gitattributes                     (merge=union 규칙)
-                                   ── 총 20개 파일 + git 설정 2개
+                                   ── 총 24개 파일 + git 설정 2개
 ```
 
 ---
@@ -203,7 +206,7 @@ docs/                              (3개, 공유만)
 
 | 범주 | BMAD | Musher Full |
 |------|------|---------------|
-| 에이전트 정의 | 11 | 3 |
+| 에이전트 정의 | 11 | 4 |
 | 워크플로우 | 3 | 0 (agent 내 인라인) |
 | 태스크 | 5 | 0 (skill로 통합) |
 | 매니페스트 | 6 | 0 |
@@ -211,8 +214,8 @@ docs/                              (3개, 공유만)
 | Story 파일 | 8~60 | 0 (docs/project-state.md에 통합) |
 | 설정 | 5+ | 0 |
 | 기타 | 20+ | 1 (copilot-instructions) |
-| **합계** | **200+** | **~20** |
+| **합계** | **200+** | **~24** |
 
 ---
 
-_이 문서는 Musher v0.9.0 파일 구조의 레퍼런스입니다. Solo/Team 모드에 따라 State File 배치가 달라집니다._
+_이 문서는 Musher v0.6.3 파일 구조의 레퍼런스입니다. Solo/Team 모드에 따라 State File 배치가 달라집니다._

@@ -262,6 +262,33 @@ describe('musher init', () => {
     });
   });
 
+  describe('--version flag', () => {
+    it('prints version and exits with code 0', async () => {
+      const origExit = process.exit;
+      const origLog = console.log;
+      let exitCode = null;
+      let output = '';
+
+      process.exit = (code) => {
+        exitCode = code;
+        throw new Error('EXIT');
+      };
+      console.log = (msg) => { output += msg; };
+
+      try {
+        await run(['--version']);
+      } catch (e) {
+        // expected
+      }
+
+      process.exit = origExit;
+      console.log = origLog;
+
+      assert.equal(exitCode, 0);
+      assert.match(output, /^\d+\.\d+\.\d+/, 'Should print semver version');
+    });
+  });
+
   describe('language detection', () => {
     it('detects Python from requirements.txt', () => {
       const tmpDir = makeTmpDir();
@@ -309,6 +336,34 @@ describe('musher init', () => {
       const tmpDir = makeTmpDir();
       fs.writeFileSync(path.join(tmpDir, 'Gemfile'), 'source "https://rubygems.org"\n');
       assert.equal(detectLanguage(tmpDir), 'ruby');
+      rmDir(tmpDir);
+    });
+
+    it('detects C# from global.json', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'global.json'), '{"sdk":{}}\n');
+      assert.equal(detectLanguage(tmpDir), 'csharp');
+      rmDir(tmpDir);
+    });
+
+    it('detects PHP from composer.json', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'composer.json'), '{"require":{}}\n');
+      assert.equal(detectLanguage(tmpDir), 'php');
+      rmDir(tmpDir);
+    });
+
+    it('detects Swift from Package.swift', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'Package.swift'), 'import PackageDescription\n');
+      assert.equal(detectLanguage(tmpDir), 'swift');
+      rmDir(tmpDir);
+    });
+
+    it('detects Dart from pubspec.yaml', () => {
+      const tmpDir = makeTmpDir();
+      fs.writeFileSync(path.join(tmpDir, 'pubspec.yaml'), 'name: myapp\n');
+      assert.equal(detectLanguage(tmpDir), 'dart');
       rmDir(tmpDir);
     });
 

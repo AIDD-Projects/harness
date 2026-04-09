@@ -4,7 +4,7 @@ All skills, agents, rules, and state files in one document.
 
 ---
 
-## Skills (8)
+## Skills (10)
 
 Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
@@ -156,7 +156,44 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 ---
 
-## Agents (3)
+### code-review-pr
+
+**Purpose**: Review external Pull Requests for quality, security, and direction alignment before merging. Unlike the `reviewer` agent (which reviews your own changes pre-commit), this skill is for reviewing incoming PRs.
+
+**When**: When assigned as a PR reviewer, when a teammate asks for review, when reviewing open-source contributions.
+
+**What it does**:
+1. Gathers PR context (title, description, diff, commit history)
+2. Direction Alignment — checks PR against `docs/project-brief.md` Goals/Non-Goals/Decision Log
+3. Scope Check — verifies changes are within expected scope
+4. Code quality review (architecture, logic, naming, error handling)
+5. Iron Laws check (Mock Sync, Type Check, Dependency Map, Feature Registry)
+6. Security scan (hardcoded secrets, dangerous patterns)
+7. Test coverage verification
+
+**Output**: PR review summary with APPROVE / REQUEST_CHANGES / COMMENT.
+
+---
+
+### deployment
+
+**Purpose**: Pre-deployment validation checklist. Ensures all quality gates pass and state files are consistent before releasing.
+
+**When**: Before deploying to staging/production, publishing npm packages, creating release tags.
+
+**What it does**:
+1. Version Check — verifies version bump is appropriate (patch/minor/major)
+2. Runs full test suite — all tests must pass
+3. State File Audit — checks all 5 state files for consistency
+4. Changelog verification — ensures changes are documented
+5. Security scan — no credentials, no debug code
+6. Manual confirmation checkpoint
+
+**Output**: Deploy readiness report with GO / NO-GO decision.
+
+---
+
+## Agents (4)
 
 Agents are role-based personas that enforce the workflow. Each reads state files and follows a procedure.
 
@@ -219,19 +256,39 @@ Agents are role-based personas that enforce the workflow. Each reads state files
 
 ---
 
+### architect
+
+**Role**: Design review gate. Validates structural changes against project direction and module boundaries.
+
+**When to call**: Before making structural changes, adding new modules, modifying the dependency graph, or changing layers. "Is this architecture change okay?", "Should I extract [concern]?", "Can [module A] depend on [module B]?"
+
+**Key behaviors**:
+- **Design Evaluation**: Assesses proposed changes against `docs/project-brief.md` and `docs/dependency-map.md`
+- Runs `impact-analysis` and `feature-breakdown` internally for complex changes
+- Validates module boundaries and dependency direction
+- Suggests alternatives and identifies trade-offs
+- Recommends `pivot` if the change represents a fundamental architecture shift
+
+**Referenced Files**: `docs/project-brief.md`, `docs/dependency-map.md`, `docs/features.md`, `docs/failure-patterns.md`, `docs/agent-memory/architect.md`.
+
+**Output**: Design evaluation with APPROVED / NEEDS_REVISION / RECOMMEND_PIVOT and rationale.
+
+---
+
 ## Dispatcher (1)
 
 The dispatcher is always active. LLM reads it automatically — no need to invoke.
 
-### core-rules (22줄 디스패처)
+### core-rules (42줄 디스패처)
 
 **File**: `core-rules.md` (global instructions)
 
 **Contains**:
 - 프로젝트 이름 표시
 - 세션 시작 시 `docs/project-state.md` 읽기 지시
-- 워크플로우 참조 (bootstrap → planner → code → reviewer → sprint-manager → learn)
+- 워크플로우 참조 (bootstrap → sprint-manager → architect → planner → code → reviewer → learn)
 - State 파일 목록 참조
+- Iron Laws (8개 불변 규칙)
 
 **Not included** (스킬/에이전트에 임베딩됨):
 - Iron Laws → `reviewer.agent.md`
@@ -310,9 +367,24 @@ State files persist project knowledge across LLM sessions. They live in the `doc
 bootstrap (if state files empty) → planner → [code] → reviewer → sprint-manager → learn
 ```
 
+### Structural Change
+```
+architect → planner → [code] → reviewer → learn
+```
+
 ### Bug Fix
 ```
 investigate → [fix] → test-integrity → reviewer → learn
+```
+
+### PR Review
+```
+code-review-pr → [comment/approve/request changes]
+```
+
+### Pre-deployment
+```
+deployment → [deploy if GO]
 ```
 
 ### Session Lifecycle

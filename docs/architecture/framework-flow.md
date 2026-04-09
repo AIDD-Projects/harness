@@ -1,6 +1,6 @@
 # Musher Framework Architecture
 
-> v0.9.0 | Musher의 컴포넌트가 어떻게 연결되고, 데이터가 어떻게 흐르는지 정의한 문서.  
+> v0.6.3 | Musher의 컴포넌트가 어떻게 연결되고, 데이터가 어떻게 흐르는지 정의한 문서.  
 > 프레임워크 변경 시 이 문서를 먼저 확인하여 기존 연계가 깨지지 않는지 검증할 것.
 
 ---
@@ -14,15 +14,15 @@ Layer 5: Agent Memory    — 에이전트별 학습, 세션 간 성장
 Layer 4: Agents          — 복합 워크플로우, 스킬 조합 호출
 Layer 3: Skills          — 절차적 워크플로우, 수동 호출
 Layer 2: State Files     — 영속 상태, 세션 간 연결고리
-Layer 1: Dispatcher      — 22줄 디스패처, 워크플로우 안내
+Layer 1: Dispatcher      — 42줄 디스패처, 워크플로우 안내
 ```
 
 | 계층 | 파일 | 활성화 | 역할 |
 |------|------|--------|------|
-| Dispatcher | core-rules.md (22줄) | 항상 (IDE가 로드) | 워크플로우 안내, state 파일 참조 |
+| Dispatcher | core-rules.md (42줄) | 항상 (IDE가 로드) | 워크플로우 안내, state 파일 참조, Iron Laws |
 | State Files | docs/project-brief.md, docs/features.md, docs/project-state.md, docs/dependency-map.md, docs/failure-patterns.md | 항상 (스킬/에이전트가 참조) | 세션 간 상태 유지 |
-| Skills | 8개 스킬 (.md) | 수동 호출 | 단일 절차 실행 (규칙 임베딩됨) |
-| Agents | 3개 에이전트 (.md) | 수동 호출 | 스킬 조합 + 판단 (규칙 임베딩됨) |
+| Skills | 10개 스킬 (.md) | 수동 호출 | 단일 절차 실행 (규칙 임베딩됨) |
+| Agents | 4개 에이전트 (.md) | 수동 호출 | 스킬 조합 + 판단 (규칙 임베딩됨) |
 | Agent Memory | docs/agent-memory/{name}.md | learn 스킬이 갱신 | 에이전트별 학습 축적 |
 
 ---
@@ -38,6 +38,9 @@ reviewer ──→ test-integrity
 
 planner  ──→ feature-breakdown
          ──→ impact-analysis
+
+architect ──→ impact-analysis
+          ──→ feature-breakdown
 
 sprint-manager ──→ (직접 호출하는 스킬 없음, Next Step에서 다른 스킬/에이전트 추천)
 ```
@@ -59,6 +62,9 @@ R = 읽기, W = 쓰기, W* = 조건부 쓰기 (해당 상황 발생 시에만)
 | **reviewer** | R | R | R | R | R |
 | **planner** | R | R/W | R/W | R | R |
 | **sprint-manager** | R | R | R/W | R | R |
+| **architect** | R | R | R | R | R |
+| **code-review-pr** | R | R | R | R | R |
+| **deployment** | — | R | R | R | R |
 
 ### 2.3 에이전트 → Agent Memory
 
@@ -67,6 +73,7 @@ R = 읽기, W = 쓰기, W* = 조건부 쓰기 (해당 상황 발생 시에만)
 | reviewer | docs/agent-memory/reviewer.md | 리뷰 시작 시 | learn 스킬이 갱신 |
 | planner | docs/agent-memory/planner.md | 플래닝 시작 시 | learn 스킬이 갱신 |
 | sprint-manager | docs/agent-memory/sprint-manager.md | 상태 확인 시 | learn 스킬이 갱신 |
+| architect | docs/agent-memory/architect.md | 설계 검토 시 | learn 스킬이 갱신 |
 
 ---
 
@@ -166,7 +173,7 @@ Agent Memory (학습 축적) ←── 다음 에이전트 호출 시 읽힘
 ```
 
 > 상세 규칙(Iron Laws, Testing Rules 등)은 각 스킬/에이전트에 임베딩되어 있어, 해당 스킬 실행 시에만 로드됨.
-> 디스패처(22줄)는 항상 로드되지만 워크플로우 안내와 state 파일 참조만 담당.
+> 디스패처(42줄)는 항상 로드되지만 워크플로우 안내, state 파일 참조, Iron Laws만 담당.
 
 이 순환이 끊어지는 경우:
 - `learn`을 실행하지 않고 세션 종료 → state 파일 미갱신 → 다음 세션이 오래된 정보로 시작
@@ -187,6 +194,8 @@ Agent Memory (학습 축적) ←── 다음 에이전트 호출 시 읽힘
 | impact-analysis | ✅ | planner, reviewer | ✅ (4개: dep-map, FP, features, project-state) | ✅ 조건부 (dep-map, features, project-state) |
 | test-integrity | ✅ | reviewer | ✅ (1개: FP) | ✅ 조건부 (FP, dep-map, project-state) |
 | security-checklist | ✅ | reviewer | ✅ (1개: FP) | ✅ 조건부 (FP, project-state) |
+| code-review-pr | ✅ | — | ✅ (5개: brief, features, dep-map, FP, project-state) | — |
+| deployment | ✅ | — | ✅ (5개: brief, features, dep-map, FP, project-state) | — |
 
 **핵심 관찰:**
 - `bootstrap`, `learn`, `pivot`은 **state 관리 스킬** — 직접 호출만 가능, 항상 state 쓰기
@@ -200,11 +209,11 @@ Agent Memory (학습 축적) ←── 다음 에이전트 호출 시 읽힘
 
 `init.js`가 위 컴포넌트를 각 IDE 포맷으로 변환:
 
-| 컴포넌트 | VS Code | Claude Code | Cursor | Codex | Windsurf | Antigravity |
-|----------|---------|-------------|--------|-------|----------|-------------|
-| Dispatcher | .github/copilot-instructions.md (22줄) | .claude/rules/core.md | .cursor/rules/core.mdc | AGENTS.md (22줄 디스패처) | .windsurf/rules/core.md | .agent/rules/core.md |
-| Skills | .github/skills/{id}/SKILL.md | .claude/skills/{id}/SKILL.md | .cursor/skills/{id}/SKILL.md | .agents/skills/{id}/SKILL.md | .windsurf/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
-| Agents | .github/agents/{id}.agent.md | .claude/skills/{id}/SKILL.md | .cursor/skills/{id}/SKILL.md | .agents/skills/{id}/SKILL.md | .windsurf/skills/{id}/SKILL.md | .agent/skills/{id}/SKILL.md |
+| 컴포넌트 | VS Code | Claude Code | Cursor | Codex | Windsurf | Gemini CLI |
+|----------|---------|-------------|--------|-------|----------|------------|
+| Dispatcher | .github/copilot-instructions.md (42줄) | .claude/rules/core.md | .cursor/rules/core.mdc | AGENTS.md (42줄 디스패처) | .windsurf/rules/core.md | GEMINI.md |
+| Skills | .github/skills/{id}/SKILL.md | .claude/skills/{id}/SKILL.md | .cursor/skills/{id}/SKILL.md | .agents/skills/{id}/SKILL.md | .windsurf/skills/{id}/SKILL.md | .gemini/skills/{id}/SKILL.md |
+| Agents | .github/agents/{id}.agent.md | .claude/agents/{id}.md | .cursor/agents/{id}.md | .codex/agents/{id}.toml | .windsurf/skills/{id}/SKILL.md | .gemini/agents/{id}.md |
 | State Files | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md | docs/*.md |
 | Agent Memory | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md | docs/agent-memory/*.md |
 
@@ -245,7 +254,8 @@ docs/ (shared, git tracked)          .harness/ (personal, gitignored)
 ├── dependency-map.md                └── agent-memory/
 └── (nothing else)                       ├── reviewer.md
                                          ├── planner.md
-                                         └── sprint-manager.md
+                                         ├── sprint-manager.md
+                                         └── architect.md
 ```
 
 ### 8.3 접근 매트릭스 (Team Mode 변형)
@@ -258,7 +268,7 @@ Team Mode에서는 2.2의 경로가 변경됨:
 
 ### 8.4 Team 전용 가이드 (TEAM_MODE 마커)
 
-11개 스킬/에이전트에 `<!-- TEAM_MODE_START/END -->` 마커로 팀 협업 가이드가 포함됨.
+14개 스킬/에이전트에 `<!-- TEAM_MODE_START/END -->` 마커로 팀 협업 가이드가 포함됨.
 Solo에서는 자동 제거되어 사용자에게 노출되지 않음.
 
 핵심 가이드:

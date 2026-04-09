@@ -3,7 +3,7 @@
 > LLM이 실수하지 않도록 만드는 프레임워크의 5가지 핵심 원칙
 
 **GitHub 원본**: `docs/architecture/design-principles.md`  
-**버전**: v0.9.0
+**버전**: v0.6.3
 
 ---
 
@@ -41,7 +41,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 
 ### 규칙
 - LLM이 하나의 작업을 수행하기 위해 읽어야 하는 파일 수 ≤ 3개
-- 전체 프레임워크 파일 수 ≤ 20개
+- 전체 프레임워크 파일 수 ≤ 25개
 - 단일 파일 크기 ≤ 300줄 (LLM이 한 번에 처리 가능한 범위)
 
 ### 측정 방법
@@ -98,23 +98,30 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ### VS Code Copilot 커스터마이징 체계
 ```
 .github/
-  copilot-instructions.md    ← 22줄 디스패처 (모든 대화에 자동 적용)
+  copilot-instructions.md    ← 42줄 디스패처 (모든 대화에 자동 적용)
   skills/                    ← SKILL.md 파일들 (온디맨드 절차)
     bootstrap/SKILL.md
     feature-breakdown/SKILL.md
     impact-analysis/SKILL.md
-    ...
+    investigate/SKILL.md
+    learn/SKILL.md
+    pivot/SKILL.md
+    security-checklist/SKILL.md
+    test-integrity/SKILL.md
+    code-review-pr/SKILL.md
+    deployment/SKILL.md
   agents/                    ← .agent.md 파일들
     planner.agent.md
     reviewer.agent.md
     sprint-manager.agent.md
+    architect.agent.md
 ```
 
 > 상세 규칙(Iron Laws, Testing Rules, Backend Rules 등)은 각 스킬/에이전트 안에 임베딩되어 있음.
 > 디스패처는 워크플로우 안내와 state 파일 참조만 담당.
 
 ### 작동 방식
-1. **copilot-instructions.md**: 매 대화에 자동 주입 (22줄 디스패처 — 워크플로우 안내 + state 파일 참조)
+1. **copilot-instructions.md**: 매 대화에 자동 주입 (42줄 디스패처 — 워크플로우 안내 + state 파일 참조 + Iron Laws)
 2. **.agent.md**: `@reviewer`처럼 멘션으로 호출하는 전문 에이전트 (규칙 임베딩됨)
 3. **SKILL.md**: 도메인 지식 문서 (규칙 임베딩됨, 에이전트가 참조)
 
@@ -140,12 +147,12 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 .github/skills/test-integrity/SKILL.md
 ```
 
-### 2~3인 팀 표준 구성 (~20개 파일)
+### 2~3인 팀 표준 구성 (~24개 파일)
 ```
 .github/copilot-instructions.md
-.github/skills/ (8개 스킬)
-.github/agents/ (3개 에이전트)
-docs/ (5개 상태 파일 + agent-memory 3개)
+.github/skills/ (10개 스킬)
+.github/agents/ (4개 에이전트)
+docs/ (5개 상태 파일 + agent-memory 4개)
 ```
 
 ### v0.9.0 Team Mode — Solo/Team 분리

@@ -1,6 +1,6 @@
 # Skill / Agent 작성 스펙
 
-> v0.9.0 | Musher 파일의 구조, 규칙, 작성 가이드
+> v0.6.3 | Musher 파일의 구조, 규칙, 작성 가이드
 
 ---
 
@@ -221,7 +221,7 @@ v0.8.0 이전에는 `testing-rules.md`, `backend-rules.md` 등 path-scoped rules
 
 ### 원칙
 - 규칙은 해당 스킬/에이전트가 호출될 때만 로드됨
-- `core-rules.md`(22줄 디스패처)만 항상 로드
+- `core-rules.md`(42줄 디스패처)만 항상 로드
 - Iron Laws, Testing Rules, Backend Rules 등은 관련 스킬/에이전트 `.md` 파일 하단에 직접 포함
 
 ### 임베딩 위치
@@ -295,9 +295,12 @@ Team 전용 가이드 내용
 | impact-analysis.md | Owner-Aware Blast Radius |
 | security-checklist.md | .harness/ gitignore, 공유 설정 비밀 |
 | test-integrity.md | Owner 통보, 공유 fixture 동기화 |
+| code-review-pr.md | Team Reviewer 역할, Cross-Owner PR 검토 |
+| deployment.md | Team 릴리스 체크리스트, Shared State 검증 |
 | planner.md | Owner-Aware Planning, Agent Memory 분리 |
 | reviewer.md | Owner-Scoped Audit, Cross-Owner 변경 감지 |
 | sprint-manager.md | Personal vs Shared State, Scope Check with Ownership |
+| architect.md | Cross-Module Design Review, Architecture Decision 공유 |
 
 ### 작성 규칙
 - 마커는 파일 **마지막 섹션**에 배치
