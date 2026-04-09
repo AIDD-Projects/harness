@@ -12,57 +12,57 @@
     {
       "localPath": "README.md",
       "pageId": "694258105",
-      "title": "K-Harness — LLM Development Harness",
-      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694258105/K-Harness+LLM+Development+Harness",
+      "title": "Musher — LLM Development Harness",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694258105/Musher+LLM+Development+Harness",
       "role": "parent",
       "note": "최상위 부모 페이지 — README.md와 동기화"
     },
     {
       "localPath": "docs/architecture/design-principles.md",
       "pageId": "693866385",
-      "title": "K-Harness 설계 원칙",
-      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/693866385/K-Harness"
+      "title": "Musher 설계 원칙",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/693866385/Musher"
     },
     {
       "localPath": "docs/architecture/file-structure.md",
       "pageId": "693866413",
-      "title": "K-Harness 파일 구조",
-      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/693866413/K-Harness"
+      "title": "Musher 파일 구조",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/693866413/Musher"
     },
     {
       "localPath": "docs/architecture/skill-spec.md",
       "pageId": "694518985",
-      "title": "K-Harness Skill/Agent 작성 스펙",
-      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694518985/K-Harness+Skill+Agent"
+      "title": "Musher Skill/Agent 작성 스펙",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694518985/Musher+Skill+Agent"
     },
     {
       "localPath": "docs/architecture/framework-flow.md",
       "pageId": "694519025",
-      "title": "K-Harness 프레임워크 연계 플로우",
+      "title": "Musher 프레임워크 연계 플로우",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694519025"
     },
     {
       "localPath": "docs/reference.md",
       "pageId": "694258191",
-      "title": "K-Harness 레퍼런스",
+      "title": "Musher 레퍼런스",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/694258191"
     },
     {
       "localPath": "docs/strategy/full-lifecycle-integration.md",
       "pageId": "697992565",
-      "title": "K-Harness Full Lifecycle 통합 전략서",
+      "title": "Musher Full Lifecycle 통합 전략서",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/697992565"
     },
     {
       "localPath": "docs/analysis/comparison.md",
       "pageId": "699664792",
-      "title": "경쟁 분석: BMAD vs gstack vs GSD vs K-Harness",
+      "title": "경쟁 분석: BMAD vs gstack vs GSD vs Musher",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/699664792"
     },
     {
       "localPath": null,
       "pageId": "698487072",
-      "title": "K-Harness 개발 논의 로그",
+      "title": "Musher 개발 논의 로그",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/698487072",
       "role": "discussion-parent",
       "note": "Confluence-only — 논의 로그 모음 (하위 4개 페이지 포함)"
@@ -70,7 +70,7 @@
     {
       "localPath": null,
       "pageId": "701073232",
-      "title": "kode:crew (AI Web Portal) 구조 분석 — K-Harness 연계 검토",
+      "title": "kode:crew (AI Web Portal) 구조 분석 — Musher 연계 검토",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/701073232",
       "parentId": "698487072",
       "note": "Confluence-only — 논의 로그 하위"
@@ -78,7 +78,7 @@
     {
       "localPath": null,
       "pageId": "701466186",
-      "title": "kode:crew ↔ K-Harness 통합 전략 설계 (100점 전략)",
+      "title": "kode:crew ↔ Musher 통합 전략 설계 (100점 전략)",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/701466186",
       "parentId": "698487072",
       "note": "Confluence-only — 논의 로그 하위"
@@ -86,7 +86,7 @@
     {
       "localPath": null,
       "pageId": "701011750",
-      "title": "멀티 개발자 환경에서의 K-Harness 전략",
+      "title": "멀티 개발자 환경에서의 Musher 전략",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/701011750",
       "parentId": "698487072",
       "note": "Confluence-only — 논의 로그 하위"
@@ -94,7 +94,7 @@
     {
       "localPath": null,
       "pageId": "702316992",
-      "title": "K-Harness v0.9.0 — Team Mode 구현 완료",
+      "title": "Musher v0.9.0 — Team Mode 구현 완료",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/702316992",
       "parentId": "698487072",
       "note": "Confluence-only — 논의 로그 하위"
@@ -105,6 +105,14 @@
       "title": "kode:musher — Musher Engineering 기반 AIDD Execution Layer 추진 현황",
       "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/702777194",
       "note": "Confluence-only — 추진 현황 보고서"
+    },
+    {
+      "localPath": null,
+      "pageId": "706516581",
+      "title": "revfactory/harness 심층 분석 — Musher 비교 및 전략적 시사점",
+      "url": "https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/706516581",
+      "parentId": "698487072",
+      "note": "Confluence-only — 논의 로그 하위 (revfactory 비교 분석)"
     },
     {
       "localPath": "docs/guide.md",

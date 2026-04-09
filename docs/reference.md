@@ -1,4 +1,4 @@
-# K-Harness Reference
+# Musher Reference
 
 All skills, agents, rules, and state files in one document.
 
@@ -10,9 +10,9 @@ Skills are on-demand procedures. LLM reads the skill file and follows the steps.
 
 ### bootstrap
 
-**Purpose**: Onboard a project into K-Harness. Solves the cold-start problem.
+**Purpose**: Onboard a project into Musher. Solves the cold-start problem.
 
-**When**: Right after `k-harness init`, when state files are empty, or when joining an existing project.
+**When**: Right after `musher init`, when state files are empty, or when joining an existing project.
 
 **What it does**:
 1. Scans project root for config files (`package.json`, `go.mod`, `requirements.txt`, etc.)

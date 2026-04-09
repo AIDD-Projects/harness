@@ -32,7 +32,7 @@ const SKILLS = [
   { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
   { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
   { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
-  { id: 'bootstrap', desc: 'Onboard project into K-Harness. Scans codebase and fills state files. Use after k-harness init or when state files are empty.' },
+  { id: 'bootstrap', desc: 'Onboard project into Musher. Scans codebase and fills state files. Use after musher init or when state files are empty.' },
   { id: 'learn', desc: 'Capture session lessons and update state files. Use at the end of every session.' },
   { id: 'pivot', desc: 'Propagate direction changes across all state files. Use when project goals, technology, scope, or architecture changes.' },
 ];
@@ -161,6 +161,27 @@ function writeAgentsAsSkills(targetDir, skillsDir, overwrite, mode = 'solo') {
   }
 }
 
+function writeAgentsAsMd(targetDir, agentsDir, overwrite, mode = 'solo') {
+  for (const agent of AGENTS) {
+    const content = resolveContent(readTemplate(agent.file), mode);
+    const agentMd =
+      `---\nname: ${agent.id}\ndescription: "${agent.desc}"\n---\n\n` +
+      content;
+    writeFile(targetDir, `${agentsDir}/${agent.id}.md`, agentMd, overwrite);
+  }
+}
+
+function writeAgentsAsToml(targetDir, agentsDir, overwrite, mode = 'solo') {
+  for (const agent of AGENTS) {
+    const content = resolveContent(readTemplate(agent.file), mode);
+    const toml =
+      `name = "${agent.id}"\n` +
+      `description = "${agent.desc}"\n` +
+      `developer_instructions = """\n${content}\n"""\n`;
+    writeFile(targetDir, `${agentsDir}/${agent.id}.toml`, toml, overwrite);
+  }
+}
+
 // ─── IDE Generators ──────────────────────────────────────────
 
 function generateVscode(targetDir, overwrite, mode = 'solo') {
@@ -192,8 +213,8 @@ function generateClaude(targetDir, overwrite, mode = 'solo') {
   // Skills (SKILL.md with frontmatter)
   writeSkills(targetDir, '.claude/skills', overwrite, mode);
 
-  // Agents as skills (Claude Code skills pattern)
-  writeAgentsAsSkills(targetDir, '.claude/skills', overwrite, mode);
+  // Agents (.claude/agents/ — Claude Code agent definition files)
+  writeAgentsAsMd(targetDir, '.claude/agents', overwrite, mode);
 
   // State files
   writeStateFiles(targetDir, overwrite, mode);
@@ -203,15 +224,15 @@ function generateCursor(targetDir, overwrite, mode = 'solo') {
   // .cursor/rules/core.mdc — dispatcher only (always active)
   const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
   const coreMdc =
-    '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
+    '---\ndescription: Musher dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, overwrite);
 
   // Skills (.cursor/skills — invokable by mentioning skill name)
   writeSkills(targetDir, '.cursor/skills', overwrite, mode);
 
-  // Agents as skills
-  writeAgentsAsSkills(targetDir, '.cursor/skills', overwrite, mode);
+  // Agents (.cursor/agents/ — Cursor subagent definition files)
+  writeAgentsAsMd(targetDir, '.cursor/agents', overwrite, mode);
 
   // State files
   writeStateFiles(targetDir, overwrite, mode);
@@ -224,8 +245,8 @@ function generateCodex(targetDir, overwrite, mode = 'solo') {
   // Skills (SKILL.md with frontmatter — invokable via $skill-name)
   writeSkills(targetDir, '.agents/skills', overwrite, mode);
 
-  // Agents as skills
-  writeAgentsAsSkills(targetDir, '.agents/skills', overwrite, mode);
+  // Agents (.codex/agents/ — Codex TOML agent definition files)
+  writeAgentsAsToml(targetDir, '.codex/agents', overwrite, mode);
 
   // State files
   writeStateFiles(targetDir, overwrite, mode);
@@ -250,16 +271,14 @@ function generateWindsurf(targetDir, overwrite, mode = 'solo') {
 }
 
 function generateAntigravity(targetDir, overwrite, mode = 'solo') {
-  // .agent/rules/core.md — dispatcher only
-  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
-  const coreRule =
-    '---\ndescription: K-Harness dispatcher — workflow guidance and state file references\ntype: always\n---\n\n' +
-    coreRules;
-  writeFile(targetDir, '.agent/rules/core.md', coreRule, overwrite);
+  // GEMINI.md — project context (always loaded by Gemini CLI)
+  writeFile(targetDir, 'GEMINI.md', resolveContent(readTemplate('core-rules.md'), mode), overwrite);
 
-  // .agent/skills/ — SKILL.md format (enables / slash commands)
-  writeSkills(targetDir, '.agent/skills', overwrite, mode);
-  writeAgentsAsSkills(targetDir, '.agent/skills', overwrite, mode);
+  // Skills (.gemini/skills/ — SKILL.md format)
+  writeSkills(targetDir, '.gemini/skills', overwrite, mode);
+
+  // Agents (.gemini/agents/ — Gemini CLI subagent definition files)
+  writeAgentsAsMd(targetDir, '.gemini/agents', overwrite, mode);
 
   // State files
   writeStateFiles(targetDir, overwrite, mode);
@@ -317,7 +336,7 @@ async function promptMode() {
 // ─── Team mode helpers ───────────────────────────────────────
 function appendGitignore(targetDir) {
   const gitignorePath = path.join(targetDir, '.gitignore');
-  const entry = '\n# K-Harness personal state (Team mode)\n.harness/\n';
+  const entry = '\n# Musher personal state (Team mode)\n.harness/\n';
   if (fs.existsSync(gitignorePath)) {
     const content = fs.readFileSync(gitignorePath, 'utf8');
     if (content.includes('.harness/')) {
@@ -333,7 +352,7 @@ function appendGitignore(targetDir) {
 
 function writeGitattributes(targetDir) {
   const content =
-    '# K-Harness Team mode — merge strategy for shared state files\n' +
+    '# Musher Team mode — merge strategy for shared state files\n' +
     'docs/features.md merge=union\n' +
     'docs/dependency-map.md merge=union\n';
   writeFile(targetDir, '.gitattributes', content, false);
@@ -345,7 +364,7 @@ function showPostInstallGuide(ideName, mode) {
   const lines = [
     '',
     '  ──────────────────────────────────────────',
-    '  ✅ K-Harness initialized successfully!',
+    '  ✅ Musher initialized successfully!',
     '',
     `  Mode: ${modeLabel}`,
     `  IDE:  ${ideName}`,
@@ -374,7 +393,7 @@ function showPostInstallGuide(ideName, mode) {
     '     2. AI scans your codebase and fills state files automatically',
     '     3. Start coding with: @planner "Add [feature name]"',
     '',
-    '  📖 Docs: https://www.npmjs.com/package/k-harness',
+    '  📖 Docs: https://www.npmjs.com/package/musher-engineering',
     '  ──────────────────────────────────────────',
     '',
   );
@@ -385,10 +404,10 @@ function showPostInstallGuide(ideName, mode) {
 // ─── CLI entry ───────────────────────────────────────────────
 function showHelp() {
   console.log(`
-  K-Harness — LLM Development Harness
+  Musher — LLM Development Harness
 
   Usage:
-    npx k-harness init [options]
+    npx musher init [options]
 
   Options:
     --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
@@ -398,10 +417,10 @@ function showHelp() {
     --help           Show this help
 
   Examples:
-    npx k-harness init
-    npx k-harness init --ide vscode
-    npx k-harness init --ide vscode --mode team
-    npx k-harness init --ide claude --dir ./my-project
+    npx musher init
+    npx musher init --ide vscode
+    npx musher init --ide vscode --mode team
+    npx musher init --ide claude --dir ./my-project
 `);
 }
 
@@ -429,7 +448,7 @@ async function run(argv) {
   }
 
   if (args.command === 'init') {
-    console.log('\n  K-Harness — LLM Development Harness\n');
+    console.log('\n  Musher — LLM Development Harness\n');
 
     // Determine IDE
     let ide = args.ide;

@@ -1,14 +1,14 @@
-# K-Harness
+# Musher
 
-[![npm version](https://img.shields.io/npm/v/k-harness.svg)](https://www.npmjs.com/package/k-harness)
-[![npm downloads](https://img.shields.io/npm/dm/k-harness.svg)](https://www.npmjs.com/package/k-harness)
+[![npm version](https://img.shields.io/npm/v/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
+[![npm downloads](https://img.shields.io/npm/dm/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Project Direction Management Framework for LLM-Driven Development.
 
 ## What It Does
 
-K-Harness manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned across sessions. It combines BMAD's systematic project management with gstack's simplicity: zero dependencies, IDE-native format generation, and minimal context overhead.
+Musher manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned across sessions. It combines BMAD's systematic project management with gstack's simplicity: zero dependencies, IDE-native format generation, and minimal context overhead.
 
 - **Direction Guard** — Every coding request is checked against project goals/non-goals before execution
 - **State Files** — 5 markdown files that persist project knowledge across LLM sessions
@@ -21,10 +21,10 @@ K-Harness manages your **project's direction** — goals, decisions, scope — s
 
 ```bash
 # Solo mode (default)
-npx k-harness init
+npx musher init
 
 # Team mode (multi-developer)
-npx k-harness init --team
+npx musher init --team
 ```
 
 Select your IDE when prompted. Files are installed into the current directory.
@@ -38,12 +38,12 @@ This scans your codebase and fills all 5 state files automatically.
 ### Non-interactive
 
 ```bash
-npx k-harness init --ide vscode
-npx k-harness init --ide claude
-npx k-harness init --ide cursor
-npx k-harness init --ide codex
-npx k-harness init --ide windsurf
-npx k-harness init --ide antigravity
+npx musher init --ide vscode
+npx musher init --ide claude
+npx musher init --ide cursor
+npx musher init --ide codex
+npx musher init --ide windsurf
+npx musher init --ide antigravity
 ```
 
 ### Options
@@ -60,11 +60,11 @@ npx k-harness init --ide antigravity
 | IDE | Dispatcher (always-on) | Skills | Agents |
 |-----|----------------------|--------|--------|
 | **VS Code Copilot** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
-| **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` |
-| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/skills/*/SKILL.md` |
-| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.agents/skills/*/SKILL.md` |
+| **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/agents/*.md` |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/agents/*.md` |
+| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.toml` |
 | **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | `.windsurf/skills/*/SKILL.md` |
-| **Google Antigravity** | `.agent/rules/core.md` | `.agent/skills/*/SKILL.md` | `.agent/skills/*/SKILL.md` |
+| **Gemini CLI** | `GEMINI.md` | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` |
 
 All IDEs also get state files (`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`) in the `docs/` directory.
 
@@ -74,7 +74,7 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 - **Core Rules** — 22-line dispatcher: session start guidance, workflow references, state file list. Detailed rules are embedded in each skill/agent that enforces them.
 
 ### Skills (on-demand procedures)
-- **bootstrap** — Onboard project into K-Harness: scans codebase + fills state files automatically
+- **bootstrap** — Onboard project into Musher: scans codebase + fills state files automatically
 - **learn** — End-of-session wrap-up: captures failure patterns, updates project state
 - **pivot** — Propagate direction changes across all state files when goals/tech/scope changes
 - **test-integrity** — Verify mock/interface synchronization before committing
@@ -98,7 +98,7 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 ## How It Works
 
 ### 1. Bootstrap (once)
-After `k-harness init`, run the `bootstrap` skill. It scans your codebase, interviews you about goals/non-goals, and fills all 5 state files automatically. **This is the most important step** — without it, Direction Guard and other skills have no context.
+After `musher init`, run the `bootstrap` skill. It scans your codebase, interviews you about goals/non-goals, and fills all 5 state files automatically. **This is the most important step** — without it, Direction Guard and other skills have no context.
 
 ### 2. Direction Guard (every request)
 Before ANY coding task, the LLM reads `project-brief.md` and checks:
@@ -123,7 +123,7 @@ When goals, technology, or scope changes, run the `pivot` skill:
 
 ## Team Mode
 
-Since v0.9.0, K-Harness supports multi-developer environments with the `--team` flag.
+Since v0.9.0, Musher supports multi-developer environments with the `--team` flag.
 
 | | Solo Mode | Team Mode |
 |---|---|---|
@@ -141,9 +141,9 @@ In Team Mode:
 
 See [docs/reference.md](docs/reference.md) for detailed descriptions of every skill, agent, rule, and state file.
 
-## Why K-Harness?
+## Why Musher?
 
-| | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | K-Harness |
+| | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | Musher |
 |---|---|---|---|---|
 | Focus | Enterprise SDLC methodology | 1-person software factory | Full lifecycle automation | Project direction management |
 | Files | 200+ | ~40 | Hundreds | ~20 |

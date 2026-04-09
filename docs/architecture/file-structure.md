@@ -1,9 +1,9 @@
-# K-Harness 파일 구조
+# Musher 파일 구조
 
 IDE 네이티브 커스터마이징 파일의 배치와 역할
 
-> **버전**: v0.9.0 (Team Mode 포함)  
-> **최종 업데이트**: 2026-04-07
+> **버전**: v0.9.2 (IDE Agent Placement 수정)  
+> **최종 업데이트**: 2026-04-09
 
 ---
 
@@ -41,11 +41,11 @@ project-root/
 │       ├── reviewer.md
 │       └── sprint-manager.md
 │
-├── .cursor/rules/core-rules.md          # Cursor 디스패처
-├── .claude/settings.json + skills/      # Claude Code 스킬
-├── .codex/instructions.md               # Codex 디스패처
-├── .windsurfrules                       # Windsurf 디스패처
-└── .antigravity/instructions.md         # AntiGravity 디스패처
+├── .claude/rules/core.md + skills/ + agents/     # Claude Code
+├── .cursor/rules/core.mdc + skills/ + agents/     # Cursor
+├── AGENTS.md + .agents/skills/ + .codex/agents/   # Codex (OpenAI)
+├── .windsurf/rules/core.md + skills/               # Windsurf
+└── GEMINI.md + .gemini/skills/ + agents/            # Gemini CLI (AntiGravity)
 ```
 
 ### Team Mode (소규모 팀, 2~4명) — v0.9.0 신규
@@ -110,7 +110,7 @@ project-root/
 
 ## 3. Team Mode 경로 치환 (resolveContent)
 
-Team 모드에서 `npx k-harness init --team` 실행 시, 모든 스킬·에이전트 파일 내용에서 경로가 자동 치환됩니다:
+Team 모드에서 `npx musher init --team` 실행 시, 모든 스킬·에이전트 파일 내용에서 경로가 자동 치환됩니다:
 
 | 원본 경로 | Team 모드 치환 |
 |---|---|
@@ -145,16 +145,17 @@ agent.md                 ──→  skills/*.md (명시적 참조: "test-integri
 
 ## 5. IDE별 파일 매핑
 
-| IDE | 디스패철 (always-on) | 스킬 | 에이전트 |
-|-----|------------------------|스킬|--------|
+| IDE | 디스패처 (always-on) | 스킬 | 에이전트 |
+|-----|------------------------|------|--------|
 | **VS Code** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
-| **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/skills/*/SKILL.md` |
-| **Cursor** | `.cursor/rules/core-rules.md` | `.cursor/rules/skills/*.md` | `.cursor/rules/agents/*.md` |
-| **Codex** | `.codex/instructions.md` | Inline | Inline |
-| **Windsurf** | `.windsurfrules` | Inline | Inline |
-| **AntiGravity** | `.antigravity/instructions.md` | Inline | Inline |
+| **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/agents/*.md` (YAML frontmatter) |
+| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/agents/*.md` (YAML frontmatter) |
+| **Codex (OpenAI)** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.toml` (TOML format) |
+| **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | `.windsurf/skills/*/SKILL.md` (에이전트도 스킬로) |
+| **Gemini CLI** | `GEMINI.md` | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` (YAML frontmatter) |
 
 > 6개 IDE에서 동일한 규칙/스킬/에이전트 콘텐츠를 각 IDE 네이티브 형식으로 생성합니다.
+> Windsurf는 별도 에이전트 개념이 없어 에이전트를 스킬로 배치합니다.
 
 ---
 
@@ -200,7 +201,7 @@ docs/                              (3개, 공유만)
 
 ## 7. BMAD 대비 파일 수 비교
 
-| 범주 | BMAD | K-Harness Full |
+| 범주 | BMAD | Musher Full |
 |------|------|---------------|
 | 에이전트 정의 | 11 | 3 |
 | 워크플로우 | 3 | 0 (agent 내 인라인) |
@@ -214,4 +215,4 @@ docs/                              (3개, 공유만)
 
 ---
 
-_이 문서는 K-Harness v0.9.0 파일 구조의 레퍼런스입니다. Solo/Team 모드에 따라 State File 배치가 달라집니다._
+_이 문서는 Musher v0.9.0 파일 구조의 레퍼런스입니다. Solo/Team 모드에 따라 State File 배치가 달라집니다._

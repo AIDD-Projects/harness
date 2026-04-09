@@ -1,6 +1,6 @@
-# K-Harness
+# Musher
 
-This project uses K-Harness for structured AI-assisted development.
+This project uses Musher for structured AI-assisted development.
 Skills and agents work together through shared state files — invoke them as needed.
 
 ## Session Start

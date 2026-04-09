@@ -1,4 +1,4 @@
-# K-Harness 설계 원칙
+# Musher 설계 원칙
 
 > LLM이 실수하지 않도록 만드는 프레임워크의 5가지 핵심 원칙
 
@@ -52,7 +52,7 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 ```
 
 ### BMAD 대비 개선
-| 작업 | BMAD 컨텍스트 비용 | K-Harness 목표 |
+| 작업 | BMAD 컨텍스트 비용 | Musher 목표 |
 |------|-------------------|---------------|
 | Story 구현 | ~6 파일, 1500줄 | 2 파일, 400줄 |
 | 코드 리뷰 | ~4 파일, 800줄 | 1 파일, 200줄 |
@@ -77,8 +77,8 @@ BMAD에서 LLM이 실패한 핵심 원인은 "이 에이전트 → 이 워크플
 - 적용 skill: test-integrity, code-review
 ```
 
-### BMAD의 testarch 지식 vs K-Harness 실패 패턴
-| | BMAD testarch | K-Harness |
+### BMAD의 testarch 지식 vs Musher 실패 패턴
+| | BMAD testarch | Musher |
 |--|--------------|-----------|
 | 내용 | 일반적 테스트 이론 | 프로젝트 실제 실패 |
 | 파일 수 | 30+ | 1 (docs/failure-patterns.md) |
@@ -150,7 +150,7 @@ docs/ (5개 상태 파일 + agent-memory 3개)
 
 ### v0.9.0 Team Mode — Solo/Team 분리
 
-v0.9.0에서 `k-harness init --team`으로 팀 모드를 명시적으로 선택할 수 있게 됨:
+v0.9.0에서 `musher init --team`으로 팀 모드를 명시적으로 선택할 수 있게 됨:
 
 | 모드 | 대상 | State 파일 위치 | 충돌 관리 |
 |---|---|---|---|

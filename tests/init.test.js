@@ -9,7 +9,7 @@ const { run, detectLanguage } = require('../src/init');
 
 // Helper: create a temp directory and clean up after
 function makeTmpDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'k-harness-test-'));
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'musher-test-'));
 }
 
 function rmDir(dir) {
@@ -41,9 +41,9 @@ const EXPECTED_FILES = {
       '.claude/skills/bootstrap/SKILL.md',
       '.claude/skills/learn/SKILL.md',
       '.claude/skills/pivot/SKILL.md',
-      '.claude/skills/reviewer/SKILL.md',
-      '.claude/skills/planner/SKILL.md',
-      '.claude/skills/sprint-manager/SKILL.md',
+      '.claude/agents/reviewer.md',
+      '.claude/agents/planner.md',
+      '.claude/agents/sprint-manager.md',
       'docs/project-state.md',
     ],
   },
@@ -55,7 +55,7 @@ const EXPECTED_FILES = {
       '.cursor/skills/bootstrap/SKILL.md',
       '.cursor/skills/learn/SKILL.md',
       '.cursor/skills/pivot/SKILL.md',
-      '.cursor/skills/reviewer/SKILL.md',
+      '.cursor/agents/reviewer.md',
       'docs/project-state.md',
     ],
   },
@@ -68,9 +68,9 @@ const EXPECTED_FILES = {
       '.agents/skills/bootstrap/SKILL.md',
       '.agents/skills/learn/SKILL.md',
       '.agents/skills/pivot/SKILL.md',
-      '.agents/skills/reviewer/SKILL.md',
-      '.agents/skills/planner/SKILL.md',
-      '.agents/skills/sprint-manager/SKILL.md',
+      '.codex/agents/reviewer.toml',
+      '.codex/agents/planner.toml',
+      '.codex/agents/sprint-manager.toml',
       'docs/project-state.md',
     ],
   },
@@ -89,12 +89,12 @@ const EXPECTED_FILES = {
   antigravity: {
     count: 20,
     required: [
-      '.agent/rules/core.md',
-      '.agent/skills/test-integrity/SKILL.md',
-      '.agent/skills/bootstrap/SKILL.md',
-      '.agent/skills/learn/SKILL.md',
-      '.agent/skills/pivot/SKILL.md',
-      '.agent/skills/planner/SKILL.md',
+      'GEMINI.md',
+      '.gemini/skills/test-integrity/SKILL.md',
+      '.gemini/skills/bootstrap/SKILL.md',
+      '.gemini/skills/learn/SKILL.md',
+      '.gemini/skills/pivot/SKILL.md',
+      '.gemini/agents/planner.md',
       'docs/project-state.md',
     ],
   },
@@ -115,7 +115,7 @@ function countFiles(dir) {
 
 // ─── Tests ──────────────────────────────────────────────────
 
-describe('k-harness init', () => {
+describe('musher init', () => {
   for (const [ide, spec] of Object.entries(EXPECTED_FILES)) {
     describe(`--ide ${ide}`, () => {
       let tmpDir;
@@ -710,7 +710,7 @@ describe('k-harness init', () => {
         await run(['init', '--ide', 'claude', '--mode', 'team', '--dir', teamDir]);
         console.log = origLog;
 
-        // Sum up all skill file lengths
+        // Sum up all skill + agent file lengths
         for (const dir of ['.claude/skills']) {
           const base = path.join(soloDir, dir);
           if (fs.existsSync(base)) {
@@ -725,6 +725,19 @@ describe('k-harness init', () => {
               const f = path.join(baseT, skill, 'SKILL.md');
               if (fs.existsSync(f)) teamLen += fs.readFileSync(f, 'utf8').length;
             }
+          }
+        }
+        // Also sum agent files (.claude/agents/*.md)
+        const soloAgents = path.join(soloDir, '.claude/agents');
+        if (fs.existsSync(soloAgents)) {
+          for (const a of fs.readdirSync(soloAgents)) {
+            if (a.endsWith('.md')) soloLen += fs.readFileSync(path.join(soloAgents, a), 'utf8').length;
+          }
+        }
+        const teamAgents = path.join(teamDir, '.claude/agents');
+        if (fs.existsSync(teamAgents)) {
+          for (const a of fs.readdirSync(teamAgents)) {
+            if (a.endsWith('.md')) teamLen += fs.readFileSync(path.join(teamAgents, a), 'utf8').length;
           }
         }
 

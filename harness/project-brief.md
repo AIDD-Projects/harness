@@ -1,6 +1,6 @@
 # Project Brief
 
-> **Fill this out immediately after running `k-harness init`.** The Planner agent uses this file for Direction Guard — without it, scope drift cannot be prevented.
+> **Fill this out immediately after running `musher init`.** The Planner agent uses this file for Direction Guard — without it, scope drift cannot be prevented.
 
 ## Vision
 
