@@ -85,7 +85,7 @@ npx musher-engineering validate
 | **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/agents/*.md` |
 | **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.toml` |
 | **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | *(agents installed as skills)* |
-| **Gemini CLI** | `GEMINI.md` | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` |
+| **Antigravity** | `GEMINI.md` | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` |
 
 All IDEs also get state files (`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`) in the `docs/` directory.
 

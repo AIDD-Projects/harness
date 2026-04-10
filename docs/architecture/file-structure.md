@@ -11,4 +11,4 @@
 - 스킬 10개: bootstrap, feature-breakdown, impact-analysis, investigate, learn, pivot, security-checklist, test-integrity, code-review-pr, deployment
 - 에이전트 4개: planner, reviewer, sprint-manager, architect
 - State 파일 5개 / Agent Memory 4개
-- IDE별 매핑 테이블 (VS Code, Claude, Cursor, Codex, Windsurf, Gemini CLI)
+- IDE별 매핑 테이블 (VS Code, Claude, Cursor, Codex, Windsurf, Antigravity)

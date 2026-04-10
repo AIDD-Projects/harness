@@ -300,7 +300,7 @@ const GENERATORS = {
   cursor:       { name: 'Cursor',                fn: generateCursor },
   codex:        { name: 'Codex (OpenAI)',         fn: generateCodex },
   windsurf:     { name: 'Windsurf',              fn: generateWindsurf },
-  antigravity:  { name: 'Gemini CLI',            fn: generateAntigravity },
+  antigravity:  { name: 'Antigravity',           fn: generateAntigravity },
 };
 
 // ─── Interactive prompt ──────────────────────────────────────

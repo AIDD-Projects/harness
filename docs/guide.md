@@ -287,7 +287,7 @@ learn ────────────────────────�
 ### Q: 다른 IDE에서도 쓸 수 있나?
 **A**: 네. 6개 IDE를 지원합니다:
 ```
-npx musher init --ide <vscode|claude|cursor|codex|windsurf|gemini>
+npx musher init --ide <vscode|claude|cursor|codex|windsurf|antigravity>
 ```
 
 ### Q: 팀에서 쓸 때 주의할 점은?
