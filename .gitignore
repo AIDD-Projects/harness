@@ -12,6 +12,11 @@ docs/confluence-sync.json
 docs/analysis/comparison.md
 docs/strategy/
 docs/qa/
+docs/reference.md
+docs/architecture/design-principles.md
+docs/architecture/file-structure.md
+docs/architecture/framework-flow.md
+docs/architecture/skill-spec.md
 project-state.md
 project-brief.md
 features.md
