@@ -1,0 +1,82 @@
+---
+name: 🐛 Bug Report
+description: 버그를 발견했을 때 사용하세요 / Report a bug
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        버그 리포트를 작성해주셔서 감사합니다!
+        Thanks for taking the time to fill out this bug report!
+
+  - type: input
+    id: version
+    attributes:
+      label: Musher 버전 / Version
+      description: "`npx musher-engineering --version`의 출력"
+      placeholder: "0.6.5"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ide
+    attributes:
+      label: IDE
+      options:
+        - VS Code Copilot
+        - Claude Code
+        - Cursor
+        - Codex (OpenAI)
+        - Windsurf
+        - Antigravity
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 모드 / Mode
+      options:
+        - Solo
+        - Team
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 무엇이 잘못되었나요? / What happened?
+      description: 예상한 동작과 실제 동작을 설명해주세요.
+      placeholder: |
+        예상 동작: ...
+        실제 동작: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 재현 방법 / Steps to reproduce
+      description: 버그를 재현하는 단계를 알려주세요.
+      placeholder: |
+        1. `npx musher-engineering init --ide vscode`
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 환경 / Environment
+      description: OS, Node.js 버전 등
+      placeholder: |
+        - OS: macOS 14.x / Ubuntu 22.04 / Windows 11
+        - Node.js: v20.x
+      render: markdown
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 로그 / Logs
+      description: 관련 에러 메시지나 터미널 출력을 붙여넣어주세요.
+      render: shell

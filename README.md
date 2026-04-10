@@ -1,12 +1,28 @@
-# Musher
+# Musher Engineering
 
 [![npm version](https://img.shields.io/npm/v/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![npm downloads](https://img.shields.io/npm/dm/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+**English** | [한국어](README.ko.md)
+
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.6.3** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
+> **v0.6.5** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
+
+## From Harness to Musher
+
+The concept of an AI "harness" — structured markdown files that guide LLM coding agents — has become a foundational pattern in AI-assisted development. Frameworks like BMAD, gstack, and GSD pioneered this approach for **solo developers**.
+
+**Musher Engineering** takes harness engineering to the next level. Built by [KT](https://github.com/KTcorp-Opensource-Projects), it evolves the harness concept from a 1-person tool into an **enterprise-grade direction management framework** for multi-developer teams.
+
+| | Traditional Harness | Musher Engineering |
+|---|---|---|
+| Target | Solo developer | **Multi-developer teams** |
+| Focus | What the AI does | **Where the AI is going** |
+| Direction management | ❌ | ✅ Direction Guard + pivot + Decision Log |
+| Team state sharing | ❌ | ✅ Shared/personal state separation |
+| Token budget | 200+ files | **~25 files (~17K tokens)** — works with small LLMs too |
 
 ## The Problem
 
@@ -210,12 +226,12 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 
 ## Roadmap
 
-Musher is at **v0.6.3** — the framework has been hardened with additional skills, agents, and CLI tools.
+Musher is at **v0.6.5** — the framework has been hardened with additional skills, agents, and CLI tools.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
-| **Hardening** | v0.6.3 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
+| **Hardening** | v0.6.5 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Intelligence** | v0.7.0 | 🔜 Next | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
 | **Ecosystem** | v0.8.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
 | **Production** | v1.0.0 | Planned | Battle-tested across enterprise teams, comprehensive docs, stable API guarantee |
@@ -232,8 +248,8 @@ Musher is at **v0.6.3** — the framework has been hardened with additional skil
 
 Musher is in active development and we'd love your input.
 
-- **Bug reports & feature requests** → [GitHub Issues](https://github.com/KTcorp-Opensource-Projects/musher-engineering/issues)
-- **Discussions & ideas** → [GitHub Discussions](https://github.com/KTcorp-Opensource-Projects/musher-engineering/discussions)
+- **Bug reports & feature requests** → [GitHub Issues](https://github.com/KTcorp-Opensource-Projects/harness/issues)
+- **Discussions & ideas** → [GitHub Discussions](https://github.com/KTcorp-Opensource-Projects/harness/discussions)
 - **Try it on your project** → `npx musher-engineering init` and tell us what works (or doesn't)
 
 We're especially interested in:
