@@ -171,7 +171,7 @@ STATUS: DONE
 ## Team Mode: Session Wrap-up
 
 ### Pre-Pull (mandatory before any shared file edit)
-1. Run `git pull origin main` before updating docs/features.md or docs/dependency-map.md
+1. Run `git pull` on the default branch before updating docs/features.md or docs/dependency-map.md (per project-brief.md → Key Technical Decisions; default: main)
 2. If merge conflicts occur, follow the **Merge Conflict SOP** below
 
 ### Merge Conflict SOP
@@ -184,11 +184,11 @@ When `git pull` causes merge conflicts in shared state files:
    |------|----------|
    | `docs/features.md` | Keep BOTH entries (merge=union should handle; if not, manually keep all rows) |
    | `docs/dependency-map.md` | Keep BOTH entries (merge=union should handle; if not, manually keep all rows) |
-   | `docs/project-brief.md` | Use the REMOTE version (team lead's direction wins) |
+   | `docs/project-brief.md` | Resolve based on team's pivot authority (per project-brief.md; default: prefer REMOTE) |
    | `docs/failure-patterns.md` | Keep BOTH entries, deduplicate by FP-NNN number |
 3. **After resolving**: `git add <resolved-files> && git commit`
 4. **Verify**: Re-read the resolved file and confirm no data was lost
-5. **If unsure**: Do NOT force-resolve. Ask the team lead or the Owner of the conflicting rows.
+5. **If unsure**: Do NOT force-resolve. Ask the designated authority (per project-brief.md; default: team lead) or the Owner of the conflicting rows.
 
 ### Owner-Scoped Updates
 - **docs/features.md**: only update rows where Owner = you

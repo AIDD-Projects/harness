@@ -44,15 +44,18 @@
 
 ## Key Technical Decisions
 
-<!-- Record foundational technology choices. Helps LLMs generate correct code.
+<!-- Record foundational technology choices AND workflow conventions.
+   Helps LLMs generate correct code and follow your team's workflow.
    Examples:
    - Language: TypeScript 5.x (strict mode)
    - Framework: Express + Prisma ORM
    - Test runner: Vitest (not Jest)
    - Database: PostgreSQL 16
    - Architecture: Hexagonal (Port + Adapter)
-   - Language: Python 3.12, Framework: FastAPI, Tests: pytest
-   - Language: Go 1.22, no framework, Tests: go test
+   - Default branch: develop
+   - Git remote: upstream
+   - Staging policy: allow git add .
+   - Pivot authority: team consensus
 -->
 
 ## Decision Log

@@ -105,30 +105,30 @@ Add an entry to the Decision Log section in docs/project-brief.md:
 
 If `.harness/` directory exists (Team mode is active):
 
-- **pivot MUST be run on the main branch** by the team lead or architect only
+- **pivot MUST be run on the default branch** by the designated authority (per project-brief.md → Key Technical Decisions; default: team lead) only
 - Feature branches should NOT run pivot independently
 - If a direction change is needed from a feature branch:
   1. Document the proposed change
   2. Share with the team
-  3. Team lead runs pivot on main
-  4. All developers pull main to get updated shared state files
+  3. The designated authority runs pivot on the default branch
+  4. All developers pull the latest shared state files
   5. Each developer's `.harness/` personal state is unaffected (update manually if needed)
 
 <!-- TEAM_MODE_START -->
 ## Team Mode: Pivot Lock
 
 ### Who Can Run Pivot
-- **Only the team lead** runs pivot, and **only on the main branch**
-- If you are not the team lead, propose the direction change to the team lead instead of running pivot yourself
+- **The designated authority** runs pivot, and **only on the default branch** (per project-brief.md → Key Technical Decisions; default: team lead on main)
+- If you are not the designated authority, propose the direction change instead of running pivot yourself
 
 ### Branch Check
 Before running pivot, verify:
-1. You are on the `main` branch: `git branch --show-current` must return `main`
+1. You are on the default branch (per project-brief.md; default: main): `git branch --show-current`
 2. Your working tree is clean: `git status` must show no uncommitted changes
-3. You have pulled the latest: `git pull origin main`
+3. You have pulled the latest: `git pull`
 
 ### After Pivot
 1. Commit and push the updated shared files
-2. Notify all team members to run `git pull origin main`
+2. Notify all team members to pull the latest shared state files
 3. Each developer's personal .harness/ files are NOT auto-updated — developers should review the pivot changes and manually update their personal state if needed
 <!-- TEAM_MODE_END -->

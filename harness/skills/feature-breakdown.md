@@ -104,7 +104,7 @@ After completing the breakdown, update these files in the same session:
 ## Team Mode: Feature Breakdown
 
 ### Pre-Pull
-Before updating shared state files, run `git pull origin main` to get the latest docs/features.md and docs/dependency-map.md.
+Before updating shared state files, run `git pull` on the default branch to get the latest docs/features.md and docs/dependency-map.md (per project-brief.md → Key Technical Decisions; default: main).
 
 ### Owner Assignment
 - When adding new rows to docs/features.md, set the Owner column to your name

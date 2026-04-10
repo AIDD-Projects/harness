@@ -139,7 +139,7 @@ Apply these insights when creating the implementation plan. If the memory file i
 ## Team Mode: Planning
 
 ### Pre-Pull
-Before reading or updating shared state files, run `git pull origin main`.
+Before reading or updating shared state files, run `git pull` on the default branch (per project-brief.md → Key Technical Decisions; default: main).
 
 ### Owner-Aware Planning
 - When assigning tasks, check docs/dependency-map.md Owner column to identify module ownership

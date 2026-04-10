@@ -128,14 +128,14 @@ These rules are enforced during every review:
 ### Testing Rules
 - New feature = New test. No feature code without tests.
 - Mocks must implement ALL interface methods with sensible defaults.
-- No `any` type casting on mocks. Use the actual interface type.
-- No `skip`, `only`, or debug statements (`console.log`, `print`) in committed test files.
+- Recommended: Avoid `any` type casting on mocks — use the actual interface type (adjust per project-brief.md → Key Technical Decisions).
+- Recommended: No `skip`, `only`, or debug statements (`console.log`, `print`) in committed test files.
 - Async tests must use `await`. No floating promises.
 
 ### Backend Rules
 - Follow project architecture pattern strictly (e.g., Domain must not import Infrastructure)
 - No hardcoded environment variables or secrets — use centralized config
-- Use explicit file staging (`git add <file>`), never `git add .` or `git add -A`
+- Recommended: Use explicit file staging (`git add <file>`) unless your team allows `git add .` (per project-brief.md → Key Technical Decisions)
 
 ### Completion Protocol
 Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT**
@@ -162,7 +162,7 @@ When Step 8 (State File Audit) produces `[STATE-AUDIT]` flags:
 ## Team Mode: Review
 
 ### Pre-Pull
-Before running review, run `git pull origin main` to get the latest shared state files.
+Before running review, run `git pull` on the default branch to get the latest shared state files (per project-brief.md → Key Technical Decisions; default: main).
 
 ### Owner-Scoped Audit
 - **Step 6 (Feature Registry)**: only check that YOUR new features are registered — do not modify other developers' rows

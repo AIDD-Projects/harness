@@ -32,7 +32,7 @@ Prevents credential leaks and accidental commits of sensitive files. (FP-004)
 - [ ] (FP-004) No hardcoded passwords, API keys, or tokens in code
 - [ ] Sensitive file patterns are registered in .gitignore
 - [ ] No temp files (tmp_*, debug_*, coverage_*) in staging area
-- [ ] Using explicit per-file staging, not `git add .`
+- [ ] Recommended: Use explicit per-file staging unless your team allows `git add .` (per project-brief.md → Key Technical Decisions)
 
 ## Example
 

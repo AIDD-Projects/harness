@@ -6,6 +6,7 @@ Skills and agents work together through shared state files — invoke them as ne
 ## Session Start
 
 Read `docs/project-state.md` first. If all state files are empty, run `bootstrap` skill.
+If `.harness/my-context.md` exists, read it for personal environment and preferences.
 
 ## Workflow
 

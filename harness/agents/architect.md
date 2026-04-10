@@ -115,7 +115,7 @@ Evaluate the proposal against these architectural principles:
 
 - This agent reviews design, it does NOT implement changes
 - Always defer to `docs/project-brief.md` Decision Log for settled architectural decisions
-- If unsure about direction, recommend involving the team lead
+- If unsure about direction, recommend involving the designated authority (per project-brief.md; default: team lead)
 - For implementation after approval, hand off to the `planner` agent
 
 <!-- TEAM_MODE_START -->

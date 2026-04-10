@@ -24,7 +24,7 @@ Pre-deployment validation checklist. Ensures all quality gates pass and state fi
 
 ### Step 2: Test Suite
 
-1. Run the full test suite: `npm test` (or project-specific command)
+1. Run the project's test command (per project-brief.md → Key Technical Decisions; e.g., `npm test`, `pytest`, `go test ./...`)
 2. **All tests must pass.** If any fail → **BLOCKED, do not proceed**
 3. Report: total tests, passed, failed
 
@@ -48,7 +48,7 @@ Verify all state files are up to date:
 
 1. `git status` — working directory should be clean
 2. `git log --oneline -5` — verify recent commits are meaningful
-3. Verify current branch is appropriate for deployment (main/release)
+3. Verify current branch is appropriate for deployment (the default branch or a release branch, per project-brief.md)
 
 ### Step 6: Changelog / Release Notes
 
@@ -87,7 +87,7 @@ Verify all state files are up to date:
 ## Team Mode: Pre-Deploy Coordination
 
 ### Shared State Sync
-1. Run `git pull origin main` before starting deploy validation
+1. Run `git pull` on the default branch before starting deploy validation (per project-brief.md → Key Technical Decisions; default: main)
 2. Verify `docs/features.md` and `docs/dependency-map.md` are up to date with latest changes from all developers
 3. Check that no other developer has in-progress stories that depend on the current release
 

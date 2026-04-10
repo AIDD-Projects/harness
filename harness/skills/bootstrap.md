@@ -85,12 +85,10 @@ Using language/framework detected in Phase 1 + user answers from Phase 2, enrich
    - Type conventions (from user answer #5)
    - Test command and mock location (from user answer #6)
 
-2. **Add language-specific defaults** to Key Technical Decisions if not already present:
-   - Python: `Use Pydantic models for API schemas, not plain dicts.`
-   - TypeScript: `Prefer union types ("a" | "b") over enums.`
-   - Go: `Use interfaces for dependency injection.`
-   - Java: `Use records for DTOs.`
-   - Rust: `Use enum variants, not string constants.`
+2. **Ask about coding conventions** for the detected language:
+   - "Any coding style conventions the AI should follow for [detected language]?" (e.g., enum vs union types, Pydantic vs dataclass, etc.)
+   - If the user provides conventions → write them to Key Technical Decisions
+   - If the user skips → do not inject any defaults
 
 ### Phase 4: Verify
 

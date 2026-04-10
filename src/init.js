@@ -84,7 +84,7 @@ This project uses Team mode. State files are split into shared and personal.
 2. **Owner Column**: shared files use Owner columns — only modify your own rows
 3. **Read-Only**: other developers' Owner rows are READ ONLY
 4. **Append-Only**: new rows go at the bottom of the table
-5. **Pivot Lock**: the \`pivot\` skill must be run on the main branch by the team lead only
+5. **Pivot Lock**: the \`pivot\` skill must be run on the default branch by the designated authority (per project-brief.md)
 6. **FP Promotion**: if a personal failure pattern (FP-NNN) affects the team, promote it to a shared doc or team channel
 `;
 

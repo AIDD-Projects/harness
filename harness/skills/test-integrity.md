@@ -58,9 +58,9 @@ After synchronizing mocks:
 ## Testing Rules (enforced during this skill)
 
 - Mocks must implement ALL interface methods. Missing method = build failure.
-- No `any` type casting on mocks. Create mocks using the actual interface type.
+- Recommended: Avoid `any` type casting on mocks — create mocks using the actual interface type (adjust per project-brief.md → Key Technical Decisions).
 - New methods must have default mock return values (e.g., `mockResolvedValue`, stub returns).
-- No `skip`, `only`, or debug statements in committed test files.
+- Recommended: No `skip`, `only`, or debug statements in committed test files.
 - Async tests must use `await`. No floating promises.
 - Each test must be independent. No shared state between tests.
 

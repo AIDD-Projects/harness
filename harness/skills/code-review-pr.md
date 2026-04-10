@@ -16,9 +16,9 @@ Unlike the `reviewer` agent (which reviews your own changes pre-commit), this sk
 ### Step 1: Gather PR Context
 
 1. Read the PR title, description, and linked issues
-2. Run `git diff main...<branch>` (or the PR's base branch) to see all changes
-3. Run `git log --oneline main...<branch>` to understand commit history
-4. Count files changed: `git diff --stat main...<branch>`
+2. Run `git diff <base>...<branch>` (use the PR's base branch, per project-brief.md; default: main) to see all changes
+3. Run `git log --oneline <base>...<branch>` to understand commit history
+4. Count files changed: `git diff --stat <base>...<branch>`
 
 ### Step 2: Direction Alignment
 
@@ -103,7 +103,7 @@ Run through these checks for each changed file:
 ### Owner-Aware Review
 1. Check `docs/dependency-map.md` Owner column for each file in the PR
 2. If the PR modifies modules owned by someone else → flag for that owner's review
-3. Only the module Owner (or team lead) can approve changes to their modules
+3. Only the module Owner (or designated authority per project-brief.md; default: team lead) can approve changes to their modules
 
 ### Shared State Verification
 - Verify the PR updates `docs/features.md` Owner column correctly
