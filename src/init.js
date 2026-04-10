@@ -359,6 +359,20 @@ function appendGitignore(targetDir) {
   console.log('  ✓  .gitignore — added .harness/');
 }
 
+function detectExistingInstall(targetDir) {
+  const markers = [
+    '.github/copilot-instructions.md',
+    '.claude/rules/core.md',
+    '.cursor/rules/core.mdc',
+    'AGENTS.md',
+    '.windsurf/rules/core.md',
+    'GEMINI.md',
+    'docs/project-state.md',
+    '.harness/project-state.md',
+  ];
+  return markers.some(f => fs.existsSync(path.join(targetDir, f)));
+}
+
 function writeGitattributes(targetDir) {
   const content =
     '# Musher Team mode — merge strategy for shared state files\n' +
@@ -634,10 +648,21 @@ async function run(argv) {
       }
     }
 
+    // Determine overwrite — prompt only in interactive terminal
+    let overwrite = args.overwrite;
+    if (!overwrite && !args.batch && process.stdin.isTTY) {
+      const hasExisting = detectExistingInstall(args.dir);
+      if (hasExisting) {
+        console.log('  ⚠  Existing Musher files detected.');
+        const answer = await askQuestion('  Overwrite existing files? (y/N): ');
+        overwrite = answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes';
+      }
+    }
+
     const gen = GENERATORS[ide];
     const lang = detectLanguage(args.dir);
     console.log(`\n  Installing for ${gen.name} (${mode} mode)... (detected language: ${lang})\n`);
-    gen.fn(args.dir, args.overwrite, mode);
+    gen.fn(args.dir, overwrite, mode);
 
     // Team mode extras
     if (mode === 'team') {

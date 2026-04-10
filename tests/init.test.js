@@ -214,19 +214,19 @@ describe('musher init', () => {
     it('skips existing files without --overwrite', async () => {
       const origLog = console.log;
       console.log = () => {};
-      await run(['init', '--ide', 'windsurf', '--mode', 'solo', '--dir', tmpDir]);
+      await run(['init', '--ide', 'windsurf', '--mode', 'solo', '--batch', '--dir', tmpDir]);
       console.log = origLog;
 
       // Modify a file
       const statePath = path.join(tmpDir, 'docs/project-state.md');
       fs.writeFileSync(statePath, 'CUSTOM CONTENT', 'utf8');
 
-      // Run again without --overwrite
+      // Run again without --overwrite (batch mode skips interactive prompt)
       const skipped = [];
       console.log = (msg) => {
         if (msg && msg.includes('Skipped')) skipped.push(msg);
       };
-      await run(['init', '--ide', 'windsurf', '--mode', 'solo', '--dir', tmpDir]);
+      await run(['init', '--ide', 'windsurf', '--mode', 'solo', '--batch', '--dir', tmpDir]);
       console.log = origLog;
 
       assert.ok(skipped.length > 0, 'Should have skipped existing files');
