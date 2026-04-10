@@ -8,7 +8,7 @@
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.6.5** — Hardened framework with 10 skills, 4 agents, Iron Laws, and CLI health checks.
+> **v0.7.0** — Team conventions delegated to project-brief.md. No more hardcoded workflow rules.
 
 ## From Harness to Musher
 
@@ -226,14 +226,15 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 
 ## Roadmap
 
-Musher is at **v0.6.5** — the framework has been hardened with additional skills, agents, and CLI tools.
+Musher is at **v0.7.0** — team conventions are now delegated to project-brief.md instead of being hardcoded.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
-| **Hardening** | v0.6.5 | ✅ Current | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
-| **Intelligence** | v0.7.0 | 🔜 Next | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
-| **Ecosystem** | v0.8.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
+| **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
+| **Flexibility** | v0.7.0 | ✅ Current | Delegate team conventions to project-brief.md, remove prescriptive rules, opt-in personal context (.harness/my-context.md) |
+| **Intelligence** | v0.8.0 | 🔜 Next | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
+| **Ecosystem** | v0.9.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
 | **Production** | v1.0.0 | Planned | Battle-tested across enterprise teams, comprehensive docs, stable API guarantee |
 
 ### What We're Working On Now

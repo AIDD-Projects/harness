@@ -8,7 +8,7 @@
 
 **모든 개발자의 AI를 하나의 프로젝트 방향으로 정렬합니다.**
 
-> **v0.6.5** — 10개 스킬, 4개 에이전트, Iron Laws, CLI 헬스체크를 갖춘 강화된 프레임워크
+> **v0.7.0** — 팀 컨벤션을 project-brief.md에 위임. 하드코딩된 워크플로우 규칙 제거.
 
 ---
 
@@ -275,9 +275,10 @@ Musher는 **AI가 어디로 가는지** — 모든 개발자의 AI가 같은 방
 | 단계 | 버전 | 상태 | 초점 |
 |------|------|------|------|
 | **Foundation** | v0.5.0 | ✅ 완료 | 핵심 프레임워크: 6 IDE 지원, 8 스킬, 3 에이전트, Team Mode, Direction Guard |
-| **Hardening** | v0.6.5 | ✅ 현재 | 10 스킬, 4 에이전트, Iron Laws, CLI batch/doctor/validate, 방향 드리프트 감지 |
-| **Intelligence** | v0.7.0 | 🔜 다음 | 스마트 충돌 감지, 교차 개발자 방향 드리프트 알림, 에이전트 메모리 공유 |
-| **Ecosystem** | v0.8.0 | 계획 | 플러그인 시스템, 커뮤니티 스킬/에이전트 마켓플레이스, IDE 확장 통합 |
+| **Hardening** | v0.6.5 | ✅ 완료 | 10 스킬, 4 에이전트, Iron Laws, CLI batch/doctor/validate, 방향 드리프트 감지 |
+| **Flexibility** | v0.7.0 | ✅ 현재 | 팀 컨벤션을 project-brief.md에 위임, prescriptive 규칙 제거, 개인 컨텍스트 opt-in (.harness/my-context.md) |
+| **Intelligence** | v0.8.0 | 🔜 다음 | 스마트 충돌 감지, 교차 개발자 방향 드리프트 알림, 에이전트 메모리 공유 |
+| **Ecosystem** | v0.9.0 | 계획 | 플러그인 시스템, 커뮤니티 스킬/에이전트 마켓플레이스, IDE 확장 통합 |
 | **Production** | v1.0.0 | 계획 | 기업 팀 전투 테스트 완료, 종합 문서, 안정 API 보장 |
 
 ### 현재 진행 중
