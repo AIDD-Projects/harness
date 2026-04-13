@@ -10,7 +10,7 @@
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.7.0** — Team conventions delegated to project-brief.md. No more hardcoded workflow rules.
+> **v0.7** — Team conventions delegated to project-brief.md. No more hardcoded workflow rules.
 
 ## From Harness to Musher
 
@@ -228,24 +228,21 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 
 ## Roadmap
 
-Musher is at **v0.7.0** — team conventions are now delegated to project-brief.md instead of being hardcoded.
+Musher is at **v0.7.2** — the framework is feature-complete. Next priority is real-world validation.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
 | **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
-| **Flexibility** | v0.7.0 | ✅ Current | Delegate team conventions to project-brief.md, remove prescriptive rules, opt-in personal context (.harness/my-context.md) |
-| **Intelligence** | v0.8.0 | 🔜 Next | Smart conflict detection, cross-developer direction drift alerts, agent memory sharing |
-| **Ecosystem** | v0.9.0 | Planned | Plugin system, community skill/agent marketplace, IDE extension integrations |
-| **Production** | v1.0.0 | Planned | Battle-tested across enterprise teams, comprehensive docs, stable API guarantee |
+| **Flexibility** | v0.7.x | ✅ Current | Delegate team conventions to project-brief.md, remove prescriptive rules, opt-in personal context (.harness/my-context.md) |
+| **Validation** | — | 🔜 Next | Real-world project adoption, user feedback collection, case studies, pain point discovery |
 
-### What We're Working On Now
+### What's Next
 
-- [ ] Git hook integration for automatic Pre-Pull verification
-- [ ] CI pipeline to detect Direction Guard violations in PRs
-- [ ] Real-world case studies from enterprise team adoption
-- [ ] Automated state file conflict resolution for Team Mode
-- [ ] Performance benchmarks: with vs without Musher Engineering
+- [ ] Adopt Musher in real projects and collect usage data
+- [ ] Document case studies: solo vs team, small vs large projects
+- [ ] Gather user feedback on friction points and missing features
+- [ ] Iterate based on real-world evidence, not assumptions
 
 ## Contributing & Feedback
 
