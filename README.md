@@ -14,7 +14,7 @@
 
 The concept of an AI "harness" — structured markdown files that guide LLM coding agents — has become a foundational pattern in AI-assisted development. Frameworks like BMAD, gstack, and GSD pioneered this approach for **solo developers**.
 
-**Musher Engineering** takes harness engineering to the next level. Built by [KT](https://github.com/KTcorp-Opensource-Projects), it evolves the harness concept from a 1-person tool into an **enterprise-grade direction management framework** for multi-developer teams.
+**Musher Engineering** takes harness engineering to the next level. Built by [AIDD-Projects](https://github.com/AIDD-Projects), it evolves the harness concept from a 1-person tool into an **enterprise-grade direction management framework** for multi-developer teams.
 
 | | Traditional Harness | Musher Engineering |
 |---|---|---|
@@ -249,8 +249,8 @@ Musher is at **v0.7.0** — team conventions are now delegated to project-brief.
 
 Musher is in active development and we'd love your input.
 
-- **Bug reports & feature requests** → [GitHub Issues](https://github.com/KTcorp-Opensource-Projects/harness/issues)
-- **Discussions & ideas** → [GitHub Discussions](https://github.com/KTcorp-Opensource-Projects/harness/discussions)
+- **Bug reports & feature requests** → [GitHub Issues](https://github.com/AIDD-Projects/harness/issues)
+- **Discussions & ideas** → [GitHub Discussions](https://github.com/AIDD-Projects/harness/discussions)
 - **Try it on your project** → `npx musher-engineering init` and tell us what works (or doesn't)
 
 We're especially interested in:

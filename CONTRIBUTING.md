@@ -11,7 +11,7 @@ Thank you for your interest in contributing to Musher Engineering!
 ### Ways to Contribute
 
 #### 🐛 Bug Reports
-Found something broken? [Open a Bug Report](https://github.com/KTcorp-Opensource-Projects/harness/issues/new?template=bug-report.yml).
+Found something broken? [Open a Bug Report](https://github.com/AIDD-Projects/harness/issues/new?template=bug-report.yml).
 
 Please include:
 - Musher version (`npx musher-engineering --version`)
@@ -19,7 +19,7 @@ Please include:
 - Steps to reproduce
 
 #### ✨ Feature Requests
-Have an idea? [Open a Feature Request](https://github.com/KTcorp-Opensource-Projects/harness/issues/new?template=feature-request.yml).
+Have an idea? [Open a Feature Request](https://github.com/AIDD-Projects/harness/issues/new?template=feature-request.yml).
 
 We're especially interested in:
 - New skills or agents for your workflow
@@ -27,15 +27,15 @@ We're especially interested in:
 - IDE-specific enhancements
 
 #### 🤖 IDE Compatibility Reports
-If an IDE updated its customization paths and Musher files aren't recognized, [report it here](https://github.com/KTcorp-Opensource-Projects/harness/issues/new?template=ide-compatibility.yml).
+If an IDE updated its customization paths and Musher files aren't recognized, [report it here](https://github.com/AIDD-Projects/harness/issues/new?template=ide-compatibility.yml).
 
 #### 💬 Discussions
-Questions, ideas, and experience sharing → [GitHub Discussions](https://github.com/KTcorp-Opensource-Projects/harness/discussions).
+Questions, ideas, and experience sharing → [GitHub Discussions](https://github.com/AIDD-Projects/harness/discussions).
 
 ### Development Setup
 
 ```bash
-git clone https://github.com/KTcorp-Opensource-Projects/harness.git
+git clone https://github.com/AIDD-Projects/harness.git
 cd musher-engineering
 npm test    # Run all tests (Node.js native test runner)
 ```
@@ -67,7 +67,7 @@ Musher Engineering에 기여해주셔서 감사합니다!
 ### 기여 방법
 
 #### 🐛 버그 리포트
-문제를 발견하셨나요? [버그 리포트를 작성해주세요](https://github.com/KTcorp-Opensource-Projects/harness/issues/new?template=bug-report.yml).
+문제를 발견하셨나요? [버그 리포트를 작성해주세요](https://github.com/AIDD-Projects/harness/issues/new?template=bug-report.yml).
 
 포함해주실 내용:
 - Musher 버전 (`npx musher-engineering --version`)
@@ -75,7 +75,7 @@ Musher Engineering에 기여해주셔서 감사합니다!
 - 재현 단계
 
 #### ✨ 기능 제안
-아이디어가 있으신가요? [기능 요청을 작성해주세요](https://github.com/KTcorp-Opensource-Projects/harness/issues/new?template=feature-request.yml).
+아이디어가 있으신가요? [기능 요청을 작성해주세요](https://github.com/AIDD-Projects/harness/issues/new?template=feature-request.yml).
 
 특히 다음 사항에 관심이 있습니다:
 - 워크플로에 필요한 새 스킬이나 에이전트
@@ -83,15 +83,15 @@ Musher Engineering에 기여해주셔서 감사합니다!
 - IDE별 특화 기능
 
 #### 🤖 IDE 호환성 리포트
-IDE 업데이트로 커스터마이징 경로가 바뀌어 Musher 파일이 인식되지 않는다면 [여기에 리포트해주세요](https://github.com/KTcorp-Opensource-Projects/harness/issues/new?template=ide-compatibility.yml).
+IDE 업데이트로 커스터마이징 경로가 바뀌어 Musher 파일이 인식되지 않는다면 [여기에 리포트해주세요](https://github.com/AIDD-Projects/harness/issues/new?template=ide-compatibility.yml).
 
 #### 💬 토론
-질문, 아이디어, 사용 경험 공유 → [GitHub Discussions](https://github.com/KTcorp-Opensource-Projects/harness/discussions).
+질문, 아이디어, 사용 경험 공유 → [GitHub Discussions](https://github.com/AIDD-Projects/harness/discussions).
 
 ### 개발 환경 설정
 
 ```bash
-git clone https://github.com/KTcorp-Opensource-Projects/harness.git
+git clone https://github.com/AIDD-Projects/harness.git
 cd musher-engineering
 npm test    # 전체 테스트 실행 (Node.js 네이티브 테스트 러너)
 ```

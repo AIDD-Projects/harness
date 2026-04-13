@@ -24,10 +24,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KTcorp-Opensource-Projects/harness.git"
+    "url": "git+https://github.com/AIDD-Projects/harness.git"
   },
   "license": "MIT",
-  "author": "KTcorp-Opensource-Projects",
+  "author": "AIDD-Projects",
   "main": "src/init.js",
   "bin": {
     "musher": "bin/cli.js",

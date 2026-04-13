@@ -16,7 +16,7 @@
 
 AI "harness" — LLM 코딩 에이전트를 안내하는 구조화된 마크다운 파일 — 는 AI 기반 개발의 기본 패턴이 되었습니다. BMAD, gstack, GSD 같은 프레임워크가 **1인 개발자**를 위해 이 접근법을 개척했습니다.
 
-**Musher Engineering**은 harness 엔지니어링을 한 단계 진화시킵니다. [KT](https://github.com/KTcorp-Opensource-Projects)에서 개발하여, harness 개념을 1인 도구에서 멀티 개발자 팀을 위한 **엔터프라이즈급 방향 관리 프레임워크**로 발전시켰습니다.
+**Musher Engineering**은 harness 엔지니어링을 한 단계 진화시킵니다. [AIDD-Projects](https://github.com/AIDD-Projects)에서 개발하여, harness 개념을 1인 도구에서 멀티 개발자 팀을 위한 **엔터프라이즈급 방향 관리 프레임워크**로 발전시켰습니다.
 
 | | 기존 Harness | Musher Engineering |
 |---|---|---|
@@ -295,8 +295,8 @@ Musher는 **AI가 어디로 가는지** — 모든 개발자의 AI가 같은 방
 
 Musher는 활발히 개발 중이며 여러분의 의견을 환영합니다.
 
-- 🐛 **버그 신고 & 기능 요청** → [GitHub Issues](https://github.com/KTcorp-Opensource-Projects/harness/issues)
-- 💬 **토론 & 아이디어** → [GitHub Discussions](https://github.com/KTcorp-Opensource-Projects/harness/discussions)
+- 🐛 **버그 신고 & 기능 요청** → [GitHub Issues](https://github.com/AIDD-Projects/harness/issues)
+- 💬 **토론 & 아이디어** → [GitHub Discussions](https://github.com/AIDD-Projects/harness/discussions)
 - 🚀 **직접 사용해보기** → `npx musher-engineering init` 후 피드백을 남겨주세요
 
 특히 다음 사항에 관심이 있습니다:
