@@ -1,10 +1,12 @@
+<div align="right">
+  <a href="README.md"><img src="https://img.shields.io/badge/lang-English-blue.svg" alt="English"></a>
+</div>
+
 # Musher Engineering
 
 [![npm version](https://img.shields.io/npm/v/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![npm downloads](https://img.shields.io/npm/dm/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-[English](README.md) | **한국어**
 
 **모든 개발자의 AI를 하나의 프로젝트 방향으로 정렬합니다.**
 

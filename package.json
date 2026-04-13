@@ -27,7 +27,7 @@
     "url": "git+https://github.com/AIDD-Projects/harness.git"
   },
   "license": "MIT",
-  "author": "AIDD-Projects",
+  "author": "jungchihoon",
   "main": "src/init.js",
   "bin": {
     "musher": "bin/cli.js",

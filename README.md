@@ -1,10 +1,12 @@
+<div align="right">
+  <a href="README.ko.md"><img src="https://img.shields.io/badge/lang-한국어-blue.svg" alt="한국어"></a>
+</div>
+
 # Musher Engineering
 
 [![npm version](https://img.shields.io/npm/v/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![npm downloads](https://img.shields.io/npm/dm/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-**English** | [한국어](README.ko.md)
 
 **Keep every developer's AI aligned on one project direction.**
 
