@@ -66,6 +66,7 @@ When the user provides a feature request or development goal in their prompt:
    - Structural/design change → Run `architect` first, then `planner`
    - Direction change → Start 🟡 Pipeline from `pivot`
    - Crew artifacts detected (`docs/crew/` exists or user provided design docs) → Start 🟣 Pipeline from `bootstrap`
+   - Any other request (info, explanation, status) → `sprint-manager` — route with context
 3. Announce which pipeline and step you are starting, then execute
 
 ## 🧭 Next Step — Response Rule

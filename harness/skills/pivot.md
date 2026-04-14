@@ -72,6 +72,9 @@ Type: [Tech Swap | Scope Change | Architecture Shift | Goal Pivot]
 ### Confirm? (yes/no)
 ```
 
+- If **yes**: Proceed to Step 4 (update all state files)
+- If **no**: Pivot is cancelled — no state files modified, return to current direction
+
 ### Step 4: Execute Updates
 
 After user confirms, update ALL state files in order:

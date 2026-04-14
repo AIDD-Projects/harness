@@ -159,7 +159,7 @@ After review completes, always append a 🧭 block based on the outcome:
 |---|---|
 | All checks pass, more stories remain | `sprint-manager` — "다음 Story는?" |
 | All checks pass, all stories done | `learn` — "세션을 마무리해줘" |
-| STATE-AUDIT flags found | `learn` — "state 파일을 정리하고 세션 마무리해줘" |
+| STATE-AUDIT flags found | Two valid paths: (1) `learn` now → "지금 state 파일을 정리해줘" or (2) `sprint-manager` → continue coding, resolve at session end |
 | Security/architecture issues blocking | [Fix] — "리뷰 지적사항을 수정하세요. 완료 후 다시 `reviewer` 호출" |
 
 Example 🧭 block for passing review:

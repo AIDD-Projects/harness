@@ -33,17 +33,20 @@ One command does everything — no manual editing required.
 
 **Do NOT modify any code files in this phase.**
 
-### Phase 1.5: Crew Artifact Detection
+### Phase 1.5: Crew Artifact Detection + Version Check
 
 Check if external planning artifacts exist:
 - `docs/crew/` directory — kode:crew output (requirements, analysis, design docs)
 - User-provided documents — requirements specs, wireframes, API designs
 
 **If crew artifacts are found:**
-1. Read all documents in `docs/crew/` (or user-provided docs)
-2. Extract: project vision, goals, non-goals, feature list, module boundaries, tech decisions
-3. **Skip most Phase 2 questions** — use artifact data instead. Only confirm with user: "Crew 산출물을 기반으로 state files를 채우겠습니다. 맞나요?"
-4. Proceed to Phase 3 using extracted data
+1. Check if `docs/project-brief.md` already has content (existing crew sync)
+   - If project-brief has content AND crew artifact files are newer → Output: "⚠️ Crew 산출물이 업데이트되었습니다. 재인제스트하겠습니까?"
+   - If project-brief is empty (first crew sync) → proceed with full ingestion
+2. Read all documents in `docs/crew/` (or user-provided docs)
+3. Extract: project vision, goals, non-goals, feature list, module boundaries, tech decisions
+4. **Skip most Phase 2 questions** — use artifact data instead. Only confirm with user: "Crew 산출물을 기반으로 state files를 채우겠습니다. 맞나요?"
+5. Proceed to Phase 3 using extracted data
 
 **If no crew artifacts:** Continue to Phase 2 (User Interview) normally.
 
