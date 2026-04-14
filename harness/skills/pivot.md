@@ -94,6 +94,27 @@ Add an entry to the Decision Log section in docs/project-brief.md:
 - **Alternatives Considered**: [What else was considered and rejected]
 ```
 
+### 🧭 Navigation — After Pivot
+
+After pivot completes, always append a 🧭 block:
+
+| Pivot Result | 🧭 Next Step |
+|---|---|
+| All state files updated | `planner` — "변경된 방향에 맞춰 재계획해줘" |
+| Crew artifacts exist for new direction | `bootstrap` (🟣) — "crew 산출물을 기반으로 state를 다시 세팅해줘" |
+| User cancelled | 🏁 No action — "기존 방향을 유지합니다" |
+
+Example 🧭 block:
+```
+---
+🧭 Next Step
+→ Call: `planner`
+→ Prompt example: "변경된 방향에 맞춰 재계획해줘"
+→ Why: Direction changed — re-plan features for new goals
+→ Pipeline: 🟡 Step 2/2
+---
+```
+
 ## Rules
 
 - **Never skip the confirmation step** — the user must approve before any state file is written

@@ -37,6 +37,20 @@ Follow the pipeline that matches the current situation. After each step, output 
 1. `pivot` → update all state files for new direction
 2. `planner` → re-plan features for new direction
 
+### 🟣 Crew-Driven Development (kode:crew artifacts provided)
+
+When external planning artifacts exist (requirements, analysis, design documents from kode:crew or similar):
+
+1. `bootstrap` → scan project & fill state files, **auto-ingest crew artifacts** into project-brief, features, dependency-map
+2. `planner` → plan features **from crew artifacts** (skip user interview — artifacts replace it)
+3. [Coding] → implement Stories in order from planner
+4. `reviewer` → code review before commit
+5. `learn` → capture session lessons before ending
+
+> Crew artifacts are detected by: `docs/crew/` directory, or user explicitly provides requirements/design documents.
+> When detected, `bootstrap` and `planner` should read these artifacts instead of asking discovery questions.
+> This pipeline produces the same state files as 🟢 — the difference is the INPUT source, not the output.
+
 ## User Request Routing
 
 When the user provides a feature request or development goal in their prompt:
@@ -48,6 +62,7 @@ When the user provides a feature request or development goal in their prompt:
    - Bug report or error → Start 🔴 Pipeline from `investigate`
    - Structural/design change → Run `architect` first, then `planner`
    - Direction change → Start 🟡 Pipeline from `pivot`
+   - Crew artifacts detected (`docs/crew/` exists or user provided design docs) → Start 🟣 Pipeline from `bootstrap`
 3. Announce which pipeline and step you are starting, then execute
 
 ## 🧭 Next Step — Response Rule
@@ -80,6 +95,7 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 | `pivot` | `planner` | "변경된 방향에 맞춰 재계획해줘" |
 | `architect` | `planner` | "승인된 설계로 기능을 계획해줘" |
 | `learn` | 🏁 Session End | "다음 세션 시작 시 `sprint-manager` 호출" |
+| Crew artifacts provided | `bootstrap` (🟣) | "crew 산출물을 기반으로 프로젝트를 세팅해줘" |
 
 ## State Files
 

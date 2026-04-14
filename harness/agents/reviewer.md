@@ -151,6 +151,29 @@ Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT*
 - Auto-apply security fixes but always record them in output
 - Escalate with NEEDS_CONTEXT after 3 uncertain judgments
 
+### 🧭 Navigation — After Review
+
+After review completes, always append a 🧭 block based on the outcome:
+
+| Review Result | 🧭 Next Step |
+|---|---|
+| All checks pass, more stories remain | `sprint-manager` — "다음 Story는?" |
+| All checks pass, all stories done | `learn` — "세션을 마무리해줘" |
+| STATE-AUDIT flags found | `learn` — "state 파일을 정리하고 세션 마무리해줘" |
+| Security/architecture issues blocking | [Fix] — "리뷰 지적사항을 수정하세요. 완료 후 다시 `reviewer` 호출" |
+
+Example 🧭 block for passing review:
+```
+---
+🧭 Next Step
+→ Call: `sprint-manager`
+→ Prompt example: "다음 Story는?"
+→ Why: Review passed — move to the next Story
+→ Pipeline: 🔵 Step 4/5
+→ Alternative: 세션 종료 시 `learn` 호출
+---
+```
+
 ## STATE-AUDIT Handoff
 
 When Step 8 (State File Audit) produces `[STATE-AUDIT]` flags:

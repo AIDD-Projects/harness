@@ -33,6 +33,20 @@ One command does everything — no manual editing required.
 
 **Do NOT modify any code files in this phase.**
 
+### Phase 1.5: Crew Artifact Detection
+
+Check if external planning artifacts exist:
+- `docs/crew/` directory — kode:crew output (requirements, analysis, design docs)
+- User-provided documents — requirements specs, wireframes, API designs
+
+**If crew artifacts are found:**
+1. Read all documents in `docs/crew/` (or user-provided docs)
+2. Extract: project vision, goals, non-goals, feature list, module boundaries, tech decisions
+3. **Skip most Phase 2 questions** — use artifact data instead. Only confirm with user: "Crew 산출물을 기반으로 state files를 채우겠습니다. 맞나요?"
+4. Proceed to Phase 3 using extracted data
+
+**If no crew artifacts:** Continue to Phase 2 (User Interview) normally.
+
 ### Phase 2: User Interview (interactive)
 
 Ask the user these questions (skip any already answered by Phase 1):
@@ -150,6 +164,12 @@ Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 → Why: State files are filled — now plan the first feature
 → Pipeline: 🟢 Step 2/5
 ---
+```
+
+If crew artifacts were used (🟣 pipeline), adjust the prompt example:
+```
+→ Prompt example: "crew 산출물을 기반으로 첫 번째 기능을 계획해줘"
+→ Pipeline: 🟣 Step 2/5
 ```
 
 ## Rules

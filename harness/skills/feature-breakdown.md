@@ -84,6 +84,21 @@ After completing the breakdown, update these files in the same session:
 - [ ] **docs/features.md**: Add a new row for the feature with Status `🔧 active`, Key Files from Wave tasks, and Test Files.
 - [ ] **docs/project-state.md**: Add Stories to the Story Status table for each Wave.
 
+### 🧭 Navigation — After Feature Breakdown
+
+Feature-breakdown is invoked BY planner (Step 8), so the 🧭 returns control to planner's flow.
+If invoked directly by the user, append:
+
+```
+---
+🧭 Next Step
+→ Call: `planner`
+→ Prompt example: "breakdown을 기반으로 Sprint Story를 생성해줘"
+→ Why: Tasks are defined — planner will register Stories and update state files
+→ Pipeline: 🟢 Step 2/5
+---
+```
+
 ## Anti-patterns
 
 | Anti-pattern | Correct Approach |

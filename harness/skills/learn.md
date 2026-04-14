@@ -139,6 +139,25 @@ Present a summary of all updates made.
 STATUS: DONE
 ```
 
+### 🧭 Navigation — After Learn
+
+Learn is the final skill in every pipeline. Always append this 🧭 block:
+
+```
+---
+🧭 Next Step
+→ 🏁 Session End
+→ Prompt example: "다음 세션 시작 시 `sprint-manager`를 호출하세요"
+→ Why: Session lessons captured — state files are up to date
+→ Pipeline: Step 5/5 (complete)
+---
+```
+
+If crew artifacts were used this session (🟣 pipeline), also note:
+```
+→ Note: 다음 세션에서 crew 산출물이 업데이트되었다면, `bootstrap`부터 다시 시작하세요
+```
+
 ## Rules
 
 - Never invent patterns that didn't actually occur — record only real failures

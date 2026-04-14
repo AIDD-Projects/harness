@@ -84,6 +84,27 @@ After the fix is verified (Phase 4):
 - **Concreteness**: Specify exact file paths and line numbers. Quote error messages. Specify expected vs actual types.
 - **Scope Lock**: Do not modify files outside the identified problem scope (Phase 2).
 
+### 🧭 Navigation — After Investigate
+
+After investigation and fix, always append a 🧭 block:
+
+| Investigate Result | 🧭 Next Step |
+|---|---|
+| Fix applied, tests pass | `reviewer` — "수정한 코드를 리뷰해줘" |
+| Root cause found but fix is out of scope | User decision — "수정 범위가 Story 밖입니다. scope를 확장하겠습니까?" |
+| 3 attempts failed | 🛑 User escalation — "3회 시도 실패. 다른 접근법을 논의합시다" |
+
+Example 🧭 block:
+```
+---
+🧭 Next Step
+→ Call: `reviewer`
+→ Prompt example: "수정한 코드를 리뷰해줘"
+→ Why: Bug fix applied — review before commit
+→ Pipeline: 🔴 Step 3/4
+---
+```
+
 ## Related Failure Patterns
 
 - FP-001: Mock not updated → Phase 4 requires checking mock sync

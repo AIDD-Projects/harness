@@ -26,6 +26,7 @@ One of:
 - **New Feature**: "I want to add [feature description]"
 - **Architecture Query**: "What depends on [module]?" / "Show me the current module map"
 - **Refactor Plan**: "I need to refactor [module/area]"
+- **Crew-Driven Feature**: "crew 산출물을 기반으로 [기능]을 계획해줘" — when kode:crew artifacts exist in `docs/crew/`
 
 ## Procedure
 
@@ -53,7 +54,11 @@ Apply these insights when creating the implementation plan. If the memory file i
 ### For New Feature
 
 1. Read `docs/project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
-2. **Direction Alignment**: Verify the requested feature against three checkpoints:
+2. **Crew Artifact Check**: If `docs/crew/` exists, read all crew artifacts.
+   - Use requirements/analysis docs to auto-fill feature scope, acceptance criteria, and module boundaries
+   - Use design docs to pre-determine architecture impact and dependency changes
+   - Skip discovery questions that crew artifacts already answer
+3. **Direction Alignment**: Verify the requested feature against three checkpoints:
    - **Goal Alignment**: Does it serve a listed Goal? If no clear link → **warn but proceed**. Include the warning in the plan output.
    - **Non-Goal Violation**: Does it fall into Non-Goals? If yes → **stop and ask the user**. Do not proceed until the user confirms this is intentional (may need `pivot` skill).
    - **Decision Consistency**: Does it contradict any Decision Log entry? If yes → **stop and warn**. Recommend running the `pivot` skill before proceeding.
