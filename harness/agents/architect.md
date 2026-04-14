@@ -54,6 +54,12 @@ Apply these insights when evaluating the current proposal. If the memory file is
 1. Read `docs/dependency-map.md` — understand current module graph
 2. Read `docs/project-brief.md` — understand direction and constraints
 3. Read `docs/failure-patterns.md` — check for past architectural mistakes
+4. **Crew Artifact Integration** (🟣 Pipeline only):
+   If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+   - Read `conceptual-architecture.md` (path from Artifact Index): load infra stack, app frameworks, security architecture, deployment strategy
+   - Read `arb-checklist-result.md` Fail items (path from Artifact Index): ensure the proposed design does not worsen existing Fail items
+   - Validate design proposals against the crew architecture's tech decisions (e.g., if architecture specifies "Spring Boot 3.3", warn if proposal uses a different framework)
+   - If no Crew Artifact Index → skip crew-specific checks; architecture review proceeds without crew artifact validation
 
 **Step 2: Direction Check**
 1. Does the proposed change align with project Goals?

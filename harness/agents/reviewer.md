@@ -68,6 +68,36 @@ Changed file list (user-provided or from `git diff --name-only`)
 - Compare current changes against all FP-NNN items in docs/failure-patterns.md
 - Warn if any pattern applies
 
+**Step 5.5: Crew Artifact Compliance Check (🟣 Pipeline only)**
+
+If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+
+1. **ARB Fail Item Check**:
+   - Read Validation Tracker → ARB Fail Resolution section
+   - If the current Story addresses a Fail item (has `[ARB-FAIL]` prefix):
+     - Read the relevant section in the ARB checklist (path from Artifact Index)
+     - Verify implementation matches the recommended action
+     - If not → flag as `[ARB-COMPLIANCE]` in output
+
+2. **NFR Spot Check** (lightweight — check only NFRs relevant to changed files):
+   - Read PRD's non-functional requirements section (path from Artifact Index)
+   - Check ONLY the NFRs related to changed code:
+     - Performance-related change? → Check performance NFRs
+     - Security-related change? → Check security NFRs
+     - API change? → Check scalability/reliability NFRs
+   - Flag violations as `[NFR-GAP]` in output
+   - Note: This is a best-effort check by the LLM, not a guarantee of 100% detection
+
+3. **FR Acceptance Criteria Check**:
+   - If the current Story has `[FR-NNN]` reference:
+     - Read the corresponding FR acceptance criteria from PRD (path from Artifact Index)
+     - Verify tests cover the acceptance criteria
+     - If missing → flag as `[ACCEPTANCE-GAP]` in output
+
+All flags (`[ARB-COMPLIANCE]`, `[NFR-GAP]`, `[ACCEPTANCE-GAP]`) are warnings, not blockers. Include them in the review output under a new "### Crew Artifact Compliance" section.
+
+If no Crew Artifact Index → skip this step entirely.
+
 **Step 6: Feature Registry Check**
 - [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7)
 - [ ] If feature files changed, verify docs/features.md key files are up to date

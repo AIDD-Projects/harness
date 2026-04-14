@@ -43,16 +43,16 @@ Follow the pipeline that matches the current situation. After each step, output 
 
 When external planning artifacts exist (requirements, analysis, design documents from kode:crew or similar):
 
-1. `bootstrap` → scan project & fill state files, **auto-ingest crew artifacts** into project-brief, features, dependency-map
-2. `planner` → plan features **from crew artifacts** (skip user interview — artifacts replace it)
-3. `sprint-manager` → start Story
+1. `bootstrap` → scan project & fill state files, **create Artifact Index + Validation Tracker** in project-brief.md (originals are never modified)
+2. `planner` → plan features **from crew artifacts**: map FR→Stories (`[FR-NNN]` prefix), ARB Fail→P0 Stories (`[ARB-FAIL]` prefix), update Validation Tracker
+3. `sprint-manager` → start Story (includes Validation Dashboard showing KPI/FR/ARB coverage)
 4. [Coding] → implement Stories in order from planner
-5. `reviewer` → code review before commit
-6. `learn` → capture session lessons before ending
+5. `reviewer` → code review + crew artifact compliance check (ARB Fail resolution, NFR spot check, FR acceptance criteria)
+6. `learn` → capture session lessons + update Validation Tracker status
 
-> Crew artifacts are detected by: `docs/crew/` directory, or user explicitly provides requirements/design documents.
-> When detected, `bootstrap` and `planner` should read these artifacts instead of asking discovery questions.
-> This pipeline produces the same state files as 🟢 — the difference is the INPUT source, not the output.
+> Crew artifacts are detected by: `docs/crew/` directory, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` directories, or user explicitly provides requirements/design documents.
+> **Reference, don't summarize**: bootstrap creates a Crew Artifact Index (path table) in project-brief.md — each skill reads the original artifact directly via the indexed path.
+> This pipeline produces the same state files as 🟢 — the difference is the INPUT source and the addition of Validation Tracker for traceability.
 
 ## User Request Routing
 
@@ -65,7 +65,7 @@ When the user provides a feature request or development goal in their prompt:
    - Bug report or error → Start 🔴 Pipeline from `investigate`
    - Structural/design change → Run `architect` first, then `planner`
    - Direction change → Start 🟡 Pipeline from `pivot`
-   - Crew artifacts detected (`docs/crew/` exists or user provided design docs) → Start 🟣 Pipeline from `bootstrap`
+   - Crew artifacts detected (`docs/crew/` exists, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` exist, or user provided design docs) → Start 🟣 Pipeline from `bootstrap`
    - Any other request (info, explanation, status) → `sprint-manager` — route with context
 3. Announce which pipeline and step you are starting, then execute
 

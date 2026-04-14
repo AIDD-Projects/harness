@@ -69,6 +69,8 @@ After every status check, recommend the next action based on current context:
 | All stories in sprint are done | → "Run `learn` to capture session lessons, then start a new sprint" |
 | A direction change was discussed | → "Run `pivot` to update all state files before continuing" |
 | Recent failure patterns apply | → "Watch out for FP-{NNN}: [description]" |
+| Validation Tracker에 계획되지 않은 KPI/FR 존재 | → "Run `planner` — 미계획 KPI/FR에 대한 Story를 추가하세요" |
+| All ARB Fail items resolved | → "ARB Fail 항목 모두 해결됨 — 배포 준비 확인 가능" |
 
 3. Format the recommendation as a 🧭 Next Step block:
 ```
@@ -126,6 +128,22 @@ Progress: {done}/{total} Stories
 
 STATUS: DONE
 ```
+
+#### Validation Dashboard (🟣 Pipeline only)
+
+When `docs/project-brief.md` contains a `## Validation Tracker` section with data, display the Validation Tracker as a dashboard in every status output:
+
+```
+### 📊 Validation Dashboard
+- KPI Coverage: {addressed}/{total} addressed ({percent}%)
+- FR Coverage: {planned}/{total} planned ({percent}%), {done}/{total} done ({percent}%)
+- ARB Fail Resolution: {resolved}/{total} resolved ({percent}%)
+
+⚠️ Unplanned items:
+- [KPI/FR ID]: [description] — 관련 Story 없음
+```
+
+**Sprint Manager reads and reports the Validation Tracker numbers.** It does NOT auto-create Stories for missing coverage — that is the planner's role. If unplanned items exist, recommend running `planner`.
 
 ### 🧭 Navigation — What Comes After Sprint Manager
 

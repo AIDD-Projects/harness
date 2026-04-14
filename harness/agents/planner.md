@@ -54,10 +54,41 @@ Apply these insights when creating the implementation plan. If the memory file i
 ### For New Feature
 
 1. Read `docs/project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
-2. **Crew Artifact Check**: If `docs/crew/` exists, read all crew artifacts.
-   - Use requirements/analysis docs to auto-fill feature scope, acceptance criteria, and module boundaries
-   - Use design docs to pre-determine architecture impact and dependency changes
-   - Skip discovery questions that crew artifacts already answer
+2. **Crew Artifact Integration** (🟣 Pipeline only):
+   If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+
+   a. **Read PRD** (path from Artifact Index):
+      - Extract functional requirements (FR-001, FR-002, ...)
+      - Extract priority (P0, P1, P2)
+      - Extract acceptance criteria for each FR
+      - Extract non-functional requirements (performance, security, scalability)
+
+   b. **Read Product Brief** (path from Artifact Index):
+      - Extract user personas → tag each Story with target persona
+      - Extract user journey steps → map to implementation order
+      - Extract KPIs → attach as acceptance criteria to relevant Stories
+
+   c. **Map FR → Stories**:
+      - Each FR-NNN generates 1+ Stories
+      - Story title includes `[FR-NNN]` prefix for traceability
+      - Story acceptance criteria = PRD's FR acceptance criteria (not invented)
+      - Story references related KPI (if applicable)
+
+   d. **Map ARB Fail Items → Mandatory Stories**:
+      - Read `docs/project-brief.md` § Validation Tracker → ARB Fail Resolution
+      - Each Fail item → P0 Story (highest priority)
+      - Story title includes `[ARB-FAIL]` prefix
+
+   e. **Update Validation Tracker** in `docs/project-brief.md`:
+      - KPI Coverage: fill Story column with mapped Story IDs
+      - FR Coverage: fill Stories column with mapped Story IDs
+      - ARB Fail Resolution: fill Story column with mapped Story IDs
+
+   f. Skip discovery questions that crew artifacts already answer.
+      Only ask about implementation-specific decisions (test framework, library choices).
+
+   If no Crew Artifact Index → proceed with normal user-driven planning below.
+
 3. **Direction Alignment**: Verify the requested feature against three checkpoints:
    - **Goal Alignment**: Does it serve a listed Goal? If no clear link → **warn but proceed**. Include the warning in the plan output.
    - **Non-Goal Violation**: Does it fall into Non-Goals? If yes → **stop and ask the user**. Do not proceed until the user confirms this is intentional (may need `pivot` skill).
@@ -111,6 +142,29 @@ Apply these insights when creating the implementation plan. If the memory file i
 
 ### Dependency Map Changes
 [Additions/modifications to docs/dependency-map.md]
+```
+
+### New Feature Plan — Crew-Driven (🟣 Pipeline)
+```markdown
+## Feature: [name]
+**Story**: S[sprint]-[number]
+**PRD Reference**: FR-[NNN]
+**KPI**: [related KPI, if any]
+**Acceptance Criteria**: [from PRD — not invented]
+**Scope**: [modules affected]
+**Risk**: Low | Medium | High
+
+### Architecture Impact
+- New modules: [list]
+- Modified modules: [list]
+
+### Implementation Plan
+[Output from feature-breakdown skill]
+
+### Validation Tracker Updates
+- KPI Coverage: [which KPIs this story addresses]
+- FR Coverage: [which FRs this story implements]
+- ARB Fail Resolution: [which Fail items this story resolves, if any]
 ```
 
 ### Architecture Query Response

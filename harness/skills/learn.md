@@ -38,6 +38,23 @@ Before recording failures, verify that the session's work stayed aligned with pr
    - Do NOT block — the learn skill always completes
 4. **If no drift**: Proceed silently (no output for this step)
 
+#### Step 2.5: Validation Tracker Update (🟣 Pipeline only)
+
+If `docs/project-brief.md` contains a `## Validation Tracker` section with data:
+
+1. **Update KPI Coverage status**:
+   - Stories completed this session → if they map to a KPI → update Status (⬜→🟡 or 🟡→✅)
+2. **Update FR Coverage status**:
+   - Stories completed this session → if they have `[FR-NNN]` prefix → update Status (⬜→🟡 or 🟡→✅)
+3. **Update ARB Fail Resolution status**:
+   - Stories completed this session → if they have `[ARB-FAIL]` prefix and reviewer passed compliance check → update Status (⬜→🟡 or 🟡→✅)
+4. **Check for Validation Drift**:
+   - Did this session produce Stories/code that don't map to any FR or KPI? → warn
+   - Are there KPIs/FRs with no Stories after 2+ sprints? → warn as "⚠️ Unplanned KPI/FR risk"
+   - Include warnings in Step 7 Report
+
+If no Validation Tracker → skip this step entirely.
+
 ### Step 3: Failure Pattern Detection
 
 For each issue/error that occurred in this session:
