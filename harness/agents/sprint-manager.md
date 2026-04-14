@@ -70,11 +70,16 @@ After every status check, recommend the next action based on current context:
 | A direction change was discussed | → "Run `pivot` to update all state files before continuing" |
 | Recent failure patterns apply | → "Watch out for FP-{NNN}: [description]" |
 
-3. Format the recommendation as:
+3. Format the recommendation as a 🧭 Next Step block:
 ```
-💡 Recommended next: [action]
-   Why: [one-sentence reason]
-   Command: [exact skill/agent to invoke]
+---
+🧭 Next Step
+→ Call: `[skill or agent name]`
+→ Prompt example: "[copy-paste ready prompt]"
+→ Why: [one-sentence reason]
+→ Pipeline: {🟢|🔵} Step {N}/{total}
+→ Alternative: [other valid path, if any]
+---
 ```
 
 **Request: "story done" / "S{N}-{M} done"**
@@ -121,6 +126,18 @@ Progress: {done}/{total} Stories
 
 STATUS: DONE
 ```
+
+### 🧭 Navigation — What Comes After Sprint Manager
+
+After sprint-manager completes, always append a 🧭 block based on the outcome:
+
+| Sprint Manager Result | 🧭 Next Step |
+|---|---|
+| State files empty | `bootstrap` — "프로젝트를 온보딩해줘" |
+| No stories exist | `planner` — "[기능]을 계획해줘" |
+| Story set to in-progress | [Coding] — "구현을 시작하세요. 완료 후 `reviewer`를 호출하세요" |
+| All stories done | `learn` — "세션을 마무리해줘" |
+| Direction change detected | `pivot` — "방향을 전환해줘" |
 
 ## Enforced Rules
 

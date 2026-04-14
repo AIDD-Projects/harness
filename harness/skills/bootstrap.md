@@ -138,6 +138,20 @@ After bootstrap completes, remind the user that shared files require `git pull` 
 STATUS: DONE
 ```
 
+### 🧭 Navigation — After Bootstrap
+
+Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
+
+```
+---
+🧭 Next Step
+→ Call: `planner`
+→ Prompt example: "[프로젝트 이름]에 [첫 번째 기능]을 추가해줘"
+→ Why: State files are filled — now plan the first feature
+→ Pipeline: 🟢 Step 2/5
+---
+```
+
 ## Rules
 
 - Never modify source code — this skill only writes to state files and rules files

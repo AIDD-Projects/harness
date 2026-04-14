@@ -1,25 +1,85 @@
 # Musher
 
 This project uses Musher for structured AI-assisted development.
-Skills and agents work together through shared state files — invoke them as needed.
+Skills and agents work together through shared state files.
+**Every response must end with a 🧭 Next Step block** — guide the user to the next action.
 
 ## Session Start
 
 Read `docs/project-state.md` first. If all state files are empty, run `bootstrap` skill.
 If `.harness/my-context.md` exists, read it for personal environment and preferences.
 
-## Workflow
+## Development Pipeline
 
-- First time / empty state → run `bootstrap`
-- Session start → run `sprint-manager` to check status
-- Structural / design change → run `architect` before planner
-- New feature → run `planner` before coding
-- Before commit → run `reviewer`
-- PR review → run `code-review-pr`
-- Bug or issue → run `investigate`
-- Before deploy / release → run `deployment`
-- Session end → run `learn`
-- Direction change → run `pivot`
+Follow the pipeline that matches the current situation. After each step, output a 🧭 Next Step.
+
+### 🟢 New Development (no design docs — start from scratch)
+1. `bootstrap` → scan project & fill state files
+2. `planner` → plan first feature based on user requirements
+3. [Coding] → implement Stories in order from planner
+4. `reviewer` → code review before commit
+5. `learn` → capture session lessons before ending
+
+### 🔵 Continue Development (bootstrap already done)
+1. `sprint-manager` → check current status ("where are we?")
+2. `planner` → plan new feature (if needed)
+3. [Coding] → implement Stories in order
+4. `reviewer` → code review before commit
+5. `learn` → capture session lessons before ending
+
+### 🔴 Bug Fix
+1. `investigate` → diagnose the issue
+2. [Fix] → apply fix within investigate's recommended scope
+3. `reviewer` → review the fix
+4. `learn` → record lessons
+
+### 🟡 Direction Change
+1. `pivot` → update all state files for new direction
+2. `planner` → re-plan features for new direction
+
+## User Request Routing
+
+When the user provides a feature request or development goal in their prompt:
+
+1. Read `docs/project-state.md` to determine current project state
+2. Route to the appropriate pipeline:
+   - State files empty → Start 🟢 Pipeline from Step 1 (`bootstrap`)
+   - State files exist + new feature request → Start 🟢 or 🔵 Pipeline from `planner`
+   - Bug report or error → Start 🔴 Pipeline from `investigate`
+   - Structural/design change → Run `architect` first, then `planner`
+   - Direction change → Start 🟡 Pipeline from `pivot`
+3. Announce which pipeline and step you are starting, then execute
+
+## 🧭 Next Step — Response Rule
+
+**Every response must end with a 🧭 Next Step block.** This is mandatory — never omit it.
+
+When a skill or agent reports STATUS: DONE, output the next step in this format:
+
+```
+---
+🧭 Next Step
+→ Call: `{skill or agent name}`
+→ Prompt example: "{copy-paste ready prompt for the user}"
+→ Why: {one-sentence reason}
+→ Pipeline: {🟢|🔵|🔴|🟡} Step {N}/{total}
+---
+```
+
+### Chaining Map — what comes after what
+
+| Completed | Next | Prompt Example |
+|-----------|------|---------------|
+| `bootstrap` | `planner` | "[project]에 [첫 기능]을 추가해줘" |
+| `planner` | `sprint-manager` | "S{N}-{M} Story를 시작해줘" |
+| `sprint-manager` (story started) | [Coding] | "구현을 시작하세요. 완료 후 `reviewer` 호출" |
+| [Coding done] | `reviewer` | "S{N}-{M} 코드를 리뷰해줘" |
+| `reviewer` (pass) | `sprint-manager` or `learn` | "다음 Story는?" 또는 "세션 마무리해줘" |
+| `reviewer` (STATE-AUDIT) | `learn` | "state 파일을 정리하고 세션 마무리해줘" |
+| `investigate` | `reviewer` | "수정한 코드를 리뷰해줘" |
+| `pivot` | `planner` | "변경된 방향에 맞춰 재계획해줘" |
+| `architect` | `planner` | "승인된 설계로 기능을 계획해줘" |
+| `learn` | 🏁 Session End | "다음 세션 시작 시 `sprint-manager` 호출" |
 
 ## State Files
 
