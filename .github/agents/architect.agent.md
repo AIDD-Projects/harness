@@ -1,3 +1,8 @@
+---
+name: architect
+description: "Design review gate. Validates structural changes against project direction and module boundaries."
+---
+
 # Architect
 
 ## Role
@@ -5,11 +10,6 @@
 Design review gate for structural changes.
 Validates that proposed architecture changes align with project direction and existing module boundaries.
 The Architect is invoked when changes affect multiple modules, introduce new layers, or modify the dependency graph significantly.
-
-## Invoked By
-
-- **User** (direct) — "아키텍처 리뷰해줘", "설계 검토해줘"
-- **planner** (optional) — when proposed changes affect 3+ modules or introduce new layers
 
 ## Referenced Skills
 
@@ -42,14 +42,7 @@ Before proceeding, verify that required state files have content:
 - `docs/dependency-map.md` — Must have at least one module row (for existing projects)
 - `docs/project-brief.md` — Must have Vision and Goals filled
 
-If `docs/project-brief.md` has no Vision/Goals filled OR `docs/dependency-map.md` has zero module rows → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
-
-**Step 0.1: Circular Dependency Check**
-
-Before evaluating proposals, verify dependency graph integrity:
-1. For each module in `docs/dependency-map.md`, check if it appears in its own "Depends On" chain (A→B→C→A = circular)
-2. If circular dependency found → flag as 🛑 **architectural blocker** before proceeding
-3. This check runs automatically on every architect invocation
+If ALL files are empty/placeholder-only → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
 
 **Step 0.5: Load Agent Memory**
 
@@ -66,12 +59,6 @@ Apply these insights when evaluating the current proposal. If the memory file is
 1. Read `docs/dependency-map.md` — understand current module graph
 2. Read `docs/project-brief.md` — understand direction and constraints
 3. Read `docs/failure-patterns.md` — check for past architectural mistakes
-4. **Crew Artifact Integration** (🟣 Pipeline only):
-   If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
-   - Read `conceptual-architecture.md` (use the path listed in Artifact Index): load infra stack, app frameworks, security architecture, deployment strategy
-   - Read `arb-checklist-result.md` Fail items (use the path listed in Artifact Index): ensure the proposed design does not worsen existing Fail items
-   - Validate design proposals against the crew architecture's tech decisions (e.g., if architecture specifies "Spring Boot 3.3", warn if proposal uses a different framework)
-   - If no Crew Artifact Index exists in project-brief.md → skip crew-specific checks; architecture review proceeds normally
 
 **Step 2: Direction Check**
 1. Does the proposed change align with project Goals?
@@ -91,11 +78,11 @@ Apply these insights when evaluating the current proposal. If the memory file is
 
 Evaluate the proposal against these architectural principles:
 
-- [ ] **Dependency direction**: Dependencies flow in one direction (no circular deps). Verify by reading dependency-map.md — check that no module appears in both "Depends On" of A and "Depended By" of A for the same target.
+- [ ] **Dependency direction**: Dependencies flow in one direction (no circular deps)
 - [ ] **Layer isolation**: Each layer has clear boundaries and responsibilities
 - [ ] **Interface stability**: Public interfaces change less frequently than implementations
 - [ ] **Single responsibility**: Each module has one reason to change
-- [ ] **Minimal coupling**: Changes to one module require minimal changes to others. Check "Depended By" count — if > 5, flag as high coupling.
+- [ ] **Minimal coupling**: Changes to one module require minimal changes to others
 
 **Step 5: Produce Recommendation**
 
@@ -158,15 +145,3 @@ Example 🧭 block for APPROVE:
 - If unsure about direction, recommend involving the designated authority (per project-brief.md; default: team lead)
 - For implementation after approval, hand off to the `planner` agent
 
-<!-- TEAM_MODE_START -->
-## Team Mode: Cross-Team Architecture
-
-### Owner-Aware Review
-1. Check `docs/dependency-map.md` Owner column for each affected module
-2. If the proposal modifies modules owned by other developers → flag for cross-team coordination
-3. Recommend: "Notify [Owner] before modifying [module]"
-
-### Shared Architecture Decisions
-- Architecture changes that affect 3+ modules MUST be recorded in `docs/project-brief.md` Decision Log
-- The decision should include: rationale, alternatives considered, and who approved it
-<!-- TEAM_MODE_END -->

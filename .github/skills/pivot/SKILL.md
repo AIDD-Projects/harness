@@ -1,14 +1,14 @@
+---
+name: pivot
+description: 'Propagate direction changes across all state files. Use when project goals, technology, scope, or architecture changes.'
+---
+
 # Pivot
 
 ## Purpose
 
 When a project direction changes — technology swap, scope expansion/reduction, architecture shift — this skill propagates the change across ALL state files consistently.
 Without this, direction changes create silent inconsistencies:docs/project-brief.md says "GraphQL" but docs/dependency-map.md still references REST modules.
-
-## Invoked By
-
-- **User** (direct) — "방향을 바꾸자", "GraphQL로 변경해줘"
-- **planner** (direction change detected) → BLOCK → pivot required before planning proceeds
 
 ## When to Apply
 
@@ -59,11 +59,6 @@ Read ALL state files and identify what needs updating:
    - Are any existing patterns invalidated by this change?
    - Mark invalidated patterns as `Status: Obsolete (pivot: [reason])`
 
-6. **Rules files** (`.vscode/instructions/*.md`) — optional, flag only:
-   - Do any instruction files reference old direction (e.g., old framework names, deprecated patterns)?
-   - Flag for user to update manually if tech stack or architecture changed
-   - Note: Pivot does NOT auto-update rules files — they are outside harness scope. Only flag them for the user's attention.
-
 ### Step 3: Present Change Plan
 
 Before writing anything, present a summary to the user:
@@ -104,7 +99,7 @@ Add an entry to the Decision Log section in docs/project-brief.md:
 - **Change**: [What changed]
 - **Reason**: [Why this decision was made]
 - **Impact**: [What was affected]
-- **Alternatives Considered**: [1-2 bullet points on what was rejected and why]
+- **Alternatives Considered**: [What else was considered and rejected]
 ```
 
 ### 🧭 Navigation — After Pivot
@@ -148,24 +143,3 @@ If `.harness/` directory exists (Team mode is active):
   4. All developers pull the latest shared state files
   5. Each developer's `.harness/` personal state is unaffected (update manually if needed)
 
-<!-- TEAM_MODE_START -->
-## Team Mode: Pivot Lock
-
-### Who Can Run Pivot
-- **The designated authority** runs pivot, and **only on the default branch** (per project-brief.md → Key Technical Decisions; default: team lead on main)
-- If you are not the designated authority, propose the direction change instead:
-  1. Document proposed change in a GitHub issue or Slack message
-  2. Discuss with the team
-  3. The designated authority runs pivot after consensus
-
-### Branch Check
-Before running pivot, verify:
-1. You are on the default branch (per project-brief.md; default: main): `git branch --show-current`
-2. Your working tree is clean: `git status` must show no uncommitted changes
-3. You have pulled the latest: `git pull`
-
-### After Pivot
-1. Commit and push the updated shared files
-2. Notify all team members to pull the latest shared state files
-3. Each developer's personal .harness/ files are NOT auto-updated — developers should review the pivot changes and manually update their personal state if needed
-<!-- TEAM_MODE_END -->

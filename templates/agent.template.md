@@ -34,3 +34,23 @@ Information the user must provide:
 ## Constraints
 - {What this agent must NOT do}
 - {Actions outside this agent's authority}
+
+### 🧭 Navigation — After {Agent Name}
+
+After this agent completes, always append a 🧭 block:
+
+| Result | 🧭 Next Step |
+|---|---|
+| {Outcome 1} | `{next-skill}` — "{copy-paste prompt}" |
+| {Outcome 2} | `{next-skill}` — "{copy-paste prompt}" |
+
+Example 🧭 block:
+```
+---
+🧭 Next Step
+→ Call: `{next-skill or agent}`
+→ Prompt example: "{copy-paste ready prompt}"
+→ Why: {one-sentence reason}
+→ Pipeline: {🟢|🔵|🔴|🟡|🟣} Step {N}/{total}
+---
+```

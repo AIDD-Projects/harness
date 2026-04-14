@@ -5,6 +5,12 @@
 Review code changes before commit or PR for quality, security, and test integrity.
 Finds issues and auto-fixes where safe, escalates where not.
 
+## Invoked By
+
+- **User** (direct) — "코드를 리뷰해줘", "커밋 전 검토해줘"
+- **[Coding done]** → reviewer (🟢/🔵/🔴 pipeline — after implementation)
+- **investigate** → reviewer — "수정한 코드를 리뷰해줘"
+
 ## Referenced Skills
 
 - test-integrity — Mock synchronization verification
@@ -29,6 +35,7 @@ Before reviewing, verify that required state files exist and are not empty:
 - `docs/project-state.md` — Must have current Sprint info (needed for scope check)
 
 If state files are empty/placeholder-only → Warn: "State files are not filled. Review will proceed but scope check and failure pattern cross-check will be limited. Consider running `bootstrap` skill."
+If `docs/failure-patterns.md` is empty, FP-cross-check (Step 5) will be skipped. This increases risk of recurring bugs.
 
 ### Step 0.5: Load Agent Memory
 
@@ -68,8 +75,39 @@ Changed file list (user-provided or from `git diff --name-only`)
 - Compare current changes against all FP-NNN items in docs/failure-patterns.md
 - Warn if any pattern applies
 
+**Step 5.5: Crew Artifact Compliance Check (🟣 Pipeline only)**
+
+If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+
+1. **ARB Fail Item Check**:
+   - Read Validation Tracker → ARB Fail Resolution section
+   - If the current Story addresses a Fail item (has `[ARB-FAIL]` prefix):
+     - Read the relevant section in the ARB checklist (path from Artifact Index)
+     - Verify implementation matches the recommended action
+     - If not → flag as `[ARB-COMPLIANCE]` in output
+   - **Indirect resolution check**: Even if the Story does NOT have `[ARB-FAIL]` prefix, scan the changed files against ARB Fail items. If a change resolves or partially addresses a Fail item (e.g., fixing a security vulnerability flagged by ARB), flag as `[ARB-INDIRECT]` in output with a recommendation to update the Validation Tracker.
+
+2. **NFR Spot Check** (lightweight — check only NFRs relevant to changed files):
+   - Read PRD's non-functional requirements section (path from Artifact Index)
+   - Check ONLY the NFRs related to changed code:
+     - Performance-related change? → Check performance NFRs
+     - Security-related change? → Check security NFRs
+     - API change? → Check scalability/reliability NFRs
+   - Flag violations as `[NFR-GAP]` in output
+   - Note: This is a best-effort check by the LLM, not a guarantee of 100% detection
+
+3. **FR Acceptance Criteria Check**:
+   - If the current Story has `[FR-NNN]` reference:
+     - Read the corresponding FR acceptance criteria from PRD (path from Artifact Index)
+     - Verify tests cover the acceptance criteria
+     - If missing → flag as `[ACCEPTANCE-GAP]` in output
+
+All flags (`[ARB-COMPLIANCE]`, `[ARB-INDIRECT]`, `[NFR-GAP]`, `[ACCEPTANCE-GAP]`) are warnings, not blockers. Include them in the review output under a new "### Crew Artifact Compliance" section.
+
+If no Crew Artifact Index → skip this step entirely.
+
 **Step 6: Feature Registry Check**
-- [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7)
+- [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7). For features spanning multiple modules, one feature row covers all modules — list all key files in that row.
 - [ ] If feature files changed, verify docs/features.md key files are up to date
 - [ ] If tests were added/removed, verify docs/features.md test files column is accurate
 
@@ -90,6 +128,7 @@ Verify that state file updates actually happened. Check each:
 - [ ] **docs/agent-memory/*.md**: If an agent (reviewer/planner/sprint-manager) was used this session, was its memory updated by the learn skill?
 
 For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
+**Severity**: Missing dependency-map or features.md entries for new modules/features are **blockers** — fix before commit. Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to learn skill.
 
 ### Output Format
 
@@ -150,6 +189,29 @@ Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT*
 - Do not refactor beyond the review scope
 - Auto-apply security fixes but always record them in output
 - Escalate with NEEDS_CONTEXT after 3 uncertain judgments
+
+### 🧭 Navigation — After Review
+
+After review completes, always append a 🧭 block based on the outcome:
+
+| Review Result | 🧭 Next Step |
+|---|---|
+| All checks pass, more stories remain | `sprint-manager` — "다음 Story는?" |
+| All checks pass, all stories done | `learn` — "세션을 마무리해줘" |
+| STATE-AUDIT flags found | Two valid paths: (1) `learn` now → "지금 state 파일을 정리해줘" or (2) `sprint-manager` → continue coding, resolve at session end |
+| Security/architecture issues blocking | [Fix] — "리뷰 지적사항을 수정하세요. 완료 후 다시 `reviewer` 호출" |
+
+Example 🧭 block for passing review:
+```
+---
+🧭 Next Step
+→ Call: `sprint-manager`
+→ Prompt example: "다음 Story는?"
+→ Why: Review passed — move to the next Story
+→ Pipeline: 🔵 Step 5/6
+→ Alternative: 세션 종료 시 `learn` 호출
+---
+```
 
 ## STATE-AUDIT Handoff
 

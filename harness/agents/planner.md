@@ -6,6 +6,13 @@ Feature planning and dependency management.
 Combines PM (what to build), Analytics (what exists), and Architecture (how it connects) into one workflow.
 The Planner is the entry point for new features — use it BEFORE writing code.
 
+## Invoked By
+
+- **User** (direct) — "[기능]을 추가해줘", "계획 세워줘"
+- **bootstrap** → planner (🟢/🟣 pipeline Step 2)
+- **pivot** → planner — "변경된 방향에 맞춰 재계획해줘"
+- **architect** → planner — "승인된 설계로 기능을 계획해줘"
+
 ## Referenced Skills
 
 - feature-breakdown
@@ -26,6 +33,7 @@ One of:
 - **New Feature**: "I want to add [feature description]"
 - **Architecture Query**: "What depends on [module]?" / "Show me the current module map"
 - **Refactor Plan**: "I need to refactor [module/area]"
+- **Crew-Driven Feature**: "crew 산출물을 기반으로 [기능]을 계획해줘" — when kode:crew artifacts exist in `docs/crew/`
 
 ## Procedure
 
@@ -37,7 +45,9 @@ Before proceeding, verify that required state files have content (not just TODO 
 - `docs/dependency-map.md` — Must have at least one module row (for existing projects)
 
 If ALL files are empty/placeholder-only → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
-If `docs/project-brief.md` alone is empty → Warn the user but proceed (the plan will lack direction guard).
+If `docs/project-brief.md` alone is empty → **Stop.** Without Vision/Goals, planner cannot check Non-Goals or provide direction guard. Run `bootstrap` first.
+
+> Step 0 runs BEFORE Step 1. If Step 0 stops (empty brief), Step 1 never executes. When Step 0 passes, Step 1 reads the now-confirmed non-empty project-brief.md for detailed content.
 
 ### Step 0.5: Load Agent Memory
 
@@ -53,22 +63,62 @@ Apply these insights when creating the implementation plan. If the memory file i
 ### For New Feature
 
 1. Read `docs/project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
-2. **Direction Alignment**: Verify the requested feature against three checkpoints:
-   - **Goal Alignment**: Does it serve a listed Goal? If no clear link → **warn but proceed**. Include the warning in the plan output.
+2. **Crew Artifact Integration** (🟣 Pipeline only):
+   If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+
+   a. **Read PRD** (path from Artifact Index):
+      - Extract functional requirements (FR-001, FR-002, ...)
+      - Extract priority (P0, P1, P2)
+      - Extract acceptance criteria for each FR
+      - Extract non-functional requirements (performance, security, scalability)
+
+   b. **Read Product Brief** (path from Artifact Index):
+      - Extract user personas → tag each Story with target persona
+      - Extract user journey steps → map to implementation order
+      - Extract KPIs → attach as acceptance criteria to relevant Stories
+
+   c. **Map FR → Stories**:
+      - Each FR-NNN generates 1+ Stories
+      - Story title includes `[FR-NNN]` prefix for traceability
+      - Story acceptance criteria = PRD's FR acceptance criteria (not invented)
+      - Story references related KPI (if applicable)
+
+   d. **Map ARB Fail Items → Mandatory Stories**:
+      - Read `docs/project-brief.md` § Validation Tracker → ARB Fail Resolution
+      - Each Fail item → P0 Story (highest priority)
+      - Story title includes `[ARB-FAIL]` prefix
+
+   e. **Update Validation Tracker** in `docs/project-brief.md`:
+      - KPI Coverage: fill Story column with mapped Story IDs
+      - FR Coverage: fill Stories column with mapped Story IDs
+      - ARB Fail Resolution: fill Story column with mapped Story IDs
+
+   f. Skip discovery questions that crew artifacts already answer.
+      Only ask about implementation-specific decisions (test framework, library choices).
+
+   If no Crew Artifact Index → proceed with normal user-driven planning below.
+
+3. **Direction Alignment**: Verify the requested feature against three checkpoints.
+   > This check intentionally duplicates architect’s direction validation (Step 2). The redundancy is by design: architect validates STRUCTURAL proposals (module boundaries, layer rules), while planner validates FEATURE-level alignment (goals, non-goals, decisions). When both are used in the same session, this provides defense-in-depth.
+   - **Goal Alignment**: Does it serve a listed Goal? If no clear link → **warn but proceed**. Include the warning in the plan output under a `### Direction Alignment` section: `⚠️ Goal Alignment: [feature] does not directly map to listed goals`.
    - **Non-Goal Violation**: Does it fall into Non-Goals? If yes → **stop and ask the user**. Do not proceed until the user confirms this is intentional (may need `pivot` skill).
    - **Decision Consistency**: Does it contradict any Decision Log entry? If yes → **stop and warn**. Recommend running the `pivot` skill before proceeding.
-   If the request represents a clear direction change → recommend running the `pivot` skill instead of proceeding with planning.
+   If the request represents a clear direction change → **stop and require the `pivot` skill** before proceeding with any planning. Do not proceed even if the user insists — direction changes must be formally tracked.
 3. Read `docs/features.md` to understand what already exists
 4. Read `docs/dependency-map.md` to understand current architecture
 5. Read `docs/project-state.md` for current Sprint context
 6. Identify which existing modules are affected
 7. Identify new modules that need to be created
 8. Run **feature-breakdown** skill to create ordered task list
-9. Run **impact-analysis** skill for each existing module being modified
-10. Check `docs/failure-patterns.md` for relevant past mistakes
-11. Produce implementation plan (see Output Format)
-12. Update `docs/project-state.md` with the new Story
-13. Update `docs/features.md` with the new feature entry
+9. Register NEW modules from feature-breakdown output in `docs/dependency-map.md` (so impact-analysis reads the updated map)
+10. Run **impact-analysis** skill for each existing module being modified (planner calls both skills independently — feature-breakdown does NOT invoke impact-analysis internally. Ordering: feature-breakdown first → register modules → impact-analysis second.)
+11. Check `docs/failure-patterns.md` for relevant past mistakes
+12. Produce implementation plan (see Output Format)
+12. **Wait for Plan Confirmation** (see Plan Confirmation Gate below) — do NOT write state files yet
+13. **After user approves** → Update `docs/project-state.md` with the new Story
+14. **After user approves** → Update `docs/features.md` with the new feature entry
+
+> **State File Write Deferral**: Steps 13-14 execute ONLY after user confirms the plan. If the user rejects or requests changes, no state files are modified — the plan is revised and re-presented. This prevents state file pollution from rejected plans.
 
 ### For Architecture Query
 
@@ -79,9 +129,28 @@ Apply these insights when creating the implementation plan. If the memory file i
 ### For Refactor Plan
 
 1. Read `docs/dependency-map.md` to map the blast radius
-2. Run **impact-analysis** skill on each module being refactored
-3. Identify safe refactoring order (leaf modules first, core modules last)
-4. Produce refactoring plan with rollback checkpoints
+2. **Crew Artifact Integration** (🟣 Pipeline only):
+   If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+   - Read relevant crew artifacts (PRD, Architecture) for refactoring context
+   - Check ARB Fail items — refactoring may address architectural issues flagged by ARB
+   - Map ARB Fail items to refactoring tasks where applicable (prefix with `[ARB-FAIL]`)
+   - Update Validation Tracker in `docs/project-brief.md` with mapped Stories
+   If no Crew Artifact Index → proceed with normal refactoring flow below.
+3. Run **impact-analysis** skill on each module being refactored
+4. Identify safe refactoring order (leaf modules first, core modules last)
+5. Produce refactoring plan with rollback checkpoints
+
+## Plan Confirmation Gate
+
+After producing ANY plan (New Feature, Refactor, or Crew-Driven), **do NOT proceed to coding immediately**.
+
+1. Present the complete plan to the user
+2. Ask: **"이 경로(Plan)대로 구현을 시작할까요?"** (or equivalent confirmation request)
+3. Wait for explicit user approval (`Yes`, `Go`, `진행해줘`, etc.)
+4. **Only after approval** → write state files (Steps 13-14) and output 🧭 Next Step pointing to `sprint-manager`
+5. If the user requests changes → revise the plan and re-confirm. **No state files are written until approval.**
+
+> **Why**: The planner is planning a route, not driving. The user must confirm the route before the engine starts. This prevents irreversible code changes based on a misunderstood plan.
 
 ## Output Format
 
@@ -108,6 +177,32 @@ Apply these insights when creating the implementation plan. If the memory file i
 [Additions/modifications to docs/dependency-map.md]
 ```
 
+### New Feature Plan — Crew-Driven (🟣 Pipeline)
+
+Use this format when Crew Artifact Index exists in project-brief.md. If no Artifact Index, use the standard format above.
+
+```markdown
+## Feature: [name]
+**Story**: S[sprint]-[number]
+**PRD Reference**: FR-[NNN]
+**KPI**: [related KPI, if any]
+**Acceptance Criteria**: [from PRD — not invented]
+**Scope**: [modules affected]
+**Risk**: Low | Medium | High
+
+### Architecture Impact
+- New modules: [list]
+- Modified modules: [list]
+
+### Implementation Plan
+[Output from feature-breakdown skill]
+
+### Validation Tracker Updates
+- KPI Coverage: [which KPIs this story addresses]
+- FR Coverage: [which FRs this story implements]
+- ARB Fail Resolution: [which Fail items this story resolves, if any]
+```
+
 ### Architecture Query Response
 ```markdown
 ## Module: [name]
@@ -117,9 +212,34 @@ Apply these insights when creating the implementation plan. If the memory file i
 - Last changed: [Sprint/Story reference]
 ```
 
+### 🧭 Navigation — After Planner
+
+After producing a plan, always append a 🧭 block:
+
+| Planner Result | 🧭 Next Step |
+|---|---|
+| Plan created (solo) | User confirmation — "이 경로(Plan)대로 구현을 시작할까요?" → approved → `sprint-manager` |
+| Plan created (crew artifacts used) | User confirmation — "crew 기반 Plan을 확인해 주세요. 진행할까요?" → approved → `sprint-manager` |
+| Non-Goal violation → stopped | User decision needed — "이 기능은 Non-Goal에 해당합니다. 계속하시겠습니까? → `pivot` 또는 취소" |
+| Direction change detected | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
+| State files empty | `bootstrap` — "프로젝트를 온보딩해줘" |
+
+Example 🧭 block for normal completion:
+```
+---
+🧭 Next Step
+→ Confirm: "이 경로(Plan)대로 구현을 시작할까요?"
+→ After approval → Call: `sprint-manager`
+→ Prompt example: "S{N}-{M} Story를 시작해줘"
+→ Why: Plan is ready — user must confirm route before engine starts
+→ Pipeline: 🟢 Step 3/6 | 🟣 Step 3/6
+---
+```
+
 ## Enforced Rules
 
 - **Direction Guard**: Before planning, read `docs/project-brief.md` and check:
+  - If Vision/Goals are empty → stop and run `bootstrap`
   - If it conflicts with **Non-Goals** → stop and ask the user
   - If it contradicts a **Decision Log** entry → warn and recommend `pivot` skill
   - If it represents a direction change → recommend `pivot` skill

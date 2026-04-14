@@ -32,3 +32,23 @@ Situations where this skill should be used:
 
 ## Related Failure Patterns
 - FP-NNN: {description} → reflected in checklist item X
+
+### 🧭 Navigation — After {Skill Name}
+
+After this skill completes, always append a 🧭 block:
+
+| Result | 🧭 Next Step |
+|---|---|
+| {Outcome 1} | `{next-skill}` — "{copy-paste prompt}" |
+| {Outcome 2} | `{next-skill}` — "{copy-paste prompt}" |
+
+Example 🧭 block:
+```
+---
+🧭 Next Step
+→ Call: `{next-skill or agent}`
+→ Prompt example: "{copy-paste ready prompt}"
+→ Why: {one-sentence reason}
+→ Pipeline: {🟢|🔵|🔴|🟡|🟣} Step {N}/{total}
+---
+```

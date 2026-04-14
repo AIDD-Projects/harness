@@ -2,6 +2,13 @@
 
 Record only actual failures from this project. No theories or assumptions.
 Keep resolved patterns for regression prevention.
+**Resolution criteria**: A pattern is "Resolved" when Frequency stays at 0 for 3+ consecutive sprints after prevention was applied.
+
+**Valid Status values**:
+- `Template` — Pre-defined pattern, not yet observed in this project
+- `Active` — Observed at least once, prevention in effect
+- `Resolved` — Frequency 0 for 3+ sprints after prevention applied
+- `Obsolete (pivot: [reason])` — Invalidated by a direction change (set by `pivot` skill)
 
 ---
 
@@ -22,12 +29,13 @@ On subsequent occurrences, increment Frequency and append to Occurred (e.g., S1-
 
 ---
 
-## FP-002: Type confusion (enum vs union, wrong parameter count)
+## FP-002: Type confusion (wrong parameter count, wrong types)
 
 - **Occurred**: <!-- Sprint/Story where this happened -->
 - **Frequency**: 0
-- **Cause**: LLM does not retain type information across sessions. Used enum syntax for union types or called constructors with wrong parameter count.
-- **Prevention**: Document core types in global instructions. Read source file before calling constructors.
+- **Cause**: LLM does not retain type information across sessions. Called constructors with wrong parameter count, used wrong types (e.g., passed string where number expected), or confused similar type names.
+- **Concrete scenario**: `new UserService(repo)` but constructor requires `new UserService(repo, logger, config)` — LLM remembered only 1 of 3 parameters from previous session.
+- **Prevention**: Document core types in global instructions. Read source file before calling constructors (Iron Law #2).
 - **Applied in**: global instructions, backend rules
 - **Status**: Template — activate when first occurrence is logged
 
@@ -38,7 +46,8 @@ On subsequent occurrences, increment Frequency and append to Occurred (e.g., S1-
 - **Occurred**: <!-- Sprint/Story where this happened -->
 - **Frequency**: 0
 - **Cause**: LLM lost track of current scope in large workflows. Skipped "report and wait for approval" steps.
-- **Prevention**: Track current Story in docs/project-state.md. Sprint manager agent detects scope violations.
+- **Concrete scenario**: Working on S1-002 (user auth), LLM noticed a bug in S1-001 (scaffolding) and fixed it without asking — breaking the unchanged module's tests.
+- **Prevention**: Track current Story in docs/project-state.md. Sprint manager agent detects scope violations. If root cause is in another module, STOP and ask user.
 - **Applied in**: sprint-manager agent, global instructions
 - **Status**: Template — activate when first occurrence is logged
 

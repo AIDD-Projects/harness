@@ -1,3 +1,8 @@
+---
+name: deployment
+description: 'Pre-deployment validation checklist. Use before deploying, publishing, or creating release tags.'
+---
+
 # Deployment
 
 ## Purpose
@@ -16,11 +21,10 @@ Pre-deployment validation checklist. Ensures all quality gates pass and state fi
 ### Step 1: Version Check
 
 1. Read `package.json` (or equivalent manifest) — note current version
-2. Verify the version was bumped appropriately (Semantic Versioning):
-   - Bug fix → patch (0.0.x) — e.g., `v1.2.3 → v1.2.4`
-   - New feature (backward-compatible) → minor (0.x.0) — e.g., `v1.2.3 → v1.3.0`
-   - Breaking change → major (x.0.0) — e.g., `v1.2.3 → v2.0.0`
-   - If unsure, ask the designated authority (per project-brief.md)
+2. Verify the version was bumped appropriately:
+   - Bug fix → patch (0.0.x)
+   - New feature → minor (0.x.0)
+   - Breaking change → major (x.0.0)
 3. If version was not bumped → **warn and recommend bumping before deploy**
 
 ### Step 2: Test Suite
@@ -48,8 +52,7 @@ Verify all state files are up to date:
 ### Step 5: Git Status
 
 1. `git status` — working directory should be clean
-2. `git stash list` — verify no unintended stashes exist (if stashes are present, confirm they are intentional)
-3. `git log --oneline -5` — verify recent commits are meaningful
+2. `git log --oneline -5` — verify recent commits are meaningful
 3. Verify current branch is appropriate for deployment (the default branch or a release branch, per project-brief.md)
 
 ### Step 6: Changelog / Release Notes
@@ -75,11 +78,7 @@ Verify all state files are up to date:
 [blockers if not ready]
 
 ### Deploy Command:
-[Suggest based on project type detected in project-brief.md Key Technical Decisions:
-  npm: npm publish / npx changeset publish
-  Docker: docker build + docker push
-  GitHub: gh release create vX.Y.Z
-  Cloud: terraform apply / aws deploy]
+[suggested deploy command based on project type]
 ```
 
 ### 🧭 Navigation — After Deployment Check
@@ -104,18 +103,6 @@ Example 🧭 block for READY:
 ---
 ```
 
-## Rollback Procedure
-
-If a deployment fails or a critical issue is found post-deploy:
-
-1. **Immediate**: Revert to the last known-good version
-   - npm: `npm unpublish <pkg>@<bad-version>` (within 72h) or publish a patch fix
-   - Docker: `docker tag <image>:<previous-tag> <image>:latest && docker push`
-   - GitHub: `gh release delete vX.Y.Z` + `git tag -d vX.Y.Z && git push --delete origin vX.Y.Z`
-2. **Record**: Add entry to `docs/failure-patterns.md` with deployment failure details
-3. **Re-validate**: Run `deployment` skill again on the rollback commit to confirm stability
-4. **Post-mortem**: Run `learn` skill to capture the incident for future sessions
-
 ## Rules
 
 - Never deploy with failing tests — no exceptions
@@ -123,15 +110,3 @@ If a deployment fails or a critical issue is found post-deploy:
 - Always verify version bump before deployment
 - This skill is read-only — it validates but does not execute the deployment
 
-<!-- TEAM_MODE_START -->
-## Team Mode: Pre-Deploy Coordination
-
-### Shared State Sync
-1. Run `git pull` on the default branch before starting deploy validation (per project-brief.md → Key Technical Decisions; default: main)
-2. Verify `docs/features.md` and `docs/dependency-map.md` are up to date with latest changes from all developers
-3. Check that no other developer has in-progress stories that depend on the current release
-
-### Owner Verification
-- Verify all modified modules have their Owner's approval
-- If deploying changes to modules owned by others, confirm they have reviewed and approved
-<!-- TEAM_MODE_END -->

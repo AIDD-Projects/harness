@@ -10,7 +10,7 @@
 
 **모든 개발자의 AI를 하나의 프로젝트 방향으로 정렬합니다.**
 
-> **v0.7** — 팀 컨벤션을 project-brief.md에 위임. 하드코딩된 워크플로우 규칙 제거.
+> **v0.8.0** — 🧭 Navigation Dispatcher, 5개 파이프라인 (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100점 품질 감사.
 
 ---
 
@@ -51,7 +51,10 @@ Musher는 모든 개발자의 AI에게 동일한 목표·비목표·결정사항
 | 기능 | 설명 |
 |------|------|
 | 🧭 **Direction Guard** | 모든 코딩 요청을 프로젝트 목표/비목표와 대조 후 실행 |
-| 📄 **State Files** | LLM 세션 간 프로젝트 지식을 유지하는 5개 마크다운 파일 |
+| 🧭 **Navigation Dispatcher** | Turn-by-Turn 네비게이션으로 5개 파이프라인을 따라 다음 단계 프롬프트를 자동 안내 |
+| 🟢🔵🔴🟡🟣 **5개 파이프라인** | New Dev → Continue → Bug Fix → Direction Change → Crew-Driven |
+| 🟣 **Crew Artifact Integration** | kode:crew 산출물(PRD, Architecture, ARB Checklist)을 직접 읽기 — 수동 복사 불필요 |
+| 📝 **State Files** | LLM 세션 간 프로젝트 지식을 유지하는 5개 마크다운 파일 |
 | 🛠️ **Skills** | 기획, 리뷰, 디버깅, 방향 전환을 위한 단계별 절차 10개 |
 | 🤖 **Agents** | 워크플로를 강제하는 역할 기반 페르소나 4개 |
 | ⚠️ **Failure Patterns** | 동일 실수 반복을 방지하는 프로젝트별 실패 기록 |
@@ -189,10 +192,23 @@ npx musher-engineering validate
 bootstrap → planner → [코딩] → reviewer → sprint-manager → learn
 ```
 
-- **planner**: 방향 정렬 확인, 기능 분해
+Musher는 상황별 **5개 파이프라인**을 제공합니다:
+
+| 파이프라인 | 상황 | 흐름 |
+|---|---|---|
+| 🟢 New Dev | 첨 기능 개발 | bootstrap → planner → sprint-manager → [코딩] → reviewer → learn |
+| 🔵 Continue | 작업 재개 | sprint-manager → [코딩] → reviewer → learn |
+| 🔴 Bug Fix | 디버깅 | investigate → [수정] → reviewer → learn |
+| 🟡 Direction Change | 목표/기술 변경 | pivot → planner → sprint-manager → [코딩] → reviewer → learn |
+| 🟣 Crew-Driven | kode:crew 산출물 | bootstrap(crew) → planner → sprint-manager → [코딩] → reviewer → learn |
+
+각 단계 완료 시 🧭 **Navigation 블록**이 다음에 무엇을 해야 하는지 — 입력할 프롬프트까지 안내합니다.
+
+- **planner**: 방향 정렬 확인, 기능 분해. **Confirm-First 게이트** — 사용자 승인 없이 진행하지 않음.
 - **reviewer**: 코드 리뷰 + state 파일 업데이트 감사
-- **sprint-manager**: 진행 상황 추적, 다음 액션 추천
+- **sprint-manager**: **Wave-Level Pacing** — 구현 Wave 사이에 자동 테스트 실행
 - **learn**: 세션 종료 전 교훈 캡처
+- **investigate**: **Recalculating Mode** — 3회 실패 후 대안 접근법 제시
 
 ### 4단계: 방향 전환 (Direction Changes)
 
@@ -257,6 +273,22 @@ Musher는 **AI가 어디로 가는지** — 모든 개발자의 AI가 같은 방
 
 이것은 개 썰매에서 각 개가 제멋대로 달리는 것과, **머셔(musher)**가 팀 전체를 한 방향으로 이끄는 것의 차이입니다.
 
+### Crew Artifact Integration (🟣 파이프라인)
+
+팀이 **kode:crew** (또는 PRD, Architecture, ARB Checklist을 산출하는 기획 도구)를 사용한다면, Musher가 산출물을 직접 읽습니다:
+
+```bash
+npx musher-engineering init
+# 그 후 LLM에게 요청:
+> "crew 산출물을 기반으로 프로젝트를 세팅해줘"
+```
+
+Bootstrap이 `docs/crew/`, `docs/PM/`, `docs/Analyst/`, `docs/ARB/`에서 crew 산출물을 자동 감지하고:
+- **Artifact Index** — 모든 crew 문서를 경로, 역할, 핵심 내용과 함께 매핑
+- **Validation Tracker** — KPI 커버리지, FR 커버리지, ARB Fail 해결 상황을 Story별로 추적
+
+원본 crew 문서는 **절대 수정되지 않습니다**. 인덱스와 트래커만 생성됩니다.
+
 ### 비교
 
 | | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | **Musher** |
@@ -274,19 +306,21 @@ Musher는 **AI가 어디로 가는지** — 모든 개발자의 AI가 같은 방
 
 ## 로드맵
 
-Musher는 현재 **v0.7.2** — 프레임워크 기능은 완성된 상태입니다. 다음 우선순위는 실사용 검증입니다.
+Musher는 현재 **v0.8.0** — Navigation Dispatcher와 Crew Artifact Integration이 포함된 기능 완성 상태입니다.
 
 | 단계 | 버전 | 상태 | 초점 |
 |------|------|------|------|
 | **Foundation** | v0.5.0 | ✅ 완료 | 핵심 프레임워크: 6 IDE 지원, 8 스킬, 3 에이전트, Team Mode, Direction Guard |
 | **Hardening** | v0.6.5 | ✅ 완료 | 10 스킬, 4 에이전트, Iron Laws, CLI batch/doctor/validate, 방향 드리프트 감지 |
-| **Flexibility** | v0.7.x | ✅ 현재 | 팀 컨벤션을 project-brief.md에 위임, prescriptive 규칙 제거, 개인 컨텍스트 opt-in (.harness/my-context.md) |
-| **Validation** | — | 🔜 다음 | 실제 프로젝트 적용, 사용자 피드백 수집, 사용 사례 문서화, 개선점 발굴 |
+| **Flexibility** | v0.7.x | ✅ 완료 | 팀 컨벤션을 project-brief.md에 위임, prescriptive 규칙 제거 |
+| **Navigation** | v0.8.0 | ✅ 현재 | 🧭 Navigation Dispatcher, 5개 파이프라인, Crew Artifact Integration, 100점 품질 감사, Confirm-First 게이트, Wave-Level Pacing, Recalculating Mode |
+| **Validation** | — | 🔜 다음 | 실사용 검증 (kode:crew → Musher 파일럿), 사용자 피드백 수집 |
 
 ### 다음 단계
 
+- [ ] 파일럿: kode:crew 산출물을 Musher의 🟣 파이프라인으로 실제 프로젝트에 적용
 - [ ] 실제 프로젝트에 Musher를 적용하고 사용 데이터 수집
-- [ ] 사용 사례 문서화: Solo vs Team, 소규모 vs 대규모 프로젝트
+- [ ] 사용 사례 문서화: Solo vs Team, crew vs no-crew
 - [ ] 마찰 포인트와 부족한 기능에 대한 사용자 피드백 수집
 - [ ] 가정이 아닌 실증 데이터 기반으로 개선 반복
 

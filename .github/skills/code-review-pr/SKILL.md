@@ -1,14 +1,14 @@
+---
+name: code-review-pr
+description: 'Review external Pull Requests for quality, security, and direction alignment. Use when reviewing incoming PRs.'
+---
+
 # Code Review PR
 
 ## Purpose
 
 Review an external Pull Request (PR) for quality, security, and direction alignment before merging.
-Unlike the `reviewer` agent (which reviews your own changes pre-commit with full project context), this skill is for reviewing incoming PRs from teammates or external contributors. code-review-pr is a cold review — stricter on state file compliance because the reviewer has less context about the PR author's intent.
-
-## Invoked By
-
-- **User** (direct) — when assigned as a PR reviewer or asked to review a branch
-- Unlike `reviewer` agent (self-review before commit), this skill is for reviewing **incoming external PRs**
+Unlike the `reviewer` agent (which reviews your own changes pre-commit), this skill is for reviewing incoming PRs from teammates or contributors.
 
 ## When to Apply
 
@@ -42,14 +42,11 @@ Unlike the `reviewer` agent (which reviews your own changes pre-commit with full
 
 Run through these checks for each changed file:
 
-- [ ] Architecture rules respected (no layer violations — check docs/dependency-map.md)
+- [ ] Architecture rules respected (no layer violations)
 - [ ] No hardcoded credentials or API keys
 - [ ] No `TODO` or `FIXME` without a linked issue
 - [ ] Error handling is present where needed
 - [ ] No overly complex functions (single responsibility)
-- [ ] No duplicated logic that should be extracted to a shared module
-- [ ] No circular imports (verify against docs/dependency-map.md)
-- [ ] Naming conventions follow project standards (per project-brief.md → Key Technical Decisions)
 
 ### Step 5: Test Coverage
 
@@ -60,7 +57,7 @@ Run through these checks for each changed file:
 
 ### Step 6: State File Compliance
 
-- [ ] New features registered in `docs/features.md` (Iron Law #7). If the PR is partial (only one layer of a feature), registration is optional — but must be registered when the feature-completing PR is merged.
+- [ ] New features registered in `docs/features.md` (Iron Law #7)
 - [ ] New modules registered in `docs/dependency-map.md` (Iron Law #6)
 - [ ] `docs/project-state.md` Story Status updated
 
@@ -126,16 +123,3 @@ Example 🧭 block for APPROVE:
 - Be specific: reference file names, line numbers, and function names
 - Suggest fixes, don't just point out problems
 
-<!-- TEAM_MODE_START -->
-## Team Mode: Cross-Team PR Review
-
-### Owner-Aware Review
-1. Check `docs/dependency-map.md` Owner column for each file in the PR
-2. If the PR modifies modules owned by someone else → flag for that owner's review
-3. Only the module Owner (or designated authority per project-brief.md; default: team lead) can approve changes to their modules
-
-### Shared State Verification
-- Verify the PR updates `docs/features.md` Owner column correctly
-- Verify new modules in `docs/dependency-map.md` have an Owner assigned
-- Check that the PR doesn't modify another developer's personal failure patterns
-<!-- TEAM_MODE_END -->

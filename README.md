@@ -10,7 +10,7 @@
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.7** — Team conventions delegated to project-brief.md. No more hardcoded workflow rules.
+> **v0.8.0** — Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100-point quality audit.
 
 ## From Harness to Musher
 
@@ -37,6 +37,9 @@ Musher Engineering solves this. It gives every developer's AI the same goals, no
 Musher manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned **across developers and sessions**. Zero dependencies, 6 IDE support, native format generation.
 
 - **Direction Guard** — Every coding request is checked against project goals/non-goals before execution
+- **Navigation Dispatcher** — 🧭 Turn-by-Turn navigation guides developers through 5 pipelines with explicit next-step prompts
+- **5 Pipelines** — 🟢 New Dev → 🔵 Continue → 🔴 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven (kode:crew artifact integration)
+- **Crew Artifact Integration** — Reads kode:crew output (PRD, Architecture, ARB Checklist) directly — no manual copy needed
 - **State Files** — 5 markdown files that persist project knowledge across LLM sessions
 - **Skills** — Step-by-step procedures for planning, review, debugging, and direction changes
 - **Agents** — Role-based personas that enforce the workflow (planner, reviewer, sprint-manager)
@@ -152,10 +155,24 @@ Before ANY coding task, the LLM reads `project-brief.md` and checks:
 ```
 bootstrap → planner → [code] → reviewer → sprint-manager → learn
 ```
-- **planner**: Checks direction alignment, breaks down features
+
+Musher provides **5 pipelines** for different scenarios:
+
+| Pipeline | When | Flow |
+|---|---|---|
+| 🟢 New Dev | First feature | bootstrap → planner → sprint-manager → [code] → reviewer → learn |
+| 🔵 Continue | Resuming work | sprint-manager → [code] → reviewer → learn |
+| 🔴 Bug Fix | Debugging | investigate → [fix] → reviewer → learn |
+| 🟡 Direction Change | Goals/tech shift | pivot → planner → sprint-manager → [code] → reviewer → learn |
+| 🟣 Crew-Driven | With kode:crew artifacts | bootstrap(crew) → planner → sprint-manager → [code] → reviewer → learn |
+
+Each step ends with a 🧭 **Navigation block** telling you exactly what to do next — including the prompt to type.
+
+- **planner**: Checks direction alignment, breaks down features. **Confirm-First gate** — won’t proceed without your approval.
 - **reviewer**: Reviews code + audits state file updates
-- **sprint-manager**: Tracks progress, recommends next action
+- **sprint-manager**: Tracks progress via **Wave-Level Pacing** — runs tests between implementation waves
 - **learn**: Captures lessons before session ends
+- **investigate**: **Recalculating Mode** — after 3 failed attempts, proposes alternative approaches
 
 ### 4. Direction Changes
 When goals, technology, or scope changes, run the `pivot` skill:
@@ -213,6 +230,22 @@ See [docs/reference.md](docs/reference.md) for detailed descriptions of every sk
 
 Existing AI coding frameworks focus on **what the AI does** (generate code, run tests, deploy). Musher focuses on **where the AI is going** — ensuring every developer's AI moves in the same direction. This is the difference between a dog sled where each dog runs wherever it wants, and one where a musher keeps the whole team on course.
 
+### Crew Artifact Integration (🟣 Pipeline)
+
+If your team uses **kode:crew** (or any planning tool that produces PRD, Architecture, ARB Checklist documents), Musher reads them directly:
+
+```bash
+npx musher-engineering init
+# Then ask your LLM:
+> "crew 산출물을 기반으로 프로젝트를 세팅해줘"
+```
+
+Bootstrap auto-detects crew artifacts in `docs/crew/`, `docs/PM/`, `docs/Analyst/`, `docs/ARB/` and creates:
+- **Artifact Index** — maps every crew document with path, role, and key contents
+- **Validation Tracker** — tracks KPI coverage, FR coverage, and ARB Fail resolution across Stories
+
+Original crew documents are **never modified**. Only the index and tracker are created.
+
 ### Comparison
 
 | | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | Musher |
@@ -228,19 +261,21 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 
 ## Roadmap
 
-Musher is at **v0.7.2** — the framework is feature-complete. Next priority is real-world validation.
+Musher is at **v0.8.0** — the framework is feature-complete with Navigation Dispatcher and Crew Artifact Integration.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
 | **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
-| **Flexibility** | v0.7.x | ✅ Current | Delegate team conventions to project-brief.md, remove prescriptive rules, opt-in personal context (.harness/my-context.md) |
-| **Validation** | — | 🔜 Next | Real-world project adoption, user feedback collection, case studies, pain point discovery |
+| **Flexibility** | v0.7.x | ✅ Done | Delegate team conventions to project-brief.md, remove prescriptive rules |
+| **Navigation** | v0.8.0 | ✅ Current | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
+| **Validation** | — | 🔜 Next | Real-world project adoption (kode:crew → Musher pilot), user feedback collection |
 
 ### What's Next
 
+- [ ] Pilot: Run kode:crew output through Musher’s 🟣 pipeline on a real project
 - [ ] Adopt Musher in real projects and collect usage data
-- [ ] Document case studies: solo vs team, small vs large projects
+- [ ] Document case studies: solo vs team, crew vs no-crew
 - [ ] Gather user feedback on friction points and missing features
 - [ ] Iterate based on real-world evidence, not assumptions
 

@@ -1,3 +1,8 @@
+---
+name: learn
+description: 'Capture session lessons and update state files. Use at the end of every session.'
+---
+
 # Learn
 
 ## Purpose
@@ -5,13 +10,6 @@
 Capture lessons from the current session before ending.
 Updates docs/failure-patterns.md with new patterns and refreshes docs/project-state.md Quick Summary.
 This is Musher's memory mechanism — without it, the same mistakes repeat across sessions.
-
-## Invoked By
-
-- **User** (direct) — "세션 마무리해줘", "오늘 배운 것 기록해줘"
-- **reviewer** (pass, all done) → learn — 모든 Story 완료 시
-- **reviewer** (STATE-AUDIT) → learn — state 파일 정리 후 세션 종료
-- Final step in ALL pipelines (🟢/🔵/🔴/🟡/🟣)
 
 ## When to Apply
 
@@ -30,14 +28,6 @@ This is Musher's memory mechanism — without it, the same mistakes repeat acros
 2. Identify what was accomplished in this session
 3. Identify any errors, failures, or unexpected issues that occurred
 
-**Edge Case: Zero-Change Session**
-If `git diff --stat` shows no changes and `git log` shows no new commits this session:
-- Report: "📝 Quiet session — status checks only, no code changes."
-- Skip Step 3 (Failure Pattern Detection) — no code changes means no new failure patterns
-- Skip Step 5 (features.md update) and Step 5.5 (dependency-map.md verify) — nothing changed
-- Still execute Step 4 (Quick Summary update) and Step 6 (Agent Memory) if an agent was used
-- Still execute Step 2 (Direction Drift Check) — discussion-only drift is possible
-
 ### Step 2: Direction Drift Check
 
 Before recording failures, verify that the session's work stayed aligned with project direction:
@@ -48,27 +38,10 @@ Before recording failures, verify that the session's work stayed aligned with pr
    - Did any change contradict a Decision Log entry? → Flag as decision reversal
    - Did the user explicitly change direction during this session? → Note for pivot recommendation
 3. **If drift detected**:
-   - Add a warning to the Step 7 Report: `⚠️ Direction drift: [description of misalignment]`
-   - Recommend: "Consider running `pivot` skill to formally update project direction. You can run it AFTER this learn session completes."
+   - Add a warning to the Step 6 Report: `⚠️ Direction drift: [description of misalignment]`
+   - Recommend: "Consider running `pivot` skill to formally update project direction"
    - Do NOT block — the learn skill always completes
 4. **If no drift**: Proceed silently (no output for this step)
-
-#### Step 2.5: Validation Tracker Update (🟣 Pipeline only)
-
-If `docs/project-brief.md` contains a `## Validation Tracker` section with data:
-
-1. **Update KPI Coverage status**:
-   - Stories completed this session → if they map to a KPI → update Status (⬜→🟡 or 🟡→✅)
-2. **Update FR Coverage status**:
-   - Stories completed this session → if they have `[FR-NNN]` prefix → update Status (⬜→🟡 or 🟡→✅)
-3. **Update ARB Fail Resolution status**:
-   - Stories completed this session → if they have `[ARB-FAIL]` prefix and reviewer passed compliance check → update Status (⬜→🟡 or 🟡→✅)
-4. **Check for Validation Drift**:
-   - Did this session produce Stories/code that don't map to any FR or KPI? → warn
-   - Are there KPIs/FRs with no Stories after 2+ sprints? → warn as "⚠️ Unplanned KPI/FR risk"
-   - Include warnings in Step 7 Report
-
-If no Validation Tracker → skip this step entirely.
 
 ### Step 3: Failure Pattern Detection
 
@@ -76,8 +49,7 @@ For each issue/error that occurred in this session:
 
 1. Read `docs/failure-patterns.md`
 2. Check if this matches an existing pattern (FP-NNN):
-   - **If match found AND already incremented by `investigate` in this session**: Skip — do not double-count. Check `docs/project-state.md` Recent Changes for investigate entries from this session to determine if a pattern was already recorded.
-   - **If match found AND NOT already incremented this session**: Increment the Frequency counter, add the Sprint/Story to "Occurred"
+   - **If match found**: Increment the Frequency counter, add the Sprint/Story to "Occurred"
    - **If new pattern**: Assign next FP-NNN number, create a new entry using this format:
 
 ```markdown
@@ -132,8 +104,6 @@ If an agent (reviewer, planner, sprint-manager, architect) was used in this sess
 2. **Auto-initialize if needed**: If the file only contains `<!-- Example entries` placeholder comments and no real data:
    - Replace the placeholder block with actual entries from this session
    - Initialize statistics counters with real values
-   - If real entries already exist alongside placeholders, APPEND new entries and remove only the placeholder comments. Do not overwrite existing real data.
-   - **When does initialization happen?**: On the FIRST session where the agent is used AND learn is invoked. If an agent is never used, its memory stays as a placeholder indefinitely — this is expected.
    - Example transformation:
      ```
      Before: <!-- Example entries (replace with real findings after first review):
@@ -213,7 +183,6 @@ If crew artifacts were used this session (🟣 pipeline), also append:
   - docs/dependency-map.md: Max 100 modules
   - docs/features.md: Max 50 features
   - docs/agent-memory/*.md: Max 100 lines each
-  - .harness/ personal files: same limits as shared files
 
 ## Anti-patterns
 
@@ -224,36 +193,3 @@ If crew artifacts were used this session (🟣 pipeline), also append:
 | Skip this skill because "nothing went wrong" | Still update Quick Summary and Story Status |
 | Update docs/failure-patterns.md but not docs/project-state.md | Always update both — they serve different purposes |
 
-<!-- TEAM_MODE_START -->
-## Team Mode: Session Wrap-up
-
-### Pre-Pull (mandatory before any shared file edit)
-1. Run `git pull` on the default branch before updating docs/features.md or docs/dependency-map.md (per project-brief.md → Key Technical Decisions; default: main)
-2. If merge conflicts occur, follow the **Merge Conflict SOP** below
-
-### Merge Conflict SOP
-
-When `git pull` causes merge conflicts in shared state files:
-
-1. **Identify conflict files**: `git diff --name-only --diff-filter=U`
-2. **Resolution strategy by file type**:
-   | File | Strategy |
-   |------|----------|
-   | `docs/features.md` | Keep BOTH entries (merge=union should handle; if not, manually keep all rows) |
-   | `docs/dependency-map.md` | Keep BOTH entries (merge=union should handle; if not, manually keep all rows) |
-   | `docs/project-brief.md` | Resolve based on team's pivot authority (per project-brief.md; default: prefer REMOTE) |
-   | `docs/failure-patterns.md` | Keep BOTH entries, deduplicate by FP-NNN number |
-3. **After resolving**: `git add <resolved-files> && git commit`
-4. **Verify**: Re-read the resolved file and confirm no data was lost
-5. **If unsure**: Do NOT force-resolve. Ask the designated authority (per project-brief.md; default: team lead) or the Owner of the conflicting rows.
-
-### Owner-Scoped Updates
-- **docs/features.md**: only update rows where Owner = you
-- **docs/dependency-map.md**: only update rows where Owner = you; if adding a new module, append at the bottom
-- **Personal files** (.harness/project-state.md, .harness/failure-patterns.md, .harness/agent-memory/): update freely — no coordination needed
-
-### Failure Pattern Promotion
-If a personal failure pattern (FP-NNN in .harness/failure-patterns.md) is likely to affect other developers:
-1. Discuss with the team (Slack, PR comment, etc.)
-2. If agreed, add it to a shared location (team wiki, PR description) so others can add it to their personal .harness/failure-patterns.md
-<!-- TEAM_MODE_END -->

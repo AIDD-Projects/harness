@@ -8,6 +8,9 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 ## Invoked By
 
 - **planner** agent — Step 8: Create ordered task list for new features
+- **architect** agent — when structural validation requires task decomposition review
+
+> **Note**: feature-breakdown is responsible for task decomposition only. It does NOT invoke `impact-analysis`. The planner calls both skills independently: feature-breakdown (Step 8) for task ordering, then impact-analysis (Step 9) for blast radius analysis.
 
 ## When to Apply
 
@@ -19,7 +22,7 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 ## Procedure
 
 1. **Describe the feature** in one sentence
-2. **Read docs/project-brief.md** — verify the feature aligns with Goals and does not violate Non-Goals. If it conflicts with Non-Goals, **stop and warn the user** before proceeding. (Direction Guard — prevents breakdown of out-of-scope features even when invoked directly without planner)
+2. **Read docs/project-brief.md** — verify the feature aligns with Goals and does not violate Non-Goals. If project-brief.md is empty (bootstrap hasn't run), skip this check but warn the user. If it conflicts with Non-Goals, **stop and warn the user** before proceeding. (Direction Guard — prevents breakdown of out-of-scope features even when invoked directly without planner)
 3. **Read docs/dependency-map.md** to understand current module relationships
 4. **Identify affected modules**: List every module that needs changes
 5. **Classify changes per module**:
@@ -28,8 +31,8 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
    - INTERNAL_CHANGE: Only internal implementation changes
    - TEST_ONLY: Only test updates needed
 6. **Build dependency order**:
-   - Draw a mini dependency graph for just the affected modules
-   - Sort topologically: modules with no dependencies come first
+   - List modules topologically: modules with zero dependencies first, then modules depending on first layer, etc.
+   - Example: Module A (no deps) → Module B (depends A) → Module C (depends A, B)
    - Group into implementation waves (parallel-safe batches)
 7. **Create task sequence**: Convert waves into numbered tasks
 8. **Annotate each task** with:
@@ -73,16 +76,31 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 - Never implement a module before its dependencies exist
 - Each task should be completable in one session
 - Every task must include its test files
-- New modules MUST be registered in docs/dependency-map.md (Iron Law #6)
+- New modules MUST be registered in docs/dependency-map.md (Iron Law #6) — the breakdown OUTPUT section lists these registrations, and planner (or the user, if invoked directly) is responsible for executing the actual state file writes
 - If a task exceeds Story scope, stop and report to user
 
-## State File Updates (mandatory)
+## State File Updates (mandatory — Step 9)
 
 After completing the breakdown, update these files in the same session:
 
 - [ ] **docs/dependency-map.md**: Register all NEW_MODULE entries. Update "Depends On" / "Depended By" for INTERFACE_CHANGE entries.
 - [ ] **docs/features.md**: Add a new row for the feature with Status `🔧 active`, Key Files from Wave tasks, and Test Files.
 - [ ] **docs/project-state.md**: Add Stories to the Story Status table for each Wave.
+
+### 🧭 Navigation — After Feature Breakdown
+
+Feature-breakdown is invoked BY planner (Step 8), so the 🧭 returns control to planner's flow.
+If invoked directly by the user, append:
+
+```
+---
+🧭 Next Step
+→ Call: `planner`
+→ Prompt example: "breakdown을 기반으로 Sprint Story를 생성해줘"
+→ Why: Tasks are defined — planner will register Stories and update state files
+→ Pipeline: 🟢 Step 2/6 (returns to planner)
+---
+```
 
 ## Anti-patterns
 

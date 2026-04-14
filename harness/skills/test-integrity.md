@@ -19,10 +19,12 @@ Prevents the most common LLM coding failure: updating an interface but forgettin
 
 1. **Read docs/failure-patterns.md**: Check FP-001 status. If frequency > 0, this project has a history of mock sync failures — apply extra scrutiny to every interface change.
 2. **Identify changed interfaces**: Find modified files in your interface directory
-3. **Map to mock files**: Locate the corresponding mock file for each changed interface
+3. **Map to mock files**: Locate the corresponding mock file for each changed interface. Convention depends on project structure (see project-brief.md → Key Technical Decisions). Common patterns:
+   - `src/domain/Interface.ts` → `tests/__mocks__/Interface.mock.ts`
+   - `src/services/Service.ts` → `src/services/__mocks__/Service.ts`
 4. **Sync methods**: Verify every interface method exists in the mock
 5. **Verify return types**: Confirm mock return values match the interface return types (FP-002: watch for type confusion)
-6. **Check consumers**: Verify use case tests configure the mock correctly for new methods
+6. **Check consumers**: Verify use case tests correctly use the new mock methods. Each new mock method must have at least one test that: (1) calls the method, (2) checks return value, (3) verifies behavior (e.g., await/resolve if async)
 
 ## Checklist
 
@@ -58,11 +60,26 @@ After synchronizing mocks:
 ## Testing Rules (enforced during this skill)
 
 - Mocks must implement ALL interface methods. Missing method = build failure.
-- Recommended: Avoid `any` type casting on mocks — create mocks using the actual interface type (adjust per project-brief.md → Key Technical Decisions).
+- Recommended: Avoid `any` type casting on mocks — create mocks using the actual interface type (adjust per project-brief.md → Key Technical Decisions). If typing is complex, extract to a shared mock type file.
 - New methods must have default mock return values (e.g., `mockResolvedValue`, stub returns).
 - Recommended: No `skip`, `only`, or debug statements in committed test files.
 - Async tests must use `await`. No floating promises.
 - Each test must be independent. No shared state between tests.
+
+### 🧭 Navigation — After Test Integrity
+
+Test-integrity is invoked BY `reviewer` (Step 3). After completion, control returns to the reviewer's flow.
+If invoked directly by the user, append:
+
+```
+---
+🧭 Next Step
+→ Call: `reviewer`
+→ Prompt example: "코드를 리뷰해줘"
+→ Why: Mock sync verified — proceed with full review
+→ Pipeline: N/A (utility skill — invoked by reviewer Step 3)
+---
+```
 
 ## Related Failure Patterns
 

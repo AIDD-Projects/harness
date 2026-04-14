@@ -5,6 +5,12 @@
 Manage Sprint/Story state, guide development sequence, and prevent scope drift.
 Keeps the LLM focused on the current work item.
 
+## Invoked By
+
+- **User** (direct) — "다음 Story는?", "현재 상태 보여줘"
+- **planner** → User confirmation → sprint-manager (🟢 pipeline Step 3)
+- **reviewer** (pass, more stories) → sprint-manager — "다음 Story는?"
+
 ## Referenced Skills
 
 - bootstrap — Recommended when state files are empty
@@ -69,12 +75,19 @@ After every status check, recommend the next action based on current context:
 | All stories in sprint are done | → "Run `learn` to capture session lessons, then start a new sprint" |
 | A direction change was discussed | → "Run `pivot` to update all state files before continuing" |
 | Recent failure patterns apply | → "Watch out for FP-{NNN}: [description]" |
+| Unplanned KPI/FR in Validation Tracker | → "Run `planner` — add Stories for unplanned KPI/FR items" |
+| All ARB Fail items resolved | → "ARB Fail items all resolved — deployment readiness can be checked" |
 
-3. Format the recommendation as:
+3. Format the recommendation as a 🧭 Next Step block:
 ```
-💡 Recommended next: [action]
-   Why: [one-sentence reason]
-   Command: [exact skill/agent to invoke]
+---
+🧭 Next Step
+→ Call: `[skill or agent name]`
+→ Prompt example: "[copy-paste ready prompt]"
+→ Why: [one-sentence reason]
+→ Pipeline: {🟢|🔵} Step {N}/{total}
+→ Alternative: [other valid path, if any]
+---
 ```
 
 **Request: "story done" / "S{N}-{M} done"**
@@ -90,9 +103,19 @@ After every status check, recommend the next action based on current context:
 5. Alert relevant docs/failure-patterns.md items
 6. Recommend relevant skill: "Consider running `planner` if this story needs detailed breakdown"
 
+**Wave-Level Pacing (Turn-by-Turn Guidance)**
+
+When a Story contains multiple Tasks/Waves (from feature-breakdown):
+- Guide implementation **one Wave at a time** (not one file at a time, not all at once)
+- After each Wave is implemented, **run tests (or invoke `reviewer` for a quick check)** to verify the Wave is clean before proceeding
+- Only after verification passes, prompt: "Wave {N} 완료 (tests pass). Wave {N+1}로 넘어갈까요?"
+- If tests fail → fix within the current Wave before moving on. Do NOT advance to the next Wave with failing tests.
+- This prevents context overload from modifying too many modules simultaneously
+- Exception: If a Wave contains only a single trivial task, it may be combined with the next Wave
+
 **Request: "new sprint"**
 1. Check all Stories in current Sprint
-2. Warn if incomplete Stories exist
+2. Warn if incomplete Stories exist: "⚠️ Sprint {N} has {M} in-progress stories. Mark them as done or carry them over before starting a new sprint."
 3. Confirm new Sprint number and theme (user input)
 4. Update docs/project-state.md
 
@@ -120,6 +143,46 @@ Progress: {done}/{total} Stories
 **Watch**: FP-{NNN} applies (description)
 
 STATUS: DONE
+```
+
+#### Validation Dashboard (🟣 Pipeline only)
+
+When `docs/project-brief.md` contains a `## Validation Tracker` section with data, display the Validation Tracker as a dashboard in every status output.
+If the Validation Tracker exists but has zero rows (no KPIs/FRs indexed yet), display: `KPI Coverage: 0/0 (N/A) — consider running bootstrap to populate Artifact Index`.
+
+```
+### 📊 Validation Dashboard
+- KPI Coverage: {addressed}/{total} addressed ({percent}%)
+- FR Coverage: {planned}/{total} planned ({percent}%), {done}/{total} done ({percent}%)
+- ARB Fail Resolution: {resolved}/{total} resolved ({percent}%)
+
+⚠️ Unplanned items:
+- [KPI/FR ID]: [description] — 관련 Story 없음
+```
+
+**Sprint Manager reads and reports the Validation Tracker numbers.** It does NOT auto-create Stories for missing coverage — that is the planner's role. If unplanned items exist, recommend running `planner`.
+
+### 🧭 Navigation — What Comes After Sprint Manager
+
+After sprint-manager completes, always append a 🧭 block based on the outcome:
+
+| Sprint Manager Result | 🧭 Next Step |
+|---|---|
+| State files empty | `bootstrap` — "프로젝트를 온보딩해줘" |
+| No stories exist | `planner` — "[기능]을 계획해줘" |
+| Story set to in-progress | [Coding] — "구현을 시작하세요. 완료 후 `reviewer`를 호출하세요" |
+| All stories done | `learn` — "세션을 마무리해줘" |
+| Direction change detected | `pivot` — "방향을 전환해줘" |
+
+Example 🧭 block for starting a story:
+```
+---
+🧭 Next Step
+→ Call: [Coding]
+→ Prompt example: "구현을 시작하세요. 완료 후 `reviewer`를 호출하세요"
+→ Why: Story is in-progress — begin implementation
+→ Pipeline: 🟢/🔵 Step 4/6
+---
 ```
 
 ## Enforced Rules

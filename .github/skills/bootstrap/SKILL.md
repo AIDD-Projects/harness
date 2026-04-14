@@ -1,3 +1,8 @@
+---
+name: bootstrap
+description: 'Onboard project into Musher. Scans codebase and fills state files. Use after musher init or when state files are empty.'
+---
+
 # Bootstrap
 
 ## Purpose
@@ -33,45 +38,20 @@ One command does everything — no manual editing required.
 
 **Do NOT modify any code files in this phase.**
 
-### Phase 1.5: Crew Artifact Detection + Indexing
+### Phase 1.5: Crew Artifact Detection + Version Check
 
 Check if external planning artifacts exist:
 - `docs/crew/` directory — kode:crew output (requirements, analysis, design docs)
-- `docs/PM/`, `docs/Analyst/`, `docs/ARB/` directories — kode:crew role-based output
 - User-provided documents — requirements specs, wireframes, API designs
-- User mentions "산출물", "PRD", "요구사항", "설계서" in their prompt
 
 **If crew artifacts are found:**
-
-1. **Catalog all documents** with path, estimated role (Analyst/PM/ARB/unknown), and key contents
-2. **Check existing state**: If `docs/project-brief.md` already has a `## Crew Artifact Index` section with content:
-   - Ask user: "⚠️ 기존 crew 산출물이 이미 인덱싱되어 있습니다. 재인덱싱하겠습니까?" (user confirms or skips)
-   - If project-brief is empty (first crew sync) → proceed with full indexing
-3. **Create Artifact Index** in `docs/project-brief.md`:
-   - Add `## Crew Artifact Index` table with: Artifact name, Path, Role, key contents summary (one line each)
-4. **Extract Minimum** for quick reference (these go into the standard sections of project-brief.md):
-   - Vision: 1-2 sentences from product-brief
-   - Goals: KPI list from product-brief (measurable items only, not full descriptions)
-   - Non-Goals: Out-of-scope list from PRD or product-brief
-   - Key Technical Decisions: tech stack from architecture doc
-5. **Build Validation Tracker** in `docs/project-brief.md`:
-   - `### KPI Coverage`: extract KPI items from product-brief → create table with ID, KPI, Source, Story (empty), Status (⬜)
-   - `### ARB Fail Resolution`: extract Fail items from arb-checklist → create table with ID, Item, Severity (CRITICAL/HIGH), Story (empty), Status (⬜ Required)
-   - `### FR Coverage`: extract FR-NNN items from PRD → create table with FR, Description, Priority (P0/P1/P2), Stories (empty), Status (⬜)
-6. **Confirm with user**: "Crew 산출물 [N]개를 발견했습니다. Artifact Index와 Validation Tracker를 생성합니다. 맞나요?"
-   - If user says **yes** → proceed with Phase 3 using crew artifact data
-   - If user says **no** → skip Artifact Index/Tracker creation, proceed with regular Phase 2 interview (treat as 🟢 pipeline)
-7. **Skip most Phase 2 questions** — use artifact data instead. Only confirm implementation-specific decisions (test framework, specific library choices).
-8. Proceed to Phase 3 using extracted data
-
-**Original crew documents are NEVER modified. Only the index and tracker are created.**
-
-**Crew Artifact Path Detection** (bootstrap detects all patterns, priority order):
-1. Pattern C: User-provided paths (explicit in prompt) — highest priority, always authoritative
-2. Pattern B: `docs/crew/` (consolidated directory)
-3. Pattern A: `docs/PM/`, `docs/Analyst/`, `docs/ARB/` (kode:crew role-based directories)
-4. Pattern D: `docs/` files containing `prd`, `product-brief`, `architecture`, `checklist` keywords — lowest priority, fallback scan
-- If multiple patterns match, use the highest priority source. Artifact Index records the actual discovered paths.
+1. Check if `docs/project-brief.md` already has content (existing crew sync)
+   - If project-brief has content → ask user: "⚠️ 기존 crew 산출물이 이미 반영되어 있습니다. 재인제스트하겠습니까?" (user confirms or skips)
+   - If project-brief is empty (first crew sync) → proceed with full ingestion
+2. Read all documents in `docs/crew/` (or user-provided docs)
+3. Extract: project vision, goals, non-goals, feature list, module boundaries, tech decisions
+4. **Skip most Phase 2 questions** — use artifact data instead. Only confirm with user: "Crew 산출물을 기반으로 state files를 채우겠습니다. 맞나요?"
+5. Proceed to Phase 3 using extracted data
 
 **If no crew artifacts:** Continue to Phase 2 (User Interview) normally.
 
@@ -95,8 +75,6 @@ Using data from Phase 1 + Phase 2, fill the following files:
 - Vision → from user answer #1
 - Goals → from user answer #2
 - Non-Goals → from user answer #3
-- Crew Artifact Index → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
-- Validation Tracker → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
 - Key Technical Decisions → from Phase 1 scan + user answer #4, #5
 
 **docs/features.md**:
@@ -141,24 +119,6 @@ Using language/framework detected in Phase 1 + user answers from Phase 2, enrich
 3. Apply corrections if any
 4. Report completion
 
-<!-- TEAM_MODE_START -->
-## Team Mode: File Locations
-
-In Team mode, state files are split between shared and personal directories:
-
-### Shared (docs/, git committed)
-- `docs/project-brief.md` — project vision, goals, non-goals
-- `docs/features.md` — feature registry
-- `docs/dependency-map.md` — module dependency graph
-
-### Personal (.harness/, gitignored)
-- `.harness/project-state.md` — current sprint/story progress
-- `.harness/failure-patterns.md` — personal failure patterns
-- `.harness/agent-memory/` — agent memory files
-
-When filling state files in Phase 3, write to the correct directories based on this split.
-After bootstrap completes, remind the user that shared files require `git pull` before editing (Pre-Pull Protocol).
-<!-- TEAM_MODE_END -->
 
 ## Output Format
 
@@ -186,26 +146,20 @@ STATUS: DONE
 
 Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 
-**If NO crew artifacts** (🟢 pipeline):
 ```
 ---
 🧭 Next Step
 → Call: `planner`
-→ Prompt example: "[project]에 [첨 번째 기능]을 추가해줘"
+→ Prompt example: "[프로젝트 이름]에 [첫 번째 기능]을 추가해줘"
 → Why: State files are filled — now plan the first feature
 → Pipeline: 🟢 Step 2/6
 ---
 ```
 
-**If crew artifacts were used** (🟣 pipeline):
+If crew artifacts were used (🟣 pipeline), adjust the prompt example:
 ```
----
-🧭 Next Step
-→ Call: `planner`
-→ Prompt example: "crew 산출물을 기반으로 첨 번째 기능을 계획해줘"
-→ Why: Artifact Index + Validation Tracker created — planner will map FR→Stories
+→ Prompt example: "crew 산출물을 기반으로 첫 번째 기능을 계획해줘"
 → Pipeline: 🟣 Step 2/6
----
 ```
 
 ## Rules
@@ -216,13 +170,6 @@ Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 - If a state file already has content, ask before overwriting
 - Rules file TODO sections can be overwritten without asking (they are placeholders)
 - Run this skill only once per project (or when explicitly requested for refresh)
-
-### Small Project Guidance
-
-For projects with fewer than 3 modules (e.g., single-file scripts, small CLI tools):
-- `docs/dependency-map.md` may have only 1-2 rows — this is normal, not a gap
-- `feature-breakdown` Waves may collapse into a single Wave — skip Wave-level pacing
-- Consider a simplified workflow: `bootstrap → planner → [code] → reviewer → learn` (skip sprint-manager for single-story projects)
 
 ## Embedded Knowledge
 
@@ -254,30 +201,7 @@ When starting a NEW session (not during bootstrap), read these files in order:
 | Skip user interview | Phase 1 scan alone is insufficient — always confirm with user |
 | Overwrite existing state files silently | Ask before overwriting non-empty files |
 | Create perfect dependency map on first try | Start with what's detectable, refine over time |
-| Leave rules file TODOs unfilled | Phase 3.5 fills Key Technical Decisions TODOs. Decision Log remains empty (filled later via `pivot` skill during project lifecycle) |
+| Leave rules file TODOs unfilled | Phase 3.5 fills ALL TODO sections — no manual editing needed |
 | Use TypeScript globs for non-TS projects | Detect language in Phase 1 and set correct globs |
 | Only fill state files, skip rules | Bootstrap fills BOTH — state files AND rules files |
 
-<!-- TEAM_MODE_START -->
-## Team Mode: Onboarding
-
-When running bootstrap in Team mode:
-
-### New Project (first developer)
-1. Run `musher init --team` to create shared + personal state files
-2. Fill all state files via normal bootstrap procedure
-3. Commit shared files (docs/) to git
-4. Push to remote — teammates will clone this
-
-### Joining Developer (existing project)
-1. Clone the repository (shared docs/ already exist)
-2. Run `musher init --team` — only personal files (.harness/) are created; shared files are skipped
-3. **DO NOT re-run bootstrap interviews** — shared state is already filled by the first developer
-4. Review docs/project-brief.md to understand project goals
-5. Create your personal .harness/project-state.md with your current Story assignment
-
-### Rules
-- **Never overwrite shared files** when joining an existing project
-- Set your Owner name in docs/features.md and docs/dependency-map.md rows you create
-- Personal state (.harness/) is yours alone — no coordination needed
-<!-- TEAM_MODE_END -->
