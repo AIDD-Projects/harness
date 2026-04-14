@@ -90,11 +90,11 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 
 | Completed | Next | Prompt Example |
 |-----------|------|---------------|
-| `bootstrap` | `planner` | "[project]에 [첫 기능]을 추가해줘" |
-| `planner` | User confirmation → `sprint-manager` | "이 경로(Plan)대로 구현을 시작할까요?" → "S{N}-{M} Story를 시작해줘" |
+| `bootstrap` | `planner` | "[project]에 [첫 기능]을 추가해줘" || `planner` (Step 0 → empty) | `bootstrap` [internal] | "State files empty — auto-invoking bootstrap" || `planner` | User confirmation → `sprint-manager` | "이 경로(Plan)대로 구현을 시작할까요?" → "S{N}-{M} Story를 시작해줘" |
 | `sprint-manager` (story started) | [Coding] | "구현을 시작하세요. 완료 후 `reviewer` 호출" |
 | [Coding done] | `reviewer` | "S{N}-{M} 코드를 리뷰해줘" |
-| `reviewer` (pass) | `sprint-manager` or `learn` | "다음 Story는?" 또는 "세션 마무리해줘" |
+| `reviewer` (pass, more stories) | `sprint-manager` | "다음 Story는?" |
+| `reviewer` (pass, all done) | `learn` | "세션 마무리해줘" |
 | `reviewer` (STATE-AUDIT) | `learn` | "state 파일을 정리하고 세션 마무리해줘" |
 | `investigate` | `reviewer` | "수정한 코드를 리뷰해줘" |
 | `pivot` | `planner` | "변경된 방향에 맞춰 재계획해줘" |

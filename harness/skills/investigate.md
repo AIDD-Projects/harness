@@ -12,6 +12,14 @@ Debug bugs systematically. Prevent "symptom patching" — fixing without underst
 - Regression bugs ("it worked yesterday")
 - Unexplained behavior
 
+### Edge Case: No Reproducible Error
+
+If the user reports "weird behavior" but there is no error message or stack trace:
+1. Ask the user to clarify: (A) Performance issue? (B) Logic error — show expected vs actual output? (C) Intermittent/race condition?
+2. For (A): Profile or add timing logs, then proceed to Phase 1 with timing data as "evidence"
+3. For (B): Use expected vs actual output as the error evidence for Phase 1
+4. For (C): Add logging to capture the intermittent state, attempt reproduction 3 times before escalating
+
 ## Procedure
 
 ### Phase 1: Evidence Collection (NO FIXES)
@@ -35,7 +43,9 @@ Debug bugs systematically. Prevent "symptom patching" — fixing without underst
 
 ### Phase 3: Hypothesis + Fix
 
-1. State the root cause hypothesis in one sentence
+1. State the root cause hypothesis:
+   - **Simple bugs**: One sentence is sufficient (e.g., "findById returns null but no null check exists")
+   - **Complex bugs** (race conditions, multi-module cascades): One-sentence SUMMARY followed by supporting context (reproduction steps, timing data, affected modules). Max 5 lines total.
 2. Implement the minimal fix based on the hypothesis
 3. Verify the fix does not break existing tests
 

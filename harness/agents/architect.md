@@ -39,6 +39,13 @@ Before proceeding, verify that required state files have content:
 
 If `docs/project-brief.md` has no Vision/Goals filled OR `docs/dependency-map.md` has zero module rows → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
 
+**Step 0.1: Circular Dependency Check**
+
+Before evaluating proposals, verify dependency graph integrity:
+1. For each module in `docs/dependency-map.md`, check if it appears in its own "Depends On" chain (A→B→C→A = circular)
+2. If circular dependency found → flag as 🛑 **architectural blocker** before proceeding
+3. This check runs automatically on every architect invocation
+
 **Step 0.5: Load Agent Memory**
 
 Read `docs/agent-memory/architect.md` for past learnings:

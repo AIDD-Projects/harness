@@ -96,16 +96,17 @@ Apply these insights when creating the implementation plan. If the memory file i
    - **Goal Alignment**: Does it serve a listed Goal? If no clear link → **warn but proceed**. Include the warning in the plan output under a `### Direction Alignment` section: `⚠️ Goal Alignment: [feature] does not directly map to listed goals`.
    - **Non-Goal Violation**: Does it fall into Non-Goals? If yes → **stop and ask the user**. Do not proceed until the user confirms this is intentional (may need `pivot` skill).
    - **Decision Consistency**: Does it contradict any Decision Log entry? If yes → **stop and warn**. Recommend running the `pivot` skill before proceeding.
-   If the request represents a clear direction change → recommend running the `pivot` skill instead of proceeding with planning.
+   If the request represents a clear direction change → **stop and require the `pivot` skill** before proceeding with any planning. Do not proceed even if the user insists — direction changes must be formally tracked.
 3. Read `docs/features.md` to understand what already exists
 4. Read `docs/dependency-map.md` to understand current architecture
 5. Read `docs/project-state.md` for current Sprint context
 6. Identify which existing modules are affected
 7. Identify new modules that need to be created
 8. Run **feature-breakdown** skill to create ordered task list
-9. Run **impact-analysis** skill for each existing module being modified (planner calls both skills independently — feature-breakdown does NOT invoke impact-analysis internally)
-10. Check `docs/failure-patterns.md` for relevant past mistakes
-11. Produce implementation plan (see Output Format)
+9. Register NEW modules from feature-breakdown output in `docs/dependency-map.md` (so impact-analysis reads the updated map)
+10. Run **impact-analysis** skill for each existing module being modified (planner calls both skills independently — feature-breakdown does NOT invoke impact-analysis internally. Ordering: feature-breakdown first → register modules → impact-analysis second.)
+11. Check `docs/failure-patterns.md` for relevant past mistakes
+12. Produce implementation plan (see Output Format)
 12. **Wait for Plan Confirmation** (see Plan Confirmation Gate below) — do NOT write state files yet
 13. **After user approves** → Update `docs/project-state.md` with the new Story
 14. **After user approves** → Update `docs/features.md` with the new feature entry

@@ -23,6 +23,14 @@ This is Musher's memory mechanism — without it, the same mistakes repeat acros
 2. Identify what was accomplished in this session
 3. Identify any errors, failures, or unexpected issues that occurred
 
+**Edge Case: Zero-Change Session**
+If `git diff --stat` shows no changes and `git log` shows no new commits this session:
+- Report: "📝 Quiet session — status checks only, no code changes."
+- Skip Step 3 (Failure Pattern Detection) — no code changes means no new failure patterns
+- Skip Step 5 (features.md update) and Step 5.5 (dependency-map.md verify) — nothing changed
+- Still execute Step 4 (Quick Summary update) and Step 6 (Agent Memory) if an agent was used
+- Still execute Step 2 (Direction Drift Check) — discussion-only drift is possible
+
 ### Step 2: Direction Drift Check
 
 Before recording failures, verify that the session's work stayed aligned with project direction:
@@ -61,7 +69,7 @@ For each issue/error that occurred in this session:
 
 1. Read `docs/failure-patterns.md`
 2. Check if this matches an existing pattern (FP-NNN):
-   - **If match found AND already incremented by `investigate` in this session**: Skip — do not double-count. The investigate skill's Phase 4 is the primary updater during bug fix sessions.
+   - **If match found AND already incremented by `investigate` in this session**: Skip — do not double-count. Check `docs/project-state.md` Recent Changes for investigate entries from this session to determine if a pattern was already recorded.
    - **If match found AND NOT already incremented this session**: Increment the Frequency counter, add the Sprint/Story to "Occurred"
    - **If new pattern**: Assign next FP-NNN number, create a new entry using this format:
 

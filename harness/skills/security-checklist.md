@@ -24,7 +24,18 @@ Prevents credential leaks and accidental commits of sensitive files. (FP-004)
    - Search code for hardcoded secrets using regex patterns (e.g., `password\s*=`, `api_key`, `secret`)
    - Verify `.env.example` exists but `.env` is gitignored
 3. **Scan for forbidden files**: Check if .env, credentials, *.pem, *.key, *.keystore, *.jks, *.p12, *.pfx, *.pkcs12, firebase.json, secrets.yml, docker-compose.override.yml files are staged
-4. **Scan for hardcoded secrets**: Search staged files for passwords, API keys, tokens
+4. **Scan for hardcoded secrets**: Search staged files for passwords, API keys, tokens using these mandatory regex patterns:
+
+   | Pattern | Catches |
+   |---|---|
+   | `password\s*[=:]\s*["'][^"']+` | Hardcoded passwords |
+   | `api[_-]?key\s*[=:]\s*["'][^"']+` | API keys |
+   | `(secret|token)\s*[=:]\s*["'][^"']+` | Secrets and tokens |
+   | `(aws_access_key_id|aws_secret_access_key)\s*=` | AWS credentials |
+   | `-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----` | Private key contents |
+   | `mongodb(\+srv)?://[^\s]+` | Database connection strings |
+
+   Run: `grep -rEn '<pattern>' <staged files>` for each pattern.
 5. **Verify .gitignore**: Ensure new environment files are covered by .gitignore
 6. **Check for temp files**: Verify tmp_*, debug_*, coverage_* files are not staged
 

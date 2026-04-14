@@ -5,13 +5,26 @@
 ## Quick Summary
 
 <!-- Update these 3 lines EVERY session end. Format strictly:
-   Line 1: ✅ Last session: [what was completed]
-   Line 2: 🔄 In progress: [what is currently being worked on]
-   Line 3: ➡️ Next: [what should be done next session]
-   Example:
-   ✅ Last session: Implemented user authentication (S1-002 done)
+   Line 1: ✅ Last session: [Story ID] [one-sentence what was done]
+   Line 2: 🔄 In progress: [Story ID] [current state with measurable progress]
+   Line 3: ➡️ Next: [specific action to take first]
+
+   ✅ Good examples:
+   ✅ Last session: S1-002 User authentication implemented (login + JWT)
    🔄 In progress: S1-003 API endpoint tests (3/7 tests passing)
-   ➡️ Next: Complete remaining 4 tests, then start S1-004 admin dashboard
+   ➡️ Next: Complete remaining 4 tests, then start S1-004
+
+   ❌ Bad examples:
+   ✅ Last session: Did some work (too vague)
+   🔄 In progress: Stuff (no Story ID, no progress metric)
+   ➡️ Next: Continue (no specific action)
+
+   **Write Precedence**: Multiple skills update this file. Priority order:
+   1. `learn` (session end) — highest priority, overwrites Quick Summary
+   2. `sprint-manager` (story status changes) — updates Story Status table
+   3. `planner` (new stories) — adds rows to Story Status table
+   4. `investigate` (bug fixes) — adds to Recent Changes only
+   If conflicts: learn’s Quick Summary always wins (it captures final session state).
 -->
 
 ## Current Sprint

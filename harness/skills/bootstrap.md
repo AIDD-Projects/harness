@@ -186,20 +186,26 @@ STATUS: DONE
 
 Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 
+**If NO crew artifacts** (🟢 pipeline):
 ```
 ---
 🧭 Next Step
 → Call: `planner`
-→ Prompt example: "[프로젝트 이름]에 [첫 번째 기능]을 추가해줘"
+→ Prompt example: "[project]에 [첨 번째 기능]을 추가해줘"
 → Why: State files are filled — now plan the first feature
 → Pipeline: 🟢 Step 2/6
 ---
 ```
 
-If crew artifacts were used (🟣 pipeline), adjust the prompt example:
+**If crew artifacts were used** (🟣 pipeline):
 ```
-→ Prompt example: "crew 산출물을 기반으로 첫 번째 기능을 계획해줘"
+---
+🧭 Next Step
+→ Call: `planner`
+→ Prompt example: "crew 산출물을 기반으로 첨 번째 기능을 계획해줘"
+→ Why: Artifact Index + Validation Tracker created — planner will map FR→Stories
 → Pipeline: 🟣 Step 2/6
+---
 ```
 
 ## Rules
@@ -210,6 +216,13 @@ If crew artifacts were used (🟣 pipeline), adjust the prompt example:
 - If a state file already has content, ask before overwriting
 - Rules file TODO sections can be overwritten without asking (they are placeholders)
 - Run this skill only once per project (or when explicitly requested for refresh)
+
+### Small Project Guidance
+
+For projects with fewer than 3 modules (e.g., single-file scripts, small CLI tools):
+- `docs/dependency-map.md` may have only 1-2 rows — this is normal, not a gap
+- `feature-breakdown` Waves may collapse into a single Wave — skip Wave-level pacing
+- Consider a simplified workflow: `bootstrap → planner → [code] → reviewer → learn` (skip sprint-manager for single-story projects)
 
 ## Embedded Knowledge
 

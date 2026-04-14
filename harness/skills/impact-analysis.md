@@ -7,8 +7,9 @@ The most common cause of regressions in growing projects is changing one module 
 
 ## Invoked By
 
-- **planner** agent — Step 9: for each existing module being modified
+- **planner** agent — Step 10: for each existing module being modified
 - **reviewer** agent — Step 7: when interface changes affect 2+ dependent modules
+- **architect** agent — when structural validation requires blast radius analysis
 
 ## When to Apply
 
@@ -71,7 +72,7 @@ Plan: 4 files to update, all within S3-2 scope
 
 After completing the analysis, update these files:
 
-- [ ] **docs/dependency-map.md**: Update the Interface Change Log table with: Date, Module, Change description, Affected Modules, Status ("In Progress" until all dependents updated, then "Updated"). **This is mandatory for ALL interface changes** — do not skip even if the change seems minor.
+- [ ] **docs/dependency-map.md**: Update the Interface Change Log table with: Date, Module, Change description, Affected Modules, Status ("In Progress" until all dependents updated, then "Updated"). **This is mandatory for ALL interface changes** — do not skip even if the change seems minor. **Status transition**: impact-analysis sets the initial status to "In Progress". After all dependent modules are verified updated (by reviewer Step 7 or test-integrity), update Status to "Updated".
 - [ ] **docs/features.md**: If the interface change affects a feature's Key Files, update the Key Files column. If test files change, update the Test Files column.
 - [ ] **docs/project-state.md**: If scope exceeds current Story, add a note to Recent Changes.
 

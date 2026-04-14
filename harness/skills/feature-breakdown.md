@@ -8,6 +8,7 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 ## Invoked By
 
 - **planner** agent — Step 8: Create ordered task list for new features
+- **architect** agent — when structural validation requires task decomposition review
 
 > **Note**: feature-breakdown is responsible for task decomposition only. It does NOT invoke `impact-analysis`. The planner calls both skills independently: feature-breakdown (Step 8) for task ordering, then impact-analysis (Step 9) for blast radius analysis.
 

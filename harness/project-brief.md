@@ -74,6 +74,12 @@
    - ✅ Completed (Story done and verified)
    Note: Story status uses ⬜/🔧/✅/🚫/❌ (see project-state.md). Feature status uses ⬜/🔧/✅/⚠️/❌ (see features.md). Validation Tracker uses a reduced set because it only tracks coverage, not development workflow.
 
+   **Write Precedence**: Multiple skills update the Validation Tracker:
+   1. `bootstrap` — creates initial structure (all ⬜)
+   2. `planner` — fills Story column (maps FR/KPI to Stories)
+   3. `learn` — updates Status (⬜→🟡 or 🟡→✅) based on session outcomes
+   If planner and learn both modify Status in the same session, learn’s update takes precedence (it captures the final session state).
+
    ### KPI Coverage
    | ID | KPI | Source | Story | Status |
    |----|-----|--------|-------|--------|
