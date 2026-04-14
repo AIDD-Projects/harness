@@ -18,7 +18,15 @@ If the user reports "weird behavior" but there is no error message or stack trac
 1. Ask the user to clarify: (A) Performance issue? (B) Logic error — show expected vs actual output? (C) Intermittent/race condition?
 2. For (A): Profile or add timing logs, then proceed to Phase 1 with timing data as "evidence"
 3. For (B): Use expected vs actual output as the error evidence for Phase 1
-4. For (C): Add logging to capture the intermittent state, attempt reproduction 3 times before escalating
+4. For (C): Add logging to capture the intermittent state, attempt reproduction 3 times before escalating.
+   **Async race condition example**:
+   ```
+   Evidence: "Data shows stale value intermittently (1 in 5 runs)"
+   Logging: Add timestamp + thread/event-loop ID at read/write points
+   Reproduction: Run 5 times with logging enabled
+   If reproduced: capture the interleaving sequence → Phase 2
+   If not reproduced after 5 attempts: escalate to user with collected logs
+   ```
 
 ## Procedure
 

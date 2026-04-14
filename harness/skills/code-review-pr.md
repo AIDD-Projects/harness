@@ -5,6 +5,11 @@
 Review an external Pull Request (PR) for quality, security, and direction alignment before merging.
 Unlike the `reviewer` agent (which reviews your own changes pre-commit with full project context), this skill is for reviewing incoming PRs from teammates or external contributors. code-review-pr is a cold review — stricter on state file compliance because the reviewer has less context about the PR author's intent.
 
+## Invoked By
+
+- **User** (direct) — when assigned as a PR reviewer or asked to review a branch
+- Unlike `reviewer` agent (self-review before commit), this skill is for reviewing **incoming external PRs**
+
 ## When to Apply
 
 - When assigned as a PR reviewer

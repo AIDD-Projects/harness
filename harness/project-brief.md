@@ -48,6 +48,13 @@
    Maps original artifact documents so skills/agents can read them directly.
    DO NOT summarize artifacts here — just index their locations.
 
+   **Detection**: bootstrap Phase 1.5 scans for artifact files in:
+   - docs/crew/
+   - docs/PM/
+   - User-provided custom paths
+   If ANY files are found, bootstrap populates this table and activates the 🟣 pipeline.
+   If NO crew artifacts are found, this section stays empty (🟢/🔵/🔴 pipelines).
+
    | Artifact | Path | Role | Contains |
    |----------|------|------|----------|
    | Product Brief | docs/crew/product-brief.md | Analyst | 비전, 페르소나, KPI |

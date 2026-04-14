@@ -17,9 +17,9 @@ Pre-deployment validation checklist. Ensures all quality gates pass and state fi
 
 1. Read `package.json` (or equivalent manifest) — note current version
 2. Verify the version was bumped appropriately (Semantic Versioning):
-   - Bug fix → patch (0.0.x)
-   - New feature (backward-compatible) → minor (0.x.0)
-   - Breaking change → major (x.0.0)
+   - Bug fix → patch (0.0.x) — e.g., `v1.2.3 → v1.2.4`
+   - New feature (backward-compatible) → minor (0.x.0) — e.g., `v1.2.3 → v1.3.0`
+   - Breaking change → major (x.0.0) — e.g., `v1.2.3 → v2.0.0`
    - If unsure, ask the designated authority (per project-brief.md)
 3. If version was not bumped → **warn and recommend bumping before deploy**
 

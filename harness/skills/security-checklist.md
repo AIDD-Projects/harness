@@ -34,6 +34,8 @@ Prevents credential leaks and accidental commits of sensitive files. (FP-004)
    | `(aws_access_key_id|aws_secret_access_key)\s*=` | AWS credentials |
    | `-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----` | Private key contents |
    | `mongodb(\+srv)?://[^\s]+` | Database connection strings |
+   | `eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}` | JWT tokens (base64 header.payload) |
+   | `client[_-]?secret\s*[=:]\s*["'][^"']+` | OAuth2 client secrets |
 
    Run: `grep -rEn '<pattern>' <staged files>` for each pattern.
 5. **Verify .gitignore**: Ensure new environment files are covered by .gitignore
