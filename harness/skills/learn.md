@@ -182,7 +182,7 @@ Learn is the final skill in every pipeline. Append the appropriate 🧭 block:
 ---
 🧭 Next Step
 → 🏁 Session End
-→ Prompt example: "다음 세션 시작 시 `sprint-manager`를 호출하세요"
+→ Prompt: "다음 세션 시작 시 `sprint-manager`를 호출하세요"
 → Why: Session lessons captured — state files are up to date
 → Pipeline:
     🟢/🔵/🟣: Step 6/6 (complete)

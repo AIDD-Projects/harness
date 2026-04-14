@@ -97,8 +97,8 @@ Example 🧭 block for READY:
 ```
 ---
 🧭 Next Step
-→ Call: [Deploy]
-→ Prompt example: "배포 명령을 실행하세요"
+→ Next: [Deploy]
+→ Prompt: "배포 명령을 실행하세요"
 → Why: All checks passed — safe to deploy
 → Pipeline: 🟢/🔵 Step 5/6 → deploy
 ---

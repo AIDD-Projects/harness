@@ -360,17 +360,36 @@ function appendGitignore(targetDir) {
 }
 
 function detectExistingInstall(targetDir) {
-  const markers = [
-    '.github/copilot-instructions.md',
-    '.claude/rules/core.md',
-    '.cursor/rules/core.mdc',
-    'AGENTS.md',
-    '.windsurf/rules/core.md',
-    'GEMINI.md',
+  // Musher state files — these contain user data that overwrite would destroy
+  const stateMarkers = [
     'docs/project-state.md',
+    'docs/features.md',
+    'docs/dependency-map.md',
+    'docs/failure-patterns.md',
+    'docs/project-brief.md',
     '.harness/project-state.md',
+    '.harness/failure-patterns.md',
   ];
-  return markers.some(f => fs.existsSync(path.join(targetDir, f)));
+  const existingState = stateMarkers.filter(f => fs.existsSync(path.join(targetDir, f)));
+
+  // IDE config files — always overwritten regardless of user choice
+  const ideMarkers = [
+    ['.github/copilot-instructions.md', 'vscode'],
+    ['.claude/rules/core.md', 'claude'],
+    ['.cursor/rules/core.mdc', 'cursor'],
+    ['.windsurf/rules/core.md', 'windsurf'],
+    ['GEMINI.md', 'antigravity'],
+  ];
+  // Only count as existing if the file contains 'Musher' (not from other frameworks)
+  const existingIde = ideMarkers.filter(([f]) => {
+    const fullPath = path.join(targetDir, f);
+    if (!fs.existsSync(fullPath)) return false;
+    try {
+      return fs.readFileSync(fullPath, 'utf8').includes('Musher');
+    } catch { return false; }
+  });
+
+  return { stateFiles: existingState, ideFiles: existingIde, hasAny: existingState.length > 0 || existingIde.length > 0 };
 }
 
 function writeGitattributes(targetDir) {
@@ -471,7 +490,13 @@ function runDoctor(targetDir) {
 
   let detectedIde = null;
   for (const [file, ide] of ideChecks) {
-    if (fs.existsSync(path.join(targetDir, file))) {
+    const fullPath = path.join(targetDir, file);
+    if (fs.existsSync(fullPath)) {
+      // Verify it's a Musher file, not from another framework
+      try {
+        const content = fs.readFileSync(fullPath, 'utf8');
+        if (!content.includes('Musher') && !content.includes('musher')) continue;
+      } catch { continue; }
       detectedIde = ide;
       checks.push(`  ✅  IDE detected: ${GENERATORS[ide].name}`);
       passed++;
@@ -651,11 +676,30 @@ async function run(argv) {
     // Determine overwrite — prompt only in interactive terminal
     let overwrite = args.overwrite;
     if (!overwrite && !args.batch && process.stdin.isTTY) {
-      const hasExisting = detectExistingInstall(args.dir);
-      if (hasExisting) {
-        console.log('  ⚠  Existing Musher files detected.');
-        const answer = await askQuestion('  Overwrite existing files? (y/N): ');
-        overwrite = answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes';
+      const existing = detectExistingInstall(args.dir);
+      if (existing.hasAny) {
+        console.log('  ⚠  Existing Musher files detected:\n');
+        if (existing.stateFiles.length > 0) {
+          console.log('  📄 State files (contain your project data):');
+          for (const f of existing.stateFiles) {
+            console.log(`     • ${f}`);
+          }
+        }
+        if (existing.ideFiles.length > 0) {
+          console.log('  🔧 IDE configs (always updated to latest version):');
+          for (const [f, ide] of existing.ideFiles) {
+            console.log(`     • ${f} (${ide})`);
+          }
+        }
+        console.log();
+        if (existing.stateFiles.length > 0) {
+          console.log('  Overwrite resets state files to blank templates.');
+          console.log('  Choose N to keep your existing data (recommended).\n');
+          const answer = await askQuestion('  Overwrite state files? (y/N): ');
+          overwrite = answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes';
+        } else {
+          console.log('  No state files to overwrite — proceeding with install.\n');
+        }
       }
     }
 

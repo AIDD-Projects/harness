@@ -145,8 +145,8 @@ Example 🧭 block:
 ```
 ---
 🧭 Next Step
-→ Call: `reviewer`
-→ Prompt example: "수정한 코드를 리뷰해줘"
+→ Next: `reviewer`
+→ Prompt: "수정한 코드를 리뷰해줘"
 → Why: Bug fix applied — review before commit
 → Pipeline: 🔴 Step 3/4
 ---

@@ -147,10 +147,43 @@ After producing ANY plan (New Feature, Refactor, or Crew-Driven), **do NOT proce
 1. Present the complete plan to the user
 2. Ask: **"이 경로(Plan)대로 구현을 시작할까요?"** (or equivalent confirmation request)
 3. Wait for explicit user approval (`Yes`, `Go`, `진행해줘`, etc.)
-4. **Only after approval** → write state files (Steps 13-14) and output 🧭 Next Step pointing to `sprint-manager`
+4. **Only after approval** → execute **MANDATORY State File Write** (below), then output 🧭 Next Step pointing to `sprint-manager`
 5. If the user requests changes → revise the plan and re-confirm. **No state files are written until approval.**
 
 > **Why**: The planner is planning a route, not driving. The user must confirm the route before the engine starts. This prevents irreversible code changes based on a misunderstood plan.
+
+### ⚠️ MANDATORY: Post-Approval State File Write
+
+**This section executes IMMEDIATELY after user approval. Do NOT skip. Do NOT output the 🧭 Next Step block until ALL writes below are complete.**
+
+After user approves the plan, perform these writes in order:
+
+1. **`docs/features.md`** — Register new feature(s):
+   - Add row(s) to the Feature Registry table
+   - Include FR reference (if crew-driven), status = `planned`
+
+2. **`docs/project-state.md`** — Create Sprint/Stories:
+   - If no Sprint exists, create Sprint 1 with theme
+   - Add Story rows to the Story Status table (status = `⬜ todo`)
+   - Each Story: ID (S{N}-{M}), Title, Status, Scope (files/modules), FR reference (if crew-driven)
+   - Update Quick Summary section
+
+3. **`docs/dependency-map.md`** — Register new modules (if any):
+   - Add rows for modules introduced by the plan
+   - Update relationship columns for modified modules
+
+4. **`docs/project-brief.md`** — Update Validation Tracker (🟣 pipeline only):
+   - KPI Coverage: fill Story column with mapped Story IDs
+   - FR Coverage: fill Stories column with mapped Story IDs
+   - ARB Fail Resolution: fill Story column with mapped Story IDs
+
+**Completion Check**: Before outputting 🧭, verify:
+- [ ] features.md has new feature row(s)
+- [ ] project-state.md has Story rows with `⬜ todo` status
+- [ ] dependency-map.md has new module rows (if plan introduces new modules)
+- [ ] project-brief.md Validation Tracker updated (if 🟣 pipeline)
+
+If any write fails, report the failure and retry. Do NOT proceed to 🧭 with incomplete state files.
 
 ## Output Format
 
@@ -229,8 +262,8 @@ Example 🧭 block for normal completion:
 ---
 🧭 Next Step
 → Confirm: "이 경로(Plan)대로 구현을 시작할까요?"
-→ After approval → Call: `sprint-manager`
-→ Prompt example: "S{N}-{M} Story를 시작해줘"
+→ After approval → Next: `sprint-manager` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
+→ Prompt: "S{N}-{M} Story를 시작해줘"
 → Why: Plan is ready — user must confirm route before engine starts
 → Pipeline: 🟢 Step 3/6 | 🟣 Step 3/6
 ---

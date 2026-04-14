@@ -79,8 +79,8 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 ```
 ---
 🧭 Next Step
-→ Call: `{skill or agent name}`
-→ Prompt example: "{copy-paste ready prompt for the user}"
+→ Next: `{skill or agent name}` (슬래시 메뉴에서 선택하거나, 채팅에 프롬프트 입력)
+→ Prompt: "{copy-paste ready prompt for the user}"
 → Why: {one-sentence reason}
 → Pipeline: {🟢|🔵|🔴|🟡} Step {N}/{total}
 ---

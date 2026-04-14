@@ -112,8 +112,8 @@ Example 🧭 block for APPROVE:
 ```
 ---
 🧭 Next Step
-→ Call: `deployment`
-→ Prompt example: "리리즈 준비를 확인해줘"
+→ Next: `deployment`
+→ Prompt: "리리즈 준비를 확인해줘"
 → Why: PR approved — validate deployment readiness
 → Pipeline: 🟢/🔵 Step 5/6
 ---

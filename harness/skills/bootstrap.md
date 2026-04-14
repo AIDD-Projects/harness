@@ -190,8 +190,8 @@ Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 ```
 ---
 🧭 Next Step
-→ Call: `planner`
-→ Prompt example: "[project]에 [첨 번째 기능]을 추가해줘"
+→ Next: `planner` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
+→ Prompt: "[project]에 [첫 번째 기능]을 추가해줘"
 → Why: State files are filled — now plan the first feature
 → Pipeline: 🟢 Step 2/6
 ---
@@ -201,8 +201,8 @@ Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 ```
 ---
 🧭 Next Step
-→ Call: `planner`
-→ Prompt example: "crew 산출물을 기반으로 첨 번째 기능을 계획해줘"
+→ Next: `planner` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
+→ Prompt: "crew 산출물을 기반으로 첫 번째 기능을 계획해줘"
 → Why: Artifact Index + Validation Tracker created — planner will map FR→Stories
 → Pipeline: 🟣 Step 2/6
 ---

@@ -82,8 +82,8 @@ After every status check, recommend the next action based on current context:
 ```
 ---
 🧭 Next Step
-→ Call: `[skill or agent name]`
-→ Prompt example: "[copy-paste ready prompt]"
+→ Next: `[skill or agent name]` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
+→ Prompt: "[copy-paste ready prompt]"
 → Why: [one-sentence reason]
 → Pipeline: {🟢|🔵} Step {N}/{total}
 → Alternative: [other valid path, if any]
@@ -102,6 +102,22 @@ After every status check, recommend the next action based on current context:
 4. Specify Story scope (related files/directories from dependency-map)
 5. Alert relevant docs/failure-patterns.md items
 6. Recommend relevant skill: "Consider running `planner` if this story needs detailed breakdown"
+
+**Request: "plan approved" / "플랜 반영해줘" (planner → sprint-manager handoff)**
+
+When invoked after planner approval, verify that planner wrote state files correctly:
+
+1. Read `docs/project-state.md` — check if Stories from the approved plan exist
+2. **If Stories exist** → proceed to "new story" handler (set first `todo` Story to `in-progress`)
+3. **If Stories are missing** (planner failed to write):
+   a. Read the approved plan from the conversation context
+   b. Create Sprint entry in `docs/project-state.md` (Sprint N, theme from plan)
+   c. Add all Story rows to the Story Status table (status = `⬜ todo`)
+   d. Update Quick Summary section
+   e. Report: "Planner가 state files에 반영하지 않아 sprint-manager가 보완했습니다."
+   f. Proceed to set the first Story to `in-progress`
+4. If 🟣 pipeline: verify `docs/project-brief.md` Validation Tracker has Story mappings. If missing, fill them from the plan.
+5. Display Sprint Status and Validation Dashboard
 
 **Wave-Level Pacing (Turn-by-Turn Guidance)**
 
@@ -178,8 +194,8 @@ Example 🧭 block for starting a story:
 ```
 ---
 🧭 Next Step
-→ Call: [Coding]
-→ Prompt example: "구현을 시작하세요. 완료 후 `reviewer`를 호출하세요"
+→ Next: [Coding] (Agent/Ask 모드에서 아래 프롬프트 입력)
+→ Prompt: "S{N}-{M} 구현을 시작해줘. 완료 후 `reviewer`를 호출해줘"
 → Why: Story is in-progress — begin implementation
 → Pipeline: 🟢/🔵 Step 4/6
 ---

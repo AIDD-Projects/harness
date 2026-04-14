@@ -46,8 +46,8 @@ Example 🧭 block:
 ```
 ---
 🧭 Next Step
-→ Call: `{next-skill or agent}`
-→ Prompt example: "{copy-paste ready prompt}"
+→ Next: `{next-skill or agent}`
+→ Prompt: "{copy-paste ready prompt}"
 → Why: {one-sentence reason}
 → Pipeline: {🟢|🔵|🔴|🟡|🟣} Step {N}/{total}
 ---

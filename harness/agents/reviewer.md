@@ -205,8 +205,8 @@ Example 🧭 block for passing review:
 ```
 ---
 🧭 Next Step
-→ Call: `sprint-manager`
-→ Prompt example: "다음 Story는?"
+→ Next: `sprint-manager` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
+→ Prompt: "다음 Story는?"
 → Why: Review passed — move to the next Story
 → Pipeline: 🔵 Step 5/6
 → Alternative: 세션 종료 시 `learn` 호출

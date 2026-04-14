@@ -121,8 +121,8 @@ Example 🧭 block:
 ```
 ---
 🧭 Next Step
-→ Call: `planner`
-→ Prompt example: "변경된 방향에 맞춰 재계획해줘"
+→ Next: `planner`
+→ Prompt: "변경된 방향에 맞춰 재계획해줘"
 → Why: Direction changed — re-plan features for new goals
 → Pipeline: 🟡 Step 2/2
 ---

@@ -144,8 +144,8 @@ Example 🧭 block for APPROVE:
 ```
 ---
 🧭 Next Step
-→ Call: `planner`
-→ Prompt example: "승인된 설계로 기능을 계획해줘"
+→ Next: `planner`
+→ Prompt: "승인된 설계로 기능을 계획해줘"
 → Why: Architecture approved — proceed to feature planning
 → Pipeline: 🟢 Pre-pipeline (leads to planner Step 2/6)
 ---
