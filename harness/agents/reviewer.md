@@ -29,6 +29,7 @@ Before reviewing, verify that required state files exist and are not empty:
 - `docs/project-state.md` — Must have current Sprint info (needed for scope check)
 
 If state files are empty/placeholder-only → Warn: "State files are not filled. Review will proceed but scope check and failure pattern cross-check will be limited. Consider running `bootstrap` skill."
+If `docs/failure-patterns.md` is empty, FP-cross-check (Step 5) will be skipped. This increases risk of recurring bugs.
 
 ### Step 0.5: Load Agent Memory
 
@@ -78,6 +79,7 @@ If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entrie
      - Read the relevant section in the ARB checklist (path from Artifact Index)
      - Verify implementation matches the recommended action
      - If not → flag as `[ARB-COMPLIANCE]` in output
+   - **Indirect resolution check**: Even if the Story does NOT have `[ARB-FAIL]` prefix, scan the changed files against ARB Fail items. If a change resolves or partially addresses a Fail item (e.g., fixing a security vulnerability flagged by ARB), flag as `[ARB-INDIRECT]` in output with a recommendation to update the Validation Tracker.
 
 2. **NFR Spot Check** (lightweight — check only NFRs relevant to changed files):
    - Read PRD's non-functional requirements section (path from Artifact Index)
@@ -94,12 +96,12 @@ If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entrie
      - Verify tests cover the acceptance criteria
      - If missing → flag as `[ACCEPTANCE-GAP]` in output
 
-All flags (`[ARB-COMPLIANCE]`, `[NFR-GAP]`, `[ACCEPTANCE-GAP]`) are warnings, not blockers. Include them in the review output under a new "### Crew Artifact Compliance" section.
+All flags (`[ARB-COMPLIANCE]`, `[ARB-INDIRECT]`, `[NFR-GAP]`, `[ACCEPTANCE-GAP]`) are warnings, not blockers. Include them in the review output under a new "### Crew Artifact Compliance" section.
 
 If no Crew Artifact Index → skip this step entirely.
 
 **Step 6: Feature Registry Check**
-- [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7)
+- [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7). For features spanning multiple modules, one feature row covers all modules — list all key files in that row.
 - [ ] If feature files changed, verify docs/features.md key files are up to date
 - [ ] If tests were added/removed, verify docs/features.md test files column is accurate
 
@@ -120,6 +122,7 @@ Verify that state file updates actually happened. Check each:
 - [ ] **docs/agent-memory/*.md**: If an agent (reviewer/planner/sprint-manager) was used this session, was its memory updated by the learn skill?
 
 For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
+**Severity**: Missing dependency-map or features.md entries for new modules/features are **blockers** — fix before commit. Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to learn skill.
 
 ### Output Format
 

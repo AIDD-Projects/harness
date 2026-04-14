@@ -16,10 +16,11 @@ Pre-deployment validation checklist. Ensures all quality gates pass and state fi
 ### Step 1: Version Check
 
 1. Read `package.json` (or equivalent manifest) — note current version
-2. Verify the version was bumped appropriately:
+2. Verify the version was bumped appropriately (Semantic Versioning):
    - Bug fix → patch (0.0.x)
-   - New feature → minor (0.x.0)
+   - New feature (backward-compatible) → minor (0.x.0)
    - Breaking change → major (x.0.0)
+   - If unsure, ask the designated authority (per project-brief.md)
 3. If version was not bumped → **warn and recommend bumping before deploy**
 
 ### Step 2: Test Suite
@@ -47,7 +48,8 @@ Verify all state files are up to date:
 ### Step 5: Git Status
 
 1. `git status` — working directory should be clean
-2. `git log --oneline -5` — verify recent commits are meaningful
+2. `git stash list` — verify no unintended stashes exist (if stashes are present, confirm they are intentional)
+3. `git log --oneline -5` — verify recent commits are meaningful
 3. Verify current branch is appropriate for deployment (the default branch or a release branch, per project-brief.md)
 
 ### Step 6: Changelog / Release Notes
@@ -73,7 +75,11 @@ Verify all state files are up to date:
 [blockers if not ready]
 
 ### Deploy Command:
-[suggested deploy command based on project type]
+[Suggest based on project type detected in project-brief.md Key Technical Decisions:
+  npm: npm publish / npx changeset publish
+  Docker: docker build + docker push
+  GitHub: gh release create vX.Y.Z
+  Cloud: terraform apply / aws deploy]
 ```
 
 ### 🧭 Navigation — After Deployment Check

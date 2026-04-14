@@ -33,8 +33,8 @@ Before recording failures, verify that the session's work stayed aligned with pr
    - Did any change contradict a Decision Log entry? → Flag as decision reversal
    - Did the user explicitly change direction during this session? → Note for pivot recommendation
 3. **If drift detected**:
-   - Add a warning to the Step 6 Report: `⚠️ Direction drift: [description of misalignment]`
-   - Recommend: "Consider running `pivot` skill to formally update project direction"
+   - Add a warning to the Step 7 Report: `⚠️ Direction drift: [description of misalignment]`
+   - Recommend: "Consider running `pivot` skill to formally update project direction. You can run it AFTER this learn session completes."
    - Do NOT block — the learn skill always completes
 4. **If no drift**: Proceed silently (no output for this step)
 
@@ -61,7 +61,8 @@ For each issue/error that occurred in this session:
 
 1. Read `docs/failure-patterns.md`
 2. Check if this matches an existing pattern (FP-NNN):
-   - **If match found**: Increment the Frequency counter, add the Sprint/Story to "Occurred"
+   - **If match found AND already incremented by `investigate` in this session**: Skip — do not double-count. The investigate skill's Phase 4 is the primary updater during bug fix sessions.
+   - **If match found AND NOT already incremented this session**: Increment the Frequency counter, add the Sprint/Story to "Occurred"
    - **If new pattern**: Assign next FP-NNN number, create a new entry using this format:
 
 ```markdown
@@ -116,6 +117,8 @@ If an agent (reviewer, planner, sprint-manager, architect) was used in this sess
 2. **Auto-initialize if needed**: If the file only contains `<!-- Example entries` placeholder comments and no real data:
    - Replace the placeholder block with actual entries from this session
    - Initialize statistics counters with real values
+   - If real entries already exist alongside placeholders, APPEND new entries and remove only the placeholder comments. Do not overwrite existing real data.
+   - **When does initialization happen?**: On the FIRST session where the agent is used AND learn is invoked. If an agent is never used, its memory stays as a placeholder indefinitely — this is expected.
    - Example transformation:
      ```
      Before: <!-- Example entries (replace with real findings after first review):
@@ -195,6 +198,7 @@ If crew artifacts were used this session (🟣 pipeline), also append:
   - docs/dependency-map.md: Max 100 modules
   - docs/features.md: Max 50 features
   - docs/agent-memory/*.md: Max 100 lines each
+  - .harness/ personal files: same limits as shared files
 
 ## Anti-patterns
 

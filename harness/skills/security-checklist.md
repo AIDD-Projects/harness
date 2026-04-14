@@ -19,8 +19,11 @@ Prevents credential leaks and accidental commits of sensitive files. (FP-004)
 ## Procedure
 
 1. **Check staging area**: Run `git diff --cached --name-only` to list files staged for commit
-2. **Read docs/failure-patterns.md**: Check FP-004 status. If frequency > 0, apply extra scrutiny to all staged files and verify .gitignore coverage is comprehensive.
-3. **Scan for forbidden files**: Check if .env, credentials, *.pem, *.key files are staged
+2. **Read docs/failure-patterns.md**: Check FP-004 status. If frequency > 0, apply extra scrutiny:
+   - Review ALL .gitignore patterns for completeness
+   - Search code for hardcoded secrets using regex patterns (e.g., `password\s*=`, `api_key`, `secret`)
+   - Verify `.env.example` exists but `.env` is gitignored
+3. **Scan for forbidden files**: Check if .env, credentials, *.pem, *.key, *.keystore, *.jks, *.p12, *.pfx, *.pkcs12, firebase.json, secrets.yml, docker-compose.override.yml files are staged
 4. **Scan for hardcoded secrets**: Search staged files for passwords, API keys, tokens
 5. **Verify .gitignore**: Ensure new environment files are covered by .gitignore
 6. **Check for temp files**: Verify tmp_*, debug_*, coverage_* files are not staged
@@ -55,7 +58,7 @@ const dbPassword = "super_secret_123";
 After completing the security check:
 
 - [ ] **docs/failure-patterns.md**: If a security issue was found (credentials staged, hardcoded secret), add a new FP-NNN entry or increment FP-004 Frequency.
-- [ ] **docs/project-state.md**: If a security issue was found, add to Recent Changes: "⚠️ Security: [description of issue found/fixed]". This ensures the next session's Quick Summary includes the security context.
+- [ ] **docs/project-state.md**: If security issues were found, add ONE summary entry to Recent Changes: "⚠️ Security: [N] issues found and fixed — [brief description]". This ensures the next session's Quick Summary includes the security context.
 
 ### 🧭 Navigation — After Security Check
 

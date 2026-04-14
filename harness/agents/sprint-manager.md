@@ -69,8 +69,8 @@ After every status check, recommend the next action based on current context:
 | All stories in sprint are done | → "Run `learn` to capture session lessons, then start a new sprint" |
 | A direction change was discussed | → "Run `pivot` to update all state files before continuing" |
 | Recent failure patterns apply | → "Watch out for FP-{NNN}: [description]" |
-| Validation Tracker에 계획되지 않은 KPI/FR 존재 | → "Run `planner` — 미계획 KPI/FR에 대한 Story를 추가하세요" |
-| All ARB Fail items resolved | → "ARB Fail 항목 모두 해결됨 — 배포 준비 확인 가능" |
+| Unplanned KPI/FR in Validation Tracker | → "Run `planner` — add Stories for unplanned KPI/FR items" |
+| All ARB Fail items resolved | → "ARB Fail items all resolved — deployment readiness can be checked" |
 
 3. Format the recommendation as a 🧭 Next Step block:
 ```
@@ -97,9 +97,19 @@ After every status check, recommend the next action based on current context:
 5. Alert relevant docs/failure-patterns.md items
 6. Recommend relevant skill: "Consider running `planner` if this story needs detailed breakdown"
 
+**Wave-Level Pacing (Turn-by-Turn Guidance)**
+
+When a Story contains multiple Tasks/Waves (from feature-breakdown):
+- Guide implementation **one Wave at a time** (not one file at a time, not all at once)
+- After each Wave is implemented, **run tests (or invoke `reviewer` for a quick check)** to verify the Wave is clean before proceeding
+- Only after verification passes, prompt: "Wave {N} 완료 (tests pass). Wave {N+1}로 넘어갈까요?"
+- If tests fail → fix within the current Wave before moving on. Do NOT advance to the next Wave with failing tests.
+- This prevents context overload from modifying too many modules simultaneously
+- Exception: If a Wave contains only a single trivial task, it may be combined with the next Wave
+
 **Request: "new sprint"**
 1. Check all Stories in current Sprint
-2. Warn if incomplete Stories exist
+2. Warn if incomplete Stories exist: "⚠️ Sprint {N} has {M} in-progress stories. Mark them as done or carry them over before starting a new sprint."
 3. Confirm new Sprint number and theme (user input)
 4. Update docs/project-state.md
 
@@ -131,7 +141,8 @@ STATUS: DONE
 
 #### Validation Dashboard (🟣 Pipeline only)
 
-When `docs/project-brief.md` contains a `## Validation Tracker` section with data, display the Validation Tracker as a dashboard in every status output:
+When `docs/project-brief.md` contains a `## Validation Tracker` section with data, display the Validation Tracker as a dashboard in every status output.
+If the Validation Tracker exists but has zero rows (no KPIs/FRs indexed yet), display: `KPI Coverage: 0/0 (N/A) — consider running bootstrap to populate Artifact Index`.
 
 ```
 ### 📊 Validation Dashboard

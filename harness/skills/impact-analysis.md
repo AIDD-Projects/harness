@@ -27,10 +27,11 @@ The most common cause of regressions in growing projects is changing one module 
 6. **Check interface impact**: Does your change affect the module's public interface?
    - If NO (internal-only change) → proceed, but still run dependent tests
    - If YES → continue to step 7
-7. **Trace each dependent**:
+7. **Trace each dependent** (direct dependents only):
    - List files in each dependent module that import from the target
    - Identify which functions/types they use
    - Determine if the interface change breaks them
+   - Note: Transitive dependents (modules importing from a dependent, not the target) are not traced here. Check them later if direct dependent interfaces also change.
 8. **Plan updates**: Create a task list of all files that need modification
 9. **Verify scope**: Confirm all files are within the current Story scope (docs/project-state.md)
 
@@ -70,7 +71,7 @@ Plan: 4 files to update, all within S3-2 scope
 
 After completing the analysis, update these files:
 
-- [ ] **docs/dependency-map.md**: Update the Interface Change Log table with: Date, Module, Change description, Affected Modules, Status. **This is mandatory for ALL interface changes** — do not skip even if the change seems minor.
+- [ ] **docs/dependency-map.md**: Update the Interface Change Log table with: Date, Module, Change description, Affected Modules, Status ("In Progress" until all dependents updated, then "Updated"). **This is mandatory for ALL interface changes** — do not skip even if the change seems minor.
 - [ ] **docs/features.md**: If the interface change affects a feature's Key Files, update the Key Files column. If test files change, update the Test Files column.
 - [ ] **docs/project-state.md**: If scope exceeds current Story, add a note to Recent Changes.
 

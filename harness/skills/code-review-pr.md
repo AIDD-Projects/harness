@@ -3,7 +3,7 @@
 ## Purpose
 
 Review an external Pull Request (PR) for quality, security, and direction alignment before merging.
-Unlike the `reviewer` agent (which reviews your own changes pre-commit), this skill is for reviewing incoming PRs from teammates or contributors.
+Unlike the `reviewer` agent (which reviews your own changes pre-commit with full project context), this skill is for reviewing incoming PRs from teammates or external contributors. code-review-pr is a cold review — stricter on state file compliance because the reviewer has less context about the PR author's intent.
 
 ## When to Apply
 
@@ -37,11 +37,14 @@ Unlike the `reviewer` agent (which reviews your own changes pre-commit), this sk
 
 Run through these checks for each changed file:
 
-- [ ] Architecture rules respected (no layer violations)
+- [ ] Architecture rules respected (no layer violations — check docs/dependency-map.md)
 - [ ] No hardcoded credentials or API keys
 - [ ] No `TODO` or `FIXME` without a linked issue
 - [ ] Error handling is present where needed
 - [ ] No overly complex functions (single responsibility)
+- [ ] No duplicated logic that should be extracted to a shared module
+- [ ] No circular imports (verify against docs/dependency-map.md)
+- [ ] Naming conventions follow project standards (per project-brief.md → Key Technical Decisions)
 
 ### Step 5: Test Coverage
 
@@ -52,7 +55,7 @@ Run through these checks for each changed file:
 
 ### Step 6: State File Compliance
 
-- [ ] New features registered in `docs/features.md` (Iron Law #7)
+- [ ] New features registered in `docs/features.md` (Iron Law #7). If the PR is partial (only one layer of a feature), registration is optional — but must be registered when the feature-completing PR is merged.
 - [ ] New modules registered in `docs/dependency-map.md` (Iron Law #6)
 - [ ] `docs/project-state.md` Story Status updated
 

@@ -37,7 +37,7 @@ Before proceeding, verify that required state files have content:
 - `docs/dependency-map.md` — Must have at least one module row (for existing projects)
 - `docs/project-brief.md` — Must have Vision and Goals filled
 
-If ALL files are empty/placeholder-only → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
+If `docs/project-brief.md` has no Vision/Goals filled OR `docs/dependency-map.md` has zero module rows → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
 
 **Step 0.5: Load Agent Memory**
 
@@ -56,10 +56,10 @@ Apply these insights when evaluating the current proposal. If the memory file is
 3. Read `docs/failure-patterns.md` — check for past architectural mistakes
 4. **Crew Artifact Integration** (🟣 Pipeline only):
    If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
-   - Read `conceptual-architecture.md` (path from Artifact Index): load infra stack, app frameworks, security architecture, deployment strategy
-   - Read `arb-checklist-result.md` Fail items (path from Artifact Index): ensure the proposed design does not worsen existing Fail items
+   - Read `conceptual-architecture.md` (use the path listed in Artifact Index): load infra stack, app frameworks, security architecture, deployment strategy
+   - Read `arb-checklist-result.md` Fail items (use the path listed in Artifact Index): ensure the proposed design does not worsen existing Fail items
    - Validate design proposals against the crew architecture's tech decisions (e.g., if architecture specifies "Spring Boot 3.3", warn if proposal uses a different framework)
-   - If no Crew Artifact Index → skip crew-specific checks; architecture review proceeds without crew artifact validation
+   - If no Crew Artifact Index exists in project-brief.md → skip crew-specific checks; architecture review proceeds normally
 
 **Step 2: Direction Check**
 1. Does the proposed change align with project Goals?
@@ -79,11 +79,11 @@ Apply these insights when evaluating the current proposal. If the memory file is
 
 Evaluate the proposal against these architectural principles:
 
-- [ ] **Dependency direction**: Dependencies flow in one direction (no circular deps)
+- [ ] **Dependency direction**: Dependencies flow in one direction (no circular deps). Verify by reading dependency-map.md — check that no module appears in both "Depends On" of A and "Depended By" of A for the same target.
 - [ ] **Layer isolation**: Each layer has clear boundaries and responsibilities
 - [ ] **Interface stability**: Public interfaces change less frequently than implementations
 - [ ] **Single responsibility**: Each module has one reason to change
-- [ ] **Minimal coupling**: Changes to one module require minimal changes to others
+- [ ] **Minimal coupling**: Changes to one module require minimal changes to others. Check "Depended By" count — if > 5, flag as high coupling.
 
 **Step 5: Produce Recommendation**
 

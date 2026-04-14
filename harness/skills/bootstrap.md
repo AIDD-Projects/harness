@@ -59,17 +59,19 @@ Check if external planning artifacts exist:
    - `### ARB Fail Resolution`: extract Fail items from arb-checklist → create table with ID, Item, Severity (CRITICAL/HIGH), Story (empty), Status (⬜ Required)
    - `### FR Coverage`: extract FR-NNN items from PRD → create table with FR, Description, Priority (P0/P1/P2), Stories (empty), Status (⬜)
 6. **Confirm with user**: "Crew 산출물 [N]개를 발견했습니다. Artifact Index와 Validation Tracker를 생성합니다. 맞나요?"
+   - If user says **yes** → proceed with Phase 3 using crew artifact data
+   - If user says **no** → skip Artifact Index/Tracker creation, proceed with regular Phase 2 interview (treat as 🟢 pipeline)
 7. **Skip most Phase 2 questions** — use artifact data instead. Only confirm implementation-specific decisions (test framework, specific library choices).
 8. Proceed to Phase 3 using extracted data
 
 **Original crew documents are NEVER modified. Only the index and tracker are created.**
 
-**Crew Artifact Path Detection** (bootstrap detects all patterns):
-- Pattern A: `docs/PM/`, `docs/Analyst/`, `docs/ARB/` (kode:crew role-based directories)
-- Pattern B: `docs/crew/` (consolidated directory)
-- Pattern C: User-provided paths (explicit in prompt)
-- Pattern D: `docs/` files containing `prd`, `product-brief`, `architecture`, `checklist` keywords
-- Artifact Index records the actual discovered paths, not a standardized path.
+**Crew Artifact Path Detection** (bootstrap detects all patterns, priority order):
+1. Pattern C: User-provided paths (explicit in prompt) — highest priority, always authoritative
+2. Pattern B: `docs/crew/` (consolidated directory)
+3. Pattern A: `docs/PM/`, `docs/Analyst/`, `docs/ARB/` (kode:crew role-based directories)
+4. Pattern D: `docs/` files containing `prd`, `product-brief`, `architecture`, `checklist` keywords — lowest priority, fallback scan
+- If multiple patterns match, use the highest priority source. Artifact Index records the actual discovered paths.
 
 **If no crew artifacts:** Continue to Phase 2 (User Interview) normally.
 
@@ -239,7 +241,7 @@ When starting a NEW session (not during bootstrap), read these files in order:
 | Skip user interview | Phase 1 scan alone is insufficient — always confirm with user |
 | Overwrite existing state files silently | Ask before overwriting non-empty files |
 | Create perfect dependency map on first try | Start with what's detectable, refine over time |
-| Leave rules file TODOs unfilled | Phase 3.5 fills ALL TODO sections — no manual editing needed |
+| Leave rules file TODOs unfilled | Phase 3.5 fills Key Technical Decisions TODOs. Decision Log remains empty (filled later via `pivot` skill during project lifecycle) |
 | Use TypeScript globs for non-TS projects | Detect language in Phase 1 and set correct globs |
 | Only fill state files, skip rules | Bootstrap fills BOTH — state files AND rules files |
 
