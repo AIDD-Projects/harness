@@ -95,7 +95,7 @@ If invoked directly by the user, append:
 → Call: `planner`
 → Prompt example: "breakdown을 기반으로 Sprint Story를 생성해줘"
 → Why: Tasks are defined — planner will register Stories and update state files
-→ Pipeline: 🟢 Step 2/5
+→ Pipeline: 🟢 Step 2/6 (returns to planner)
 ---
 ```
 

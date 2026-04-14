@@ -41,7 +41,7 @@ Check if external planning artifacts exist:
 
 **If crew artifacts are found:**
 1. Check if `docs/project-brief.md` already has content (existing crew sync)
-   - If project-brief has content AND crew artifact files are newer → Output: "⚠️ Crew 산출물이 업데이트되었습니다. 재인제스트하겠습니까?"
+   - If project-brief has content → ask user: "⚠️ 기존 crew 산출물이 이미 반영되어 있습니다. 재인제스트하겠습니까?" (user confirms or skips)
    - If project-brief is empty (first crew sync) → proceed with full ingestion
 2. Read all documents in `docs/crew/` (or user-provided docs)
 3. Extract: project vision, goals, non-goals, feature list, module boundaries, tech decisions

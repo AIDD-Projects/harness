@@ -100,6 +100,17 @@ After PR review completes, always append a 🧭 block:
 | REQUEST_CHANGES | [Fix] — "PR 지적사항을 수정하세요. 완료 후 다시 `code-review-pr` 호출" |
 | Direction misaligned | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
 
+Example 🧭 block for APPROVE:
+```
+---
+🧭 Next Step
+→ Call: `deployment`
+→ Prompt example: "리리즈 준비를 확인해줘"
+→ Why: PR approved — validate deployment readiness
+→ Pipeline: 🟢/🔵 Step 5/6
+---
+```
+
 ## Rules
 
 - Do not modify the PR code directly — only review and comment

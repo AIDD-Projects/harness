@@ -68,6 +68,7 @@ If invoked directly by the user, append:
 → Call: `reviewer`
 → Prompt example: "코드를 리뷰해줘"
 → Why: Security scan complete — proceed with full review
+→ Pipeline: N/A (utility skill — invoked by reviewer Step 4)
 ---
 ```
 

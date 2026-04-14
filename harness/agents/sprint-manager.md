@@ -139,6 +139,17 @@ After sprint-manager completes, always append a 🧭 block based on the outcome:
 | All stories done | `learn` — "세션을 마무리해줘" |
 | Direction change detected | `pivot` — "방향을 전환해줘" |
 
+Example 🧭 block for starting a story:
+```
+---
+🧭 Next Step
+→ Call: [Coding]
+→ Prompt example: "구현을 시작하세요. 완료 후 `reviewer`를 호출하세요"
+→ Why: Story is in-progress — begin implementation
+→ Pipeline: 🟢/🔵 Step 4/6
+---
+```
+
 ## Enforced Rules
 
 - **Scope Compliance**: Do not modify files outside the current Story scope. If user requests an out-of-scope change, warn first and proceed only after confirmation.

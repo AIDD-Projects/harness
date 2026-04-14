@@ -87,6 +87,17 @@ After deployment validation completes, always append a 🧭 block:
 | NOT_READY (state files) | `learn` — "state 파일을 정리해줘" |
 | NOT_READY (security) | `security-checklist` — "보안 이슈를 해결해줘" |
 
+Example 🧭 block for READY:
+```
+---
+🧭 Next Step
+→ Call: [Deploy]
+→ Prompt example: "배포 명령을 실행하세요"
+→ Why: All checks passed — safe to deploy
+→ Pipeline: 🟢/🔵 Step 5/6 → deploy
+---
+```
+
 ## Rules
 
 - Never deploy with failing tests — no exceptions

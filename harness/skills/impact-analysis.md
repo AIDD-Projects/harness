@@ -85,6 +85,7 @@ If invoked directly by the user, append:
 → Call: `planner` or `reviewer`
 → Prompt example: "영향도 분석 결과를 반영해줘"
 → Why: Blast radius mapped — incorporate into plan or review
+→ Pipeline: N/A (utility skill — invoked by planner Step 9 or reviewer Step 7)
 ---
 ```
 
