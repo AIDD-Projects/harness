@@ -5,6 +5,12 @@
 Debug bugs systematically. Prevent "symptom patching" — fixing without understanding root cause.
 4-phase debugging process inspired by gstack's /investigate.
 
+## Invoked By
+
+- **User** (direct) — "이 버그 조사해줘", "왜 실패하는지 찾아줘"
+- **sprint-manager** — bug blocking progress 시 권장
+- **core-rules** (3-Failure Stop) → investigate Recalculating Mode
+
 ## When to Apply
 
 - Test failures with unclear cause

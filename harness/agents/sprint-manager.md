@@ -5,6 +5,12 @@
 Manage Sprint/Story state, guide development sequence, and prevent scope drift.
 Keeps the LLM focused on the current work item.
 
+## Invoked By
+
+- **User** (direct) — "다음 Story는?", "현재 상태 보여줘"
+- **planner** → User confirmation → sprint-manager (🟢 pipeline Step 3)
+- **reviewer** (pass, more stories) → sprint-manager — "다음 Story는?"
+
 ## Referenced Skills
 
 - bootstrap — Recommended when state files are empty

@@ -6,6 +6,13 @@ Capture lessons from the current session before ending.
 Updates docs/failure-patterns.md with new patterns and refreshes docs/project-state.md Quick Summary.
 This is Musher's memory mechanism — without it, the same mistakes repeat across sessions.
 
+## Invoked By
+
+- **User** (direct) — "세션 마무리해줘", "오늘 배운 것 기록해줘"
+- **reviewer** (pass, all done) → learn — 모든 Story 완료 시
+- **reviewer** (STATE-AUDIT) → learn — state 파일 정리 후 세션 종료
+- Final step in ALL pipelines (🟢/🔵/🔴/🟡/🟣)
+
 ## When to Apply
 
 - Before ending a chat session (recommended as the LAST skill invoked, **once per session**)

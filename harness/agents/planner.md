@@ -6,6 +6,13 @@ Feature planning and dependency management.
 Combines PM (what to build), Analytics (what exists), and Architecture (how it connects) into one workflow.
 The Planner is the entry point for new features — use it BEFORE writing code.
 
+## Invoked By
+
+- **User** (direct) — "[기능]을 추가해줘", "계획 세워줘"
+- **bootstrap** → planner (🟢/🟣 pipeline Step 2)
+- **pivot** → planner — "변경된 방향에 맞춰 재계획해줘"
+- **architect** → planner — "승인된 설계로 기능을 계획해줘"
+
 ## Referenced Skills
 
 - feature-breakdown

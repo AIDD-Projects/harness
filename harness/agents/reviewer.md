@@ -5,6 +5,12 @@
 Review code changes before commit or PR for quality, security, and test integrity.
 Finds issues and auto-fixes where safe, escalates where not.
 
+## Invoked By
+
+- **User** (direct) — "코드를 리뷰해줘", "커밋 전 검토해줘"
+- **[Coding done]** → reviewer (🟢/🔵/🔴 pipeline — after implementation)
+- **investigate** → reviewer — "수정한 코드를 리뷰해줘"
+
 ## Referenced Skills
 
 - test-integrity — Mock synchronization verification

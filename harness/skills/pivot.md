@@ -5,6 +5,11 @@
 When a project direction changes — technology swap, scope expansion/reduction, architecture shift — this skill propagates the change across ALL state files consistently.
 Without this, direction changes create silent inconsistencies:docs/project-brief.md says "GraphQL" but docs/dependency-map.md still references REST modules.
 
+## Invoked By
+
+- **User** (direct) — "방향을 바꾸자", "GraphQL로 변경해줘"
+- **planner** (direction change detected) → BLOCK → pivot required before planning proceeds
+
 ## When to Apply
 
 - Technology change: "Switch from REST to GraphQL", "Replace PostgreSQL with MongoDB"

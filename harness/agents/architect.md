@@ -6,6 +6,11 @@ Design review gate for structural changes.
 Validates that proposed architecture changes align with project direction and existing module boundaries.
 The Architect is invoked when changes affect multiple modules, introduce new layers, or modify the dependency graph significantly.
 
+## Invoked By
+
+- **User** (direct) — "아키텍처 리뷰해줘", "설계 검토해줘"
+- **planner** (optional) — when proposed changes affect 3+ modules or introduce new layers
+
 ## Referenced Skills
 
 - impact-analysis — Change blast radius assessment

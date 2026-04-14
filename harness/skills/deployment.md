@@ -104,6 +104,18 @@ Example 🧭 block for READY:
 ---
 ```
 
+## Rollback Procedure
+
+If a deployment fails or a critical issue is found post-deploy:
+
+1. **Immediate**: Revert to the last known-good version
+   - npm: `npm unpublish <pkg>@<bad-version>` (within 72h) or publish a patch fix
+   - Docker: `docker tag <image>:<previous-tag> <image>:latest && docker push`
+   - GitHub: `gh release delete vX.Y.Z` + `git tag -d vX.Y.Z && git push --delete origin vX.Y.Z`
+2. **Record**: Add entry to `docs/failure-patterns.md` with deployment failure details
+3. **Re-validate**: Run `deployment` skill again on the rollback commit to confirm stability
+4. **Post-mortem**: Run `learn` skill to capture the incident for future sessions
+
 ## Rules
 
 - Never deploy with failing tests — no exceptions

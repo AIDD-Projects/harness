@@ -34,6 +34,12 @@ When you add or modify a feature:
 
 **Iron Law #7**: When adding a new feature, register it here in the same commit.
 
+**Write Precedence** (multiple skills update this file):
+1. **planner** — registers new features (⬜ planned) when creating implementation plans
+2. **sprint-manager** — updates Status to 🔧 active when a Story begins
+3. **reviewer** — updates Status to ✅ done when Story passes review, or ⚠️ broken if tests fail
+4. **learn** — finalizes Status at session end (conflict resolution: learn takes precedence)
+
 ## Orphan Detection
 
 Periodically check for orphan features (features without active stories or stories without a parent feature):
