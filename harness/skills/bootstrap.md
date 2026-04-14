@@ -162,14 +162,14 @@ Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 → Call: `planner`
 → Prompt example: "[프로젝트 이름]에 [첫 번째 기능]을 추가해줘"
 → Why: State files are filled — now plan the first feature
-→ Pipeline: 🟢 Step 2/5
+→ Pipeline: 🟢 Step 2/6
 ---
 ```
 
 If crew artifacts were used (🟣 pipeline), adjust the prompt example:
 ```
 → Prompt example: "crew 산출물을 기반으로 첫 번째 기능을 계획해줘"
-→ Pipeline: 🟣 Step 2/5
+→ Pipeline: 🟣 Step 2/6
 ```
 
 ## Rules

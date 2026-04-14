@@ -57,6 +57,20 @@ After completing the security check:
 - [ ] **docs/failure-patterns.md**: If a security issue was found (credentials staged, hardcoded secret), add a new FP-NNN entry or increment FP-004 Frequency.
 - [ ] **docs/project-state.md**: If a security issue was found, add to Recent Changes: "⚠️ Security: [description of issue found/fixed]". This ensures the next session's Quick Summary includes the security context.
 
+### 🧭 Navigation — After Security Check
+
+Security-checklist is invoked BY `reviewer` (Step 4). After completion, control returns to the reviewer's flow.
+If invoked directly by the user, append:
+
+```
+---
+🧭 Next Step
+→ Call: `reviewer`
+→ Prompt example: "코드를 리뷰해줘"
+→ Why: Security scan complete — proceed with full review
+---
+```
+
 ## Related Failure Patterns
 
 - FP-004: Dangerous file committed → Checklist items 2, 5 (no forbidden files, no temp files)

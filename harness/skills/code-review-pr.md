@@ -90,6 +90,16 @@ Run through these checks for each changed file:
 [summary recommendation]
 ```
 
+### 🧭 Navigation — After PR Review
+
+After PR review completes, always append a 🧭 block:
+
+| PR Review Result | 🧭 Next Step |
+|---|---|
+| APPROVE | Merge & `deployment` — "리리즈 준비를 확인해줘" |
+| REQUEST_CHANGES | [Fix] — "PR 지적사항을 수정하세요. 완료 후 다시 `code-review-pr` 호출" |
+| Direction misaligned | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
+
 ## Rules
 
 - Do not modify the PR code directly — only review and comment

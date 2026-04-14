@@ -76,6 +76,17 @@ Verify all state files are up to date:
 [suggested deploy command based on project type]
 ```
 
+### 🧭 Navigation — After Deployment Check
+
+After deployment validation completes, always append a 🧭 block:
+
+| Deployment Result | 🧭 Next Step |
+|---|---|
+| READY | [Deploy] — "배포 명령을 실행하세요" |
+| NOT_READY (test failure) | [Fix] — "테스트 실패를 수정해줘. 완료 후 다시 `deployment` 호출" |
+| NOT_READY (state files) | `learn` — "state 파일을 정리해줘" |
+| NOT_READY (security) | `security-checklist` — "보안 이슈를 해결해줘" |
+
 ## Rules
 
 - Never deploy with failing tests — no exceptions

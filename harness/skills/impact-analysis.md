@@ -74,6 +74,20 @@ After completing the analysis, update these files:
 - [ ] **docs/features.md**: If the interface change affects a feature's Key Files, update the Key Files column. If test files change, update the Test Files column.
 - [ ] **docs/project-state.md**: If scope exceeds current Story, add a note to Recent Changes.
 
+### 🧭 Navigation — After Impact Analysis
+
+Impact-analysis is invoked BY `planner` (Step 9) or `reviewer` (Step 7). After completion, control returns to the caller's flow.
+If invoked directly by the user, append:
+
+```
+---
+🧭 Next Step
+→ Call: `planner` or `reviewer`
+→ Prompt example: "영향도 분석 결과를 반영해줘"
+→ Why: Blast radius mapped — incorporate into plan or review
+---
+```
+
 ## Related Failure Patterns
 
 - FP-001: Interface changed, mock not updated → Checklist item 7 (mock/test updates planned)

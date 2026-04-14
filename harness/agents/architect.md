@@ -111,6 +111,28 @@ Evaluate the proposal against these architectural principles:
 ...
 ```
 
+### 🧭 Navigation — After Architect
+
+After architecture review completes, always append a 🧭 block:
+
+| Architect Result | 🧭 Next Step |
+|---|---|
+| APPROVE | `planner` — "승인된 설계로 기능을 계획해줘" |
+| REVISE | [Redesign] — "설계를 수정하고 다시 `architect` 호출" |
+| REJECT | User decision — "설계가 반려되었습니다. 대안을 논의합시다" |
+| Direction misaligned | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
+
+Example 🧭 block for APPROVE:
+```
+---
+🧭 Next Step
+→ Call: `planner`
+→ Prompt example: "승인된 설계로 기능을 계획해줘"
+→ Why: Architecture approved — proceed to feature planning
+→ Pipeline: 🟢 Pre-step → Step 2/6
+---
+```
+
 ## Constraints
 
 - This agent reviews design, it does NOT implement changes

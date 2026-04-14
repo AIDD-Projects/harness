@@ -169,7 +169,7 @@ Example 🧭 block for passing review:
 → Call: `sprint-manager`
 → Prompt example: "다음 Story는?"
 → Why: Review passed — move to the next Story
-→ Pipeline: 🔵 Step 4/5
+→ Pipeline: 🔵 Step 5/6
 → Alternative: 세션 종료 시 `learn` 호출
 ---
 ```

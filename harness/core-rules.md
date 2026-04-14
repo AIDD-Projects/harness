@@ -16,16 +16,18 @@ Follow the pipeline that matches the current situation. After each step, output 
 ### 🟢 New Development (no design docs — start from scratch)
 1. `bootstrap` → scan project & fill state files
 2. `planner` → plan first feature based on user requirements
-3. [Coding] → implement Stories in order from planner
-4. `reviewer` → code review before commit
-5. `learn` → capture session lessons before ending
+3. `sprint-manager` → start Story ("S{N}-{M} Story를 시작해줘")
+4. [Coding] → implement Stories in order from planner
+5. `reviewer` → code review before commit
+6. `learn` → capture session lessons before ending
 
 ### 🔵 Continue Development (bootstrap already done)
 1. `sprint-manager` → check current status ("where are we?")
 2. `planner` → plan new feature (if needed)
-3. [Coding] → implement Stories in order
-4. `reviewer` → code review before commit
-5. `learn` → capture session lessons before ending
+3. `sprint-manager` → start Story
+4. [Coding] → implement Stories in order
+5. `reviewer` → code review before commit
+6. `learn` → capture session lessons before ending
 
 ### 🔴 Bug Fix
 1. `investigate` → diagnose the issue
@@ -43,9 +45,10 @@ When external planning artifacts exist (requirements, analysis, design documents
 
 1. `bootstrap` → scan project & fill state files, **auto-ingest crew artifacts** into project-brief, features, dependency-map
 2. `planner` → plan features **from crew artifacts** (skip user interview — artifacts replace it)
-3. [Coding] → implement Stories in order from planner
-4. `reviewer` → code review before commit
-5. `learn` → capture session lessons before ending
+3. `sprint-manager` → start Story
+4. [Coding] → implement Stories in order from planner
+5. `reviewer` → code review before commit
+6. `learn` → capture session lessons before ending
 
 > Crew artifacts are detected by: `docs/crew/` directory, or user explicitly provides requirements/design documents.
 > When detected, `bootstrap` and `planner` should read these artifacts instead of asking discovery questions.

@@ -64,6 +64,20 @@ After synchronizing mocks:
 - Async tests must use `await`. No floating promises.
 - Each test must be independent. No shared state between tests.
 
+### 🧭 Navigation — After Test Integrity
+
+Test-integrity is invoked BY `reviewer` (Step 3). After completion, control returns to the reviewer's flow.
+If invoked directly by the user, append:
+
+```
+---
+🧭 Next Step
+→ Call: `reviewer`
+→ Prompt example: "코드를 리뷰해줘"
+→ Why: Mock sync verified — proceed with full review
+---
+```
+
 ## Related Failure Patterns
 
 - FP-001: Interface changed, mock not updated → Checklist item 2

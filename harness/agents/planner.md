@@ -128,7 +128,8 @@ After producing a plan, always append a 🧭 block:
 
 | Planner Result | 🧭 Next Step |
 |---|---|
-| Plan created | `sprint-manager` — "S{N}-{M} Story를 시작해줘" |
+| Plan created (solo) | `sprint-manager` — "S{N}-{M} Story를 시작해줘" |
+| Plan created (crew artifacts used) | `sprint-manager` — "crew 기반 S{N}-{M} Story를 시작해줘" |
 | Non-Goal violation → stopped | User decision needed — "이 기능은 Non-Goal에 해당합니다. 계속하시겠습니까? → `pivot` 또는 취소" |
 | Direction change detected | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
 | State files empty | `bootstrap` — "프로젝트를 온보딩해줘" |
@@ -139,8 +140,8 @@ Example 🧭 block for normal completion:
 🧭 Next Step
 → Call: `sprint-manager`
 → Prompt example: "S{N}-{M} Story를 시작해줘"
-→ Why: Plan is ready — start the first Story
-→ Pipeline: 🟢 Step 3/5
+→ Why: Plan is ready — register and start the first Story
+→ Pipeline: 🟢 Step 3/6 | 🟣 Step 3/6
 ---
 ```
 

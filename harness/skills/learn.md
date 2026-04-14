@@ -141,7 +141,7 @@ STATUS: DONE
 
 ### 🧭 Navigation — After Learn
 
-Learn is the final skill in every pipeline. Always append this 🧭 block:
+Learn is the final skill in every pipeline. Append the appropriate 🧭 block:
 
 ```
 ---
@@ -149,11 +149,13 @@ Learn is the final skill in every pipeline. Always append this 🧭 block:
 → 🏁 Session End
 → Prompt example: "다음 세션 시작 시 `sprint-manager`를 호출하세요"
 → Why: Session lessons captured — state files are up to date
-→ Pipeline: Step 5/5 (complete)
+→ Pipeline:
+    🟢/🔵/🟣: Step 6/6 (complete)
+    🔴: Step 4/4 (complete)
 ---
 ```
 
-If crew artifacts were used this session (🟣 pipeline), also note:
+If crew artifacts were used this session (🟣 pipeline), also append:
 ```
 → Note: 다음 세션에서 crew 산출물이 업데이트되었다면, `bootstrap`부터 다시 시작하세요
 ```
