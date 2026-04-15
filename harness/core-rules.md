@@ -19,22 +19,22 @@ Follow the pipeline that matches the current situation. After each step, output 
 2. `planner` → plan first feature based on user requirements
 3. `sprint-manager` → start Story ("S{N}-{M} Story를 시작해줘")
 4. [Coding] → implement Stories in order from planner
-5. `reviewer` → code review before commit
-6. `learn` → capture session lessons before ending
+5. `reviewer` → code review → commit (`git commit -m "S{N}-{M}: ..."`) → push
+6. `learn` → capture session lessons + verify push before ending
 
 ### 🔵 Continue Development (bootstrap already done)
 1. `sprint-manager` → check current status ("where are we?")
 2. `planner` → plan new feature (if needed)
 3. `sprint-manager` → start Story
 4. [Coding] → implement Stories in order
-5. `reviewer` → code review before commit
-6. `learn` → capture session lessons before ending
+5. `reviewer` → code review → commit (`git commit -m "S{N}-{M}: ..."`) → push
+6. `learn` → capture session lessons + verify push before ending
 
 ### 🔴 Bug Fix
 1. `investigate` → diagnose the issue
 2. [Fix] → apply fix within investigate's recommended scope
-3. `reviewer` → review the fix
-4. `learn` → record lessons
+3. `reviewer` → review the fix → commit → push
+4. `learn` → record lessons + verify push
 
 ### 🟡 Direction Change
 1. `pivot` → update all state files for new direction
@@ -48,8 +48,8 @@ When external planning artifacts exist (requirements, analysis, design documents
 2. `planner` → plan features **from crew artifacts**: map FR→Stories (`[FR-NNN]` prefix), ARB Fail→P0 Stories (`[ARB-FAIL]` prefix), update Validation Tracker
 3. `sprint-manager` → start Story (includes Validation Dashboard showing KPI/FR/ARB coverage)
 4. [Coding] → implement Stories in order from planner
-5. `reviewer` → code review + crew artifact compliance check (ARB Fail resolution, NFR spot check, FR acceptance criteria)
-6. `learn` → capture session lessons + update Validation Tracker status
+5. `reviewer` → code review + crew artifact compliance check → commit → push
+6. `learn` → capture session lessons + update Validation Tracker + verify push
 
 > Crew artifacts are detected by: `docs/crew/` directory, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` directories, or user explicitly provides requirements/design documents (e.g., mentions "PRD", "산출물", "설계서", or provides file paths to planning artifacts).
 > **Reference, don't summarize**: bootstrap creates a Crew Artifact Index (path table) in project-brief.md — each skill reads the original artifact directly via the indexed path.
@@ -93,8 +93,8 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 | `bootstrap` | `planner` | "[project]에 [첫 기능]을 추가해줘" || `planner` (Step 0 → empty) | `bootstrap` [internal] | "State files empty — auto-invoking bootstrap" || `planner` | User confirmation → `sprint-manager` | "이 경로(Plan)대로 구현을 시작할까요?" → "S{N}-{M} Story를 시작해줘" |
 | `sprint-manager` (story started) | [Coding] | "구현을 시작하세요. 완료 후 `reviewer` 호출" |
 | [Coding done] | `reviewer` | "S{N}-{M} 코드를 리뷰해줘" |
-| `reviewer` (pass, more stories) | `sprint-manager` | "다음 Story는?" |
-| `reviewer` (pass, all done) | `learn` | "세션 마무리해줘" |
+| `reviewer` (pass, more stories) | Commit → `sprint-manager` | \"커밋 후 다음 Story는?\" |
+| `reviewer` (pass, all done) | Commit → `learn` | \"커밋 후 세션 마무리해줘\" |
 | `reviewer` (STATE-AUDIT) | `learn` | "state 파일을 정리하고 세션 마무리해줘" |
 | `investigate` | `reviewer` | "수정한 코드를 리뷰해줘" |
 | `pivot` | `planner` | "변경된 방향에 맞춰 재계획해줘" |

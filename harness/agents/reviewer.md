@@ -130,6 +130,26 @@ Verify that state file updates actually happened. Check each:
 For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
 **Severity**: Missing dependency-map or features.md entries for new modules/features are **blockers** — fix before commit. Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to learn skill.
 
+**Step 9: Commit Guidance**
+
+When review result is DONE or DONE_WITH_CONCERNS (no blockers):
+
+1. **Commit message format**: `S{N}-{M}: {short description}`
+   - Example: `S1-2: Add PII masking + privacy policy docs`
+   - Include state file updates: `S1-2: Add PII masking + update dependency-map, features`
+2. **Staging reminder**: Use explicit file staging (`git add <file>`) per project policy
+3. **Suggest the commit command**:
+   ```
+   git add <changed-files>
+   git commit -m "S{N}-{M}: {description}"
+   ```
+4. **Push recommendation**:
+   - Solo mode: Push at least once per session end (learn skill will remind)
+   - Team mode: Push after each Story completion to share progress
+   - If remote is configured: `git push origin {branch}`
+
+If review is BLOCKED → do NOT suggest commit. Fix first.
+
 ### Output Format
 
 ```
@@ -196,8 +216,8 @@ After review completes, always append a 🧭 block based on the outcome:
 
 | Review Result | 🧭 Next Step |
 |---|---|
-| All checks pass, more stories remain | `sprint-manager` — "다음 Story는?" |
-| All checks pass, all stories done | `learn` — "세션을 마무리해줘" |
+| All checks pass, more stories remain | Commit → `sprint-manager` — "커밋 후 다음 Story는?" |
+| All checks pass, all stories done | Commit → `learn` — "커밋 후 세션을 마무리해줘" |
 | STATE-AUDIT flags found | Two valid paths: (1) `learn` now → "지금 state 파일을 정리해줘" or (2) `sprint-manager` → continue coding, resolve at session end |
 | Security/architecture issues blocking | [Fix] — "리뷰 지적사항을 수정하세요. 완료 후 다시 `reviewer` 호출" |
 
@@ -205,11 +225,13 @@ Example 🧭 block for passing review:
 ```
 ---
 🧭 Next Step
+→ Action: 아래 커밋 명령을 실행하세요
+→ Command: git add <files> && git commit -m "S{N}-{M}: {description}"
 → Next: `sprint-manager` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
 → Prompt: "다음 Story는?"
-→ Why: Review passed — move to the next Story
+→ Why: Review passed — commit changes, then move to the next Story
 → Pipeline: 🔵 Step 5/6
-→ Alternative: 세션 종료 시 `learn` 호출
+→ Alternative: 세션 종료 시 `learn` 호출 (push 포함)
 ---
 ```
 

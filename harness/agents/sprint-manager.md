@@ -93,7 +93,10 @@ After every status check, recommend the next action based on current context:
 **Request: "story done" / "S{N}-{M} done"**
 1. Update the Story status to `done` in docs/project-state.md
 2. Add completion record to "Recent Changes" section
-3. Guide to next Story if available
+3. **Commit/Push check**: If changes are uncommitted, remind:
+   - "⚠️ S{N}-{M} 완료 — 커밋하셨나요? `git add <files> && git commit -m \"S{N}-{M}: {description}\"`"
+   - Team mode: Also remind to push — "팀원에게 공유하려면 `git push origin {branch}` 실행"
+4. Guide to next Story if available
 
 **Request: "new story" / "next task"**
 1. Find next `todo` Story in docs/project-state.md

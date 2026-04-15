@@ -124,6 +124,22 @@ If the `reviewer` agent was run in this session and produced `[STATE-AUDIT]` fla
 2. Apply the recommended state file update
 3. If the flag was already resolved during the session, skip it
 
+### Step 5.7: Git Push Check (session end)
+
+Before ending the session, check for unpushed commits:
+
+1. Run `git log --oneline @{u}..HEAD 2>/dev/null || echo "no upstream"` to find unpushed commits
+2. **If unpushed commits exist**:
+   - List the commits: `git log --oneline @{u}..HEAD`
+   - Solo mode: Recommend push — `git push origin {branch}`
+   - Team mode: **Strongly recommend** push — unpushed work is invisible to teammates
+   - Warn: "⚠️ {N}개의 커밋이 push되지 않았습니다. 작업물을 원격에 백업하세요."
+3. **If no upstream configured** (`no upstream`):
+   - Check if remote exists: `git remote -v`
+   - If remote exists: Suggest `git push -u origin {branch}` (first push)
+   - If no remote: Note "원격 저장소가 설정되지 않았습니다. 팀 협업 시 remote 설정이 필요합니다."
+4. **If all commits are pushed**: Skip (no output)
+
 ### Step 6: Update Agent Memory (if applicable)
 
 If an agent (reviewer, planner, sprint-manager, architect) was used in this session, update its memory file in `docs/agent-memory/`:
@@ -166,6 +182,10 @@ Present a summary of all updates made.
 - [x] docs/features.md — [N] features updated (if applicable)
 - [x] docs/dependency-map.md — [N] modules verified/added (if applicable)
 - [x] docs/agent-memory/{name}.md — [N] agents updated (if applicable)
+
+### Git Status:
+- Unpushed commits: [N] — `git push origin {branch}` 실행 권장
+  (or: All commits pushed ✅)
 
 ### Next Session Should:
 1. [recommended first action]

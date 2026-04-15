@@ -122,6 +122,9 @@
    - Default branch: <!-- e.g., main, develop -->
    - Git remote: <!-- e.g., origin, upstream -->
    - Staging policy: <!-- e.g., explicit per-file staging (no git add .), allow git add . -->
+   - Branch strategy: <!-- e.g., feature branches (feature/S1-1-scaffolding), trunk-based, gitflow -->
+   - Commit message format: <!-- default: "S{N}-{M}: {description}" — Story ID prefix for traceability -->
+   - Push frequency: <!-- e.g., per Story completion, per session end, per sprint -->
    - Pivot authority: <!-- e.g., team consensus, tech lead, solo developer -->
    - Deploy method: <!-- e.g., npm publish, docker push, terraform apply -->
 -->
