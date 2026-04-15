@@ -2,6 +2,7 @@
 
 > kode:crew 산출물 → kode:musher v0.8.2 (`--crew` 플래그) 실행 파일럿
 > 실험 #1(seongho)의 후속 — `--crew` 조건부 콘텐츠 기능 첫 실증
+> **Confluence**: [실증 실험 #2 페이지](https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/717786374) | **Page ID**: 717786374
 
 ---
 
