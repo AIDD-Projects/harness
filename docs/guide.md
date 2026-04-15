@@ -2,6 +2,7 @@
 
 > 여러 개발자의 AI가 하나의 프로젝트 방향으로 정렬되게 만드는 프레임워크
 > **v0.8.0** — 🧭 Navigation Dispatcher, 5개 파이프라인, Crew Artifact Integration
+> **Confluence**: [사용자 가이드 — 시작하기](https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/709658498/kode+musher) | **Page ID**: `709658498`
 
 다른 harness 프레임워크들(BMAD, gstack, GSD 등)은 **1인 개발자가 기획·분석·설계·개발을 혼자 하는 것**에 집중합니다. Musher는 다릅니다. **여러 명의 개발자가 각자의 AI 코딩 에이전트를 사용하면서도, 모든 AI 세션이 동일한 프로젝트 방향(Goals, Non-Goals, Decision Log)을 따르도록** 하는 것이 목표입니다.
 
