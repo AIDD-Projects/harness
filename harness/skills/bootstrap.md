@@ -28,8 +28,27 @@ One command does everything — no manual editing required.
    - `src/`, `lib/`, `app/` → source code
    - `tests/`, `test/`, `__tests__/`, `spec/` → test directories
    - `docs/` → documentation
-3. **Scan for existing tests**: Find test files and map them to source modules
-4. **Scan imports/dependencies**: Trace module relationships from import statements
+3. **Framework Coexistence Check** (경량 — 1회 list_dir만 사용):
+   프로젝트 루트 `list_dir` 결과에서 아래 패턴과 매칭하여 존재 목록만 생성한다.
+   **⚠️ 내부 파일 스캔 금지** — 디렉토리 안의 파일을 읽거나 나열하지 않는다.
+
+   | 패턴 | 프레임워크 |
+   |------|:-----------|
+   | `.bmad-core/` | BMAD-METHOD |
+   | `.claude/` | Claude Code |
+   | `.cursor/` | Cursor |
+   | `.windsurf/` | Windsurf |
+   | `.gemini/` | Gemini |
+   | `.clinerules/` or `.cline/` | Cline |
+   | `.github/chatmodes/` | GitHub Chatmodes |
+   | `AGENTS.md` | Codex / OpenAI |
+   | `opencode.jsonc` | OpenCode |
+
+   > `.github/chatmodes/`는 `.github/` 하위이므로, `.github/` 존재 시 1회 추가 list_dir 허용.
+   > 감지된 프레임워크는 State file에 "공존 프레임워크: [목록]"으로 기록한다.
+
+4. **Scan for existing tests**: Find test files and map them to source modules
+5. **Scan imports/dependencies**: Trace module relationships from import statements
 
 **Do NOT modify any code files in this phase.**
 
@@ -48,22 +67,40 @@ Check if external planning artifacts exist:
 2. **Check existing state**: If `docs/project-brief.md` already has a `## Crew Artifact Index` section with content:
    - Ask user: "⚠️ 기존 crew 산출물이 이미 인덱싱되어 있습니다. 재인덱싱하겠습니까?" (user confirms or skips)
    - If project-brief is empty (first crew sync) → proceed with full indexing
-3. **Create Artifact Index** in `docs/project-brief.md`:
+3. **Lazy Read Protocol로 산출물 읽기** (⚠️ 전문 읽기 금지):
+
+   **Step A: 구조 스캔 (첫 50줄)**
+   - 각 산출물의 **첫 50줄만** 읽는다 (목차, 헤더, Executive Summary)
+   - 이 50줄에서 추출: 프로젝트 비전, 목표, 비목표, 기술 스택, FR/KPI/ARB 목록 존재 여부
+   - 문서 구조를 파악한다 (어떤 섹션이 몇 번째 줄에 있는지)
+   - 첫 50줄에 목차가 없으면 60줄까지 확장 허용
+
+   **Step B: 선택적 상세 읽기**
+   - State file 작성에 필요한 섹션만 추가로 읽는다:
+     - PRD → "Functional Requirements", "KPI", "Non-Functional Requirements" 섹션
+     - Architecture → "Tech Stack", "Module 구조" 섹션
+     - ARB Checklist → "Fail Items" 섹션만 (Pass 항목은 불필요)
+     - Product Brief → "Vision" + "Persona" 섹션
+   - **읽지 않는 섹션**: 배경, 시장 분석, 상세 설명, 참고 자료 등
+
+   > 효과: PRD 336줄 → ~130줄 (61% 감소), 4개 산출물 총합 885줄 → ~350줄 (60% 감소)
+
+4. **Create Artifact Index** in `docs/project-brief.md`:
    - Add `## Crew Artifact Index` table with: Artifact name, Path, Role, key contents summary (one line each)
-4. **Extract Minimum** for quick reference (these go into the standard sections of project-brief.md):
+5. **Extract Minimum** for quick reference (these go into the standard sections of project-brief.md):
    - Vision: 1-2 sentences from product-brief
    - Goals: KPI list from product-brief (measurable items only, not full descriptions)
    - Non-Goals: Out-of-scope list from PRD or product-brief
    - Key Technical Decisions: tech stack from architecture doc
-5. **Build Validation Tracker** in `docs/project-brief.md`:
+6. **Build Validation Tracker** in `docs/project-brief.md`:
    - `### KPI Coverage`: extract KPI items from product-brief → create table with ID, KPI, Source, Story (empty), Status (⬜)
    - `### ARB Fail Resolution`: extract Fail items from arb-checklist → create table with ID, Item, Severity (CRITICAL/HIGH), Story (empty), Status (⬜ Required)
    - `### FR Coverage`: extract FR-NNN items from PRD → create table with FR, Description, Priority (P0/P1/P2), Stories (empty), Status (⬜)
-6. **Confirm with user**: "Crew 산출물 [N]개를 발견했습니다. Artifact Index와 Validation Tracker를 생성합니다. 맞나요?"
+7. **Confirm with user**: "Crew 산출물 [N]개를 발견했습니다. Artifact Index와 Validation Tracker를 생성합니다. 맞나요?"
    - If user says **yes** → proceed with Phase 3 using crew artifact data
    - If user says **no** → skip Artifact Index/Tracker creation, proceed with regular Phase 2 interview (treat as 🟢 pipeline)
-7. **Skip most Phase 2 questions** — use artifact data instead. Only confirm implementation-specific decisions (test framework, specific library choices).
-8. Proceed to Phase 3 using extracted data
+8. **Skip most Phase 2 questions** — use artifact data instead. Only confirm implementation-specific decisions (test framework, specific library choices).
+9. Proceed to Phase 3 using extracted data
 
 **Original crew documents are NEVER modified. Only the index and tracker are created.**
 

@@ -18,12 +18,15 @@ The Planner is the entry point for new features — use it BEFORE writing code.
 
 ## Referenced Files
 
-- docs/project-brief.md — Project vision, goals, and non-goals
-- docs/features.md — Feature registry
-- docs/dependency-map.md
-- docs/project-state.md
-- docs/failure-patterns.md
-- docs/agent-memory/planner.md — Past estimation accuracy and architecture insights
+### Required — 반드시 읽기
+- docs/project-brief.md — 프로젝트 방향, Goals, Non-Goals, Decision Log (Step 1에서 사용)
+- docs/features.md — 기존 기능 등록부 (중복 방지)
+- docs/dependency-map.md — 모듈 구조 (impact 분석)
+- docs/agent-memory/planner.md — 과거 계획 인사이트
+
+### Optional — 해당 Step에서만 읽기
+- docs/project-state.md — Sprint 컨텍스트 필요 시에만 읽기
+- docs/failure-patterns.md — 과거 실수 확인 시에만 읽기
 
 ## Input
 

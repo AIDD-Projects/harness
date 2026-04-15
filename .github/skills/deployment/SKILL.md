@@ -42,6 +42,7 @@ Verify all state files are up to date:
 - [ ] `docs/dependency-map.md` — No orphaned modules
 - [ ] `docs/failure-patterns.md` — No unresolved critical patterns
 - [ ] `docs/project-brief.md` — Decision Log has entries for all major changes
+- [ ] **Cross-check features ↔ stories**: All `done` stories should have their features marked `✅ done` in features.md
 
 ### Step 4: Security Scan
 

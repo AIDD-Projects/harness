@@ -33,8 +33,27 @@ One command does everything — no manual editing required.
    - `src/`, `lib/`, `app/` → source code
    - `tests/`, `test/`, `__tests__/`, `spec/` → test directories
    - `docs/` → documentation
-3. **Scan for existing tests**: Find test files and map them to source modules
-4. **Scan imports/dependencies**: Trace module relationships from import statements
+3. **Framework Coexistence Check** (경량 — 1회 list_dir만 사용):
+   프로젝트 루트 `list_dir` 결과에서 아래 패턴과 매칭하여 존재 목록만 생성한다.
+   **⚠️ 내부 파일 스캔 금지** — 디렉토리 안의 파일을 읽거나 나열하지 않는다.
+
+   | 패턴 | 프레임워크 |
+   |------|:-----------|
+   | `.bmad-core/` | BMAD-METHOD |
+   | `.claude/` | Claude Code |
+   | `.cursor/` | Cursor |
+   | `.windsurf/` | Windsurf |
+   | `.gemini/` | Gemini |
+   | `.clinerules/` or `.cline/` | Cline |
+   | `.github/chatmodes/` | GitHub Chatmodes |
+   | `AGENTS.md` | Codex / OpenAI |
+   | `opencode.jsonc` | OpenCode |
+
+   > `.github/chatmodes/`는 `.github/` 하위이므로, `.github/` 존재 시 1회 추가 list_dir 허용.
+   > 감지된 프레임워크는 State file에 "공존 프레임워크: [목록]"으로 기록한다.
+
+4. **Scan for existing tests**: Find test files and map them to source modules
+5. **Scan imports/dependencies**: Trace module relationships from import statements
 
 **Do NOT modify any code files in this phase.**
 
@@ -48,7 +67,24 @@ Check if external planning artifacts exist:
 1. Check if `docs/project-brief.md` already has content (existing crew sync)
    - If project-brief has content → ask user: "⚠️ 기존 crew 산출물이 이미 반영되어 있습니다. 재인제스트하겠습니까?" (user confirms or skips)
    - If project-brief is empty (first crew sync) → proceed with full ingestion
-2. Read all documents in `docs/crew/` (or user-provided docs)
+2. **Lazy Read Protocol로 산출물 읽기** (⚠️ 전문 읽기 금지):
+
+   **Step A: 구조 스캔 (첫 50줄)**
+   - 각 산출물의 **첫 50줄만** 읽는다 (목차, 헤더, Executive Summary)
+   - 이 50줄에서 추출: 프로젝트 비전, 목표, 비목표, 기술 스택, FR/KPI/ARB 목록 존재 여부
+   - 문서 구조를 파악한다 (어떤 섹션이 몇 번째 줄에 있는지)
+   - 첫 50줄에 목차가 없으면 60줄까지 확장 허용
+
+   **Step B: 선택적 상세 읽기**
+   - State file 작성에 필요한 섹션만 추가로 읽는다:
+     - PRD → "Functional Requirements", "KPI", "Non-Functional Requirements" 섹션
+     - Architecture → "Tech Stack", "Module 구조" 섹션
+     - ARB Checklist → "Fail Items" 섹션만 (Pass 항목은 불필요)
+     - Product Brief → "Vision" + "Persona" 섹션
+   - **읽지 않는 섹션**: 배경, 시장 분석, 상세 설명, 참고 자료 등
+
+   > 효과: PRD 336줄 → ~130줄 (61% 감소), 4개 산출물 총합 885줄 → ~350줄 (60% 감소)
+
 3. Extract: project vision, goals, non-goals, feature list, module boundaries, tech decisions
 4. **Skip most Phase 2 questions** — use artifact data instead. Only confirm with user: "Crew 산출물을 기반으로 state files를 채우겠습니다. 맞나요?"
 5. Proceed to Phase 3 using extracted data

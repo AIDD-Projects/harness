@@ -43,7 +43,7 @@ Before recording failures, verify that the session's work stayed aligned with pr
    - Do NOT block — the learn skill always completes
 4. **If no drift**: Proceed silently (no output for this step)
 
-### Step 3: Failure Pattern Detection
+### Step 3: Failure Pattern Detection ⚠️ MANDATORY
 
 For each issue/error that occurred in this session:
 
@@ -65,14 +65,22 @@ For each issue/error that occurred in this session:
 
 3. If the failure relates to a specific skill or agent, note it for that skill's checklist
 
-### Step 4: Update docs/project-state.md
+> **Self-check**: Step 3 완료 시 `docs/failure-patterns.md`에 최소 하나의 FP 항목이 있어야 합니다 (이 세션에서 실패가 없었으면 기존 항목 확인만).
+
+### Step 4: Update docs/project-state.md ⚠️ MANDATORY
 
 1. Update **Quick Summary** (3 lines):
    - Line 1: What was accomplished in this session
    - Line 2: What is currently in progress
    - Line 3: What should be done next
+
+   > **Self-check**: Quick Summary가 정확히 3줄인지 확인. 3줄 초과 시 축약, 미달 시 보충.
+
 2. Update **Story Status** table if any stories changed
-3. Add to **Recent Changes** section with date and summary
+3. **MANDATORY** — Add to **Recent Changes** section with date and summary. Recent Changes가 비어있으면 반드시 추가:
+   ```
+   - [YYYY-MM-DD] S{N}-{M}: {what was done} (STATUS: DONE)
+   ```
 
 ### Step 5: Update docs/features.md (if applicable)
 
@@ -89,12 +97,24 @@ For each issue/error that occurred in this session:
    - Interface change without Interface Change Log entry → **add it now**
 4. Cross-reference `docs/features.md` Key Files against `docs/dependency-map.md` modules — flag orphaned modules
 
+> **Self-check**: `docs/dependency-map.md`에 이 세션에서 새로 추가한 모듈이 모두 등록되었는지 확인. 누락 시 즉시 추가.
+
 ### Step 5.6: Resolve STATE-AUDIT Flags (if applicable)
 
 If the `reviewer` agent was run in this session and produced `[STATE-AUDIT]` flags:
 1. Review each flagged item
 2. Apply the recommended state file update
 3. If the flag was already resolved during the session, skip it
+
+### Step 5.65: Auto-Commit State Files ⚠️ MANDATORY
+
+State file 변경사항을 커밋합니다. Learn 실행 결과가 커밋되지 않으면 다음 세션에서 유실됩니다.
+
+1. Stage state files: `git add docs/project-state.md docs/failure-patterns.md docs/features.md docs/dependency-map.md docs/agent-memory/`
+2. Commit: `git commit -m "learn: session lessons captured"`
+3. If commit fails (nothing to commit), skip — state files were already committed
+
+> **Self-check**: `git status`에 docs/ 아래 unstaged 파일이 없어야 합니다.
 
 ### Step 6: Update Agent Memory (if applicable)
 

@@ -18,11 +18,14 @@ The Architect is invoked when changes affect multiple modules, introduce new lay
 
 ## Referenced Files
 
-- docs/project-brief.md — Project vision, goals, non-goals, and Decision Log
-- docs/dependency-map.md — Module dependency graph (the authoritative architecture source)
-- docs/features.md — Feature registry
-- docs/failure-patterns.md — Past architectural mistakes
-- docs/agent-memory/architect.md — Past design decisions and structural insights
+### Required — 반드시 읽기
+- docs/dependency-map.md — 모듈 의존성 그래프 (Step 1에서 사용, 아키텍처 권위 소스)
+- docs/project-brief.md — 프로젝트 방향, Goals, Non-Goals (Step 2에서 사용)
+- docs/agent-memory/architect.md — 과거 설계 인사이트
+
+### Optional — 해당 Step에서만 읽기
+- docs/features.md — 기능 레지스트리 확인 필요 시에만 읽기
+- docs/failure-patterns.md — 과거 아키텍처 실수 확인 시에만 읽기
 
 ## Procedure
 

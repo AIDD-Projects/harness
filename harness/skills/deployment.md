@@ -38,6 +38,13 @@ Verify all state files are up to date:
 - [ ] `docs/dependency-map.md` — No orphaned modules
 - [ ] `docs/failure-patterns.md` — No unresolved critical patterns
 - [ ] `docs/project-brief.md` — Decision Log has entries for all major changes
+- [ ] **Cross-check features ↔ stories**: All `done` stories should have their features marked `✅ done` in features.md
+
+<!-- CREW_MODE_START -->
+- [ ] **Validation Tracker FR Coverage**: All Functional Requirements (FR) have at least one mapped Story (`docs/project-brief.md` → Validation Tracker)
+- [ ] **Validation Tracker ARB Fail Resolution**: All ARB Fail items resolved (✅) or explicitly deferred with rationale
+- [ ] **KPI Coverage**: All KPIs addressed or deferred with documented reason
+<!-- CREW_MODE_END -->
 
 ### Step 4: Security Scan
 

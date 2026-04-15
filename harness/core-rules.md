@@ -95,7 +95,7 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 | Completed | Next | Prompt Example |
 |-----------|------|---------------|
 | `bootstrap` | `planner` | "[project]에 [첫 기능]을 추가해줘" || `planner` (Step 0 → empty) | `bootstrap` [internal] | "State files empty — auto-invoking bootstrap" || `planner` | User confirmation → `sprint-manager` | "이 경로(Plan)대로 구현을 시작할까요?" → "S{N}-{M} Story를 시작해줘" |
-| `sprint-manager` (story started) | [Coding] | "구현을 시작하세요. 완료 후 `reviewer` 호출" |
+| `sprint-manager` (story started) | [Coding] | "S{N}-{M} 구현을 시작해줘" → 완료 후 **새 채팅**에서 `@reviewer` 호출 |
 | [Coding done] | `reviewer` | "S{N}-{M} 코드를 리뷰해줘" |
 | `reviewer` (pass, more stories) | Commit → `sprint-manager` | \"커밋 후 다음 Story는?\" |
 | `reviewer` (pass, all done) | Commit → `learn` | \"커밋 후 세션 마무리해줘\" |
@@ -133,3 +133,4 @@ These laws are enforced across all skills and agents. Violations should be flagg
 6. **Dependency Map**: When adding or modifying a module, update dependency-map.md in the same commit.
 7. **Feature Registry**: When adding a feature, register it in features.md in the same commit.
 8. **Session Handoff**: At session end, update project-state.md Quick Summary so the next session has context.
+9. **Common First**: All features must work at Common level (🟢🔵🔴) without crew dependency. Crew-specific logic must be inside crew marker blocks only. Never add crew-only code to Common paths.

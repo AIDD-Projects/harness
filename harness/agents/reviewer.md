@@ -19,12 +19,15 @@ Finds issues and auto-fixes where safe, escalates where not.
 
 ## Referenced Files
 
-- docs/project-brief.md — Project vision, goals, non-goals, and Decision Log
-- docs/features.md — Feature registry (for Step 6 Feature Registry Check)
-- docs/failure-patterns.md — Project failure patterns
-- docs/project-state.md — Current Story scope
-- docs/dependency-map.md — Module dependency graph
-- docs/agent-memory/reviewer.md — Past review patterns and frequently missed items
+### Required — 반드시 읽기
+- docs/project-state.md — 현재 Story scope 확인 (Step 1에서 사용)
+- docs/failure-patterns.md — 패턴 대조 (Step 5에서 사용)
+- docs/agent-memory/reviewer.md — 과거 리뷰 패턴
+
+### Optional — 해당 Step에서만 읽기
+- docs/project-brief.md — Step 2 방향 확인 시에만 읽기
+- docs/dependency-map.md — Step 4 blast radius 확인 시에만 읽기
+- docs/features.md — Step 8 교차검증 시에만 읽기
 
 ## Procedure
 
@@ -60,6 +63,7 @@ Changed file list (user-provided or from `git diff --name-only`)
 - [ ] No imports from infrastructure in domain layer
 - [ ] No business logic in presentation layer
 - [ ] Constructor parameters match actual source (FP-002)
+- [ ] **Common First (Iron Law #9)**: No crew-specific logic outside crew marker blocks. All features must work without crew artifacts.
 
 **Step 3: Test Integrity (test-integrity skill)**
 - [ ] Interface changes have synchronized mocks (FP-001)
@@ -124,13 +128,21 @@ If no Crew Artifact Index → skip this step entirely.
 Verify that state file updates actually happened. Check each:
 - [ ] **docs/project-state.md**: If stories were worked on, is Quick Summary current? Are story statuses updated?
 - [ ] **docs/features.md**: If new features were added, are they registered? If features were completed, is status updated?
+- [ ] **Cross-check features ↔ stories**: If a feature status is `✅ done` in features.md, verify all related stories in project-state.md are also `done`. If stories are `done` but their feature is still `🔄 in-progress`, flag as `[STATE-AUDIT]`.
+- [ ] **FR Coverage validation**: For the Story being reviewed, check if it implements a feature (FR-NNN reference in Story name, or changes to files listed in features.md Key Files):
+  - Story completes an FR → features.md status must be `✅ done`. If not → `[STATE-AUDIT: FR-COVERAGE]`
+  - Story partially implements an FR → features.md status must be at least `🔄 in-progress`. If still `⬜` → `[STATE-AUDIT: FR-COVERAGE]`
+  - Provide the exact features.md update needed in the flag output
 - [ ] **docs/dependency-map.md**: If new modules were created, are they registered? If dependencies changed, are relationships updated?
 - [ ] **docs/failure-patterns.md**: If a bug was fixed that matched a pattern, was frequency incremented?
 - [ ] **docs/project-brief.md**: If a technology or architectural decision was made, is it in Decision Log?
 - [ ] **docs/agent-memory/*.md**: If an agent (reviewer/planner/sprint-manager) was used this session, was its memory updated by the learn skill?
 
 For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
-**Severity**: Missing dependency-map or features.md entries for new modules/features are **blockers** — fix before commit. Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to learn skill.
+**Severity**:
+- Missing dependency-map or features.md entries for new modules/features are **blockers** — fix before commit.
+- `[STATE-AUDIT: FR-COVERAGE]` flags (features.md status ↔ Story 완료 불일치) are **blockers** — features.md 상태 갱신 후 commit. 30초면 해결되며 learn까지 미루면 FR 추적이 실제와 불일치합니다.
+- Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to learn skill.
 
 **Step 9: Commit Guidance**
 
@@ -221,7 +233,7 @@ After review completes, always append a 🧭 block based on the outcome:
 | All checks pass, more stories remain | Commit → `sprint-manager` — "커밋 후 다음 Story는?" |
 | All checks pass, all stories done | Commit → `learn` — "커밋 후 세션을 마무리해줘" |
 | STATE-AUDIT flags found | Two valid paths: (1) `learn` now → "지금 state 파일을 정리해줘" or (2) `sprint-manager` → continue coding, resolve at session end |
-| Security/architecture issues blocking | [Fix] — "리뷰 지적사항을 수정하세요. 완료 후 다시 `reviewer` 호출" |
+| Security/architecture issues blocking | [Fix] — "리뷰 지적사항을 수정하세요. 완료 후 **새 프롬프트**에서 다시 `@reviewer` 호출" |
 
 Example 🧭 block for passing review:
 ```
@@ -229,7 +241,7 @@ Example 🧭 block for passing review:
 🧭 Next Step
 → Action: 아래 커밋 명령을 실행하세요
 → Command: git add <files> && git commit -m "S{N}-{M}: {description}"
-→ Next: `sprint-manager` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
+→ Next: `sprint-manager` (**새 채팅**에서 아래 입력)
 → Prompt: "다음 Story는?"
 → Why: Review passed — commit changes, then move to the next Story
 → Pipeline: 🔵 Step 5/6

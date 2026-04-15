@@ -30,6 +30,7 @@ docs/          # Documentation (architecture, analysis, strategy)
 6. **Dependency Map**: When adding or modifying a module, update dependency-map.md in the same commit. Register new modules, update relationship columns.
 7. **Feature Registry**: When adding a feature, register it in features.md in the same commit.
 8. **Session Handoff**: At session end, update project-state.md Quick Summary so the next session has context.
+9. **Common First**: All features must work at Common level (🟢🔵🔴) without crew dependency. Crew-specific logic must be inside crew marker blocks only.
 
 ## Test Rules
 

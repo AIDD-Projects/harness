@@ -28,6 +28,19 @@ npx musher init --ide vscode
 "부트스트랩 실행해줘" → 상태 파일 자동 채우기 → 개발 시작
 ```
 
+### IDE 설정 (대형 프로젝트용)
+
+Crew 산출물이 있는 대형 프로젝트에서 bootstrap 실행 시 턴 제한에 걸릴 수 있습니다:
+
+| IDE | 설정 | 권장값 |
+|-----|------|--------|
+| VS Code | `settings.json` → `chat.agent.maxRequests` | `100` |
+| Cursor | 자동 관리 | 기본값 OK |
+| Windsurf | 자동 관리 | 기본값 OK |
+| Claude Code | 터미널 기반 | 별도 설정 불필요 |
+
+> 일반 코딩/리뷰 작업에서는 기본 설정으로 충분합니다. Bootstrap + Crew 조합에서만 설정 변경이 필요합니다.
+
 ---
 
 ## 2. 핵심 개념: 디스패처 vs 스킬 vs 에이전트

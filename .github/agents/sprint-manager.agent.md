@@ -19,12 +19,15 @@ Keeps the LLM focused on the current work item.
 
 ## Referenced Files
 
-- docs/project-state.md — Current state (this is the core file)
-- docs/project-brief.md — Project vision and goals (for direction checks)
-- docs/features.md — Feature registry (for progress overview)
-- docs/dependency-map.md — Module graph (for scope validation)
-- docs/failure-patterns.md — Recurring failure tracking
-- docs/agent-memory/sprint-manager.md — Past velocity and scope drift data
+### Required — 반드시 읽기
+- docs/project-state.md — 핵심 파일: 현재 Sprint/Story 상태 (Step 0, 모든 Handler에서 사용)
+- docs/features.md — 진행률 개요 (Next Step Recommendation에서 사용)
+- docs/agent-memory/sprint-manager.md — 과거 velocity 및 scope drift 데이터
+
+### Optional — 해당 Step에서만 읽기
+- docs/project-brief.md — 방향 확인 필요 시에만 읽기
+- docs/dependency-map.md — scope 검증 필요 시에만 읽기
+- docs/failure-patterns.md — FP 경고 필요 시에만 읽기
 
 ## Procedure
 
@@ -140,7 +143,7 @@ After sprint-manager completes, always append a 🧭 block based on the outcome:
 |---|---|
 | State files empty | `bootstrap` — "프로젝트를 온보딩해줘" |
 | No stories exist | `planner` — "[기능]을 계획해줘" |
-| Story set to in-progress | [Coding] — "구현을 시작하세요. 완료 후 `reviewer`를 호출하세요" |
+| Story set to in-progress | [Coding] — "S{N}-{M} 구현을 시작해줘". 완료 후 **새 채팅**에서 reviewer 호출 |
 | All stories done | `learn` — "세션을 마무리해줘" |
 | Direction change detected | `pivot` — "방향을 전환해줘" |
 
@@ -149,8 +152,9 @@ Example 🧭 block for starting a story:
 ---
 🧭 Next Step
 → Call: [Coding]
-→ Prompt example: "구현을 시작하세요. 완료 후 `reviewer`를 호출하세요"
-→ Why: Story is in-progress — begin implementation
+→ Prompt: "S{N}-{M} 구현을 시작해줘"
+→ After: 구현 완료 후, **새 채팅**을 열고 `@reviewer`에게 "S{N}-{M} 코드를 리뷰해줘" 입력
+→ Why: Story is in-progress — begin implementation (⚠️ reviewer는 같은 채팅에서 빈 응답 가능 — 반드시 새 채팅에서 호출)
 → Pipeline: 🟢/🔵 Step 4/6
 ---
 ```

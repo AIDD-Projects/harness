@@ -97,6 +97,19 @@ npx musher-engineering doctor
 npx musher-engineering validate
 ```
 
+### IDE Configuration (Optional)
+
+Large projects with crew artifacts may require increased turn limits:
+
+| IDE | Setting | Recommended |
+|-----|---------|-------------|
+| VS Code | `chat.agent.maxRequests` in settings.json | `100` |
+| Cursor | Auto-managed | Default OK |
+| Windsurf | Auto-managed | Default OK |
+| Claude Code | Terminal-based | Default OK |
+
+> This is only needed when running `bootstrap` with crew artifacts on projects that have many existing frameworks. Normal coding/review operations work within default limits.
+
 ## Supported IDEs
 
 | IDE | Dispatcher (always-on) | Skills | Agents |
