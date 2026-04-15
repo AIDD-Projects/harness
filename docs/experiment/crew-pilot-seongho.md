@@ -1,6 +1,7 @@
 # 🟣 Crew-Driven Pipeline 실증 실험 — KT AI 고객상담 자동화
 
 > kode:crew 산출물 → kode:musher 실행 파일럿
+> **Confluence**: [실증 실험 페이지](https://ktspace.atlassian.net/wiki/spaces/CNCORE/pages/714575770) | **Page ID**: `714575770`
 
 ---
 
