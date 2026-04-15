@@ -11,7 +11,7 @@ This is Musher's memory mechanism — without it, the same mistakes repeat acros
 - **User** (direct) — "세션 마무리해줘", "오늘 배운 것 기록해줘"
 - **reviewer** (pass, all done) → learn — 모든 Story 완료 시
 - **reviewer** (STATE-AUDIT) → learn — state 파일 정리 후 세션 종료
-- Final step in ALL pipelines (🟢/🔵/🔴/🟡/🟣)
+- Final step in ALL pipelines (🟢/🔵/🔴/🟡)
 
 ## When to Apply
 
@@ -53,6 +53,7 @@ Before recording failures, verify that the session's work stayed aligned with pr
    - Do NOT block — the learn skill always completes
 4. **If no drift**: Proceed silently (no output for this step)
 
+<!-- CREW_MODE_START -->
 #### Step 2.5: Validation Tracker Update (🟣 Pipeline only)
 
 If `docs/project-brief.md` contains a `## Validation Tracker` section with data:
@@ -69,6 +70,7 @@ If `docs/project-brief.md` contains a `## Validation Tracker` section with data:
    - Include warnings in Step 7 Report
 
 If no Validation Tracker → skip this step entirely.
+<!-- CREW_MODE_END -->
 
 ### Step 3: Failure Pattern Detection
 
@@ -205,15 +207,17 @@ Learn is the final skill in every pipeline. Append the appropriate 🧭 block:
 → Prompt: "다음 세션 시작 시 `sprint-manager`를 호출하세요"
 → Why: Session lessons captured — state files are up to date
 → Pipeline:
-    🟢/🔵/🟣: Step 6/6 (complete)
+    🟢/🔵: Step 6/6 (complete)
     🔴: Step 4/4 (complete)
 ---
 ```
 
+<!-- CREW_MODE_START -->
 If crew artifacts were used this session (🟣 pipeline), also append:
 ```
 → Note: 다음 세션에서 crew 산출물이 업데이트되었다면, `bootstrap`부터 다시 시작하세요
 ```
+<!-- CREW_MODE_END -->
 
 ## Rules
 

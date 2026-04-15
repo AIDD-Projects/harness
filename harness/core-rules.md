@@ -40,6 +40,7 @@ Follow the pipeline that matches the current situation. After each step, output 
 1. `pivot` → update all state files for new direction
 2. `planner` → re-plan features for new direction
 
+<!-- CREW_MODE_START -->
 ### 🟣 Crew-Driven Development (kode:crew artifacts provided)
 
 When external planning artifacts exist (requirements, analysis, design documents from kode:crew or similar):
@@ -54,6 +55,7 @@ When external planning artifacts exist (requirements, analysis, design documents
 > Crew artifacts are detected by: `docs/crew/` directory, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` directories, or user explicitly provides requirements/design documents (e.g., mentions "PRD", "산출물", "설계서", or provides file paths to planning artifacts).
 > **Reference, don't summarize**: bootstrap creates a Crew Artifact Index (path table) in project-brief.md — each skill reads the original artifact directly via the indexed path.
 > This pipeline produces the same state files as 🟢 — the difference is the INPUT source and the addition of Validation Tracker for traceability.
+<!-- CREW_MODE_END -->
 
 ## User Request Routing
 
@@ -66,7 +68,9 @@ When the user provides a feature request or development goal in their prompt:
    - Bug report or error → Start 🔴 Pipeline from `investigate`
    - Structural/design change → Run `architect` first, then `planner`
    - Direction change → Start 🟡 Pipeline from `pivot`
+<!-- CREW_MODE_START -->
    - Crew artifacts detected (`docs/crew/` exists, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` exist, or user provided design docs) → Start 🟣 Pipeline from `bootstrap`
+<!-- CREW_MODE_END -->
    - Any other request (info, explanation, status) → `sprint-manager` — route with context
 3. Announce which pipeline and step you are starting, then execute
 
@@ -100,7 +104,9 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 | `pivot` | `planner` | "변경된 방향에 맞춰 재계획해줘" |
 | `architect` | `planner` | "승인된 설계로 기능을 계획해줘" |
 | `learn` | 🏁 Session End | "다음 세션 시작 시 `sprint-manager` 호출" |
+<!-- CREW_MODE_START -->
 | Crew artifacts provided | `bootstrap` (🟣) | "crew 산출물을 기반으로 프로젝트를 세팅해줘" |
+<!-- CREW_MODE_END -->
 
 ## State Files
 

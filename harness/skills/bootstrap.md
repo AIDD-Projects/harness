@@ -33,6 +33,7 @@ One command does everything — no manual editing required.
 
 **Do NOT modify any code files in this phase.**
 
+<!-- CREW_MODE_START -->
 ### Phase 1.5: Crew Artifact Detection + Indexing
 
 Check if external planning artifacts exist:
@@ -74,6 +75,7 @@ Check if external planning artifacts exist:
 - If multiple patterns match, use the highest priority source. Artifact Index records the actual discovered paths.
 
 **If no crew artifacts:** Continue to Phase 2 (User Interview) normally.
+<!-- CREW_MODE_END -->
 
 ### Phase 2: User Interview (interactive)
 
@@ -95,8 +97,10 @@ Using data from Phase 1 + Phase 2, fill the following files:
 - Vision → from user answer #1
 - Goals → from user answer #2
 - Non-Goals → from user answer #3
+<!-- CREW_MODE_START -->
 - Crew Artifact Index → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
 - Validation Tracker → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
+<!-- CREW_MODE_END -->
 - Key Technical Decisions → from Phase 1 scan + user answer #4, #5
 
 **docs/features.md**:
@@ -197,6 +201,7 @@ Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 ---
 ```
 
+<!-- CREW_MODE_START -->
 **If crew artifacts were used** (🟣 pipeline):
 ```
 ---
@@ -207,6 +212,7 @@ Bootstrap always leads to `planner`. Append this block after STATUS: DONE:
 → Pipeline: 🟣 Step 2/6
 ---
 ```
+<!-- CREW_MODE_END -->
 
 ## Rules
 

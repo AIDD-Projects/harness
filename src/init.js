@@ -88,7 +88,19 @@ This project uses Team mode. State files are split into shared and personal.
 6. **FP Promotion**: if a personal failure pattern (FP-NNN) affects the team, promote it to a shared doc or team channel
 `;
 
-function resolveContent(content, mode) {
+function resolveContent(content, mode, crew = false) {
+  // Crew mode: strip Crew-only blocks unless --crew is specified
+  if (!crew) {
+    content = content.replace(/<!-- CREW_MODE_START -->[\s\S]*?<!-- CREW_MODE_END -->\n?/g, '');
+  } else {
+    // Remove markers, keep Crew content
+    content = content
+      .replaceAll('<!-- CREW_MODE_START -->\n', '')
+      .replaceAll('<!-- CREW_MODE_START -->', '')
+      .replaceAll('<!-- CREW_MODE_END -->\n', '')
+      .replaceAll('<!-- CREW_MODE_END -->', '');
+  }
+
   if (mode !== 'team') {
     // Solo mode: strip Team-only blocks entirely
     return content.replace(/<!-- TEAM_MODE_START -->[\s\S]*?<!-- TEAM_MODE_END -->\n?/g, '');
@@ -137,11 +149,11 @@ function detectLanguage(targetDir) {
 
 // ─── Shared writers ──────────────────────────────────────────
 
-function writeStateFiles(targetDir, overwrite, mode = 'solo') {
+function writeStateFiles(targetDir, overwrite, mode = 'solo', crew = false) {
   for (const file of STATE_FILES) {
     const isPersonal = PERSONAL_STATE_FILES.includes(file);
     const destDir = (mode === 'team' && isPersonal) ? PERSONAL_DEST_DIR : STATE_DEST_DIR;
-    const content = resolveContent(readTemplate(file), mode);
+    const content = resolveContent(readTemplate(file), mode, crew);
     writeFile(targetDir, `${destDir}/${file}`, content, overwrite);
   }
   for (const file of AGENT_MEMORY_FILES) {
@@ -150,9 +162,9 @@ function writeStateFiles(targetDir, overwrite, mode = 'solo') {
   }
 }
 
-function writeSkills(targetDir, skillsDir, overwrite, mode = 'solo') {
+function writeSkills(targetDir, skillsDir, overwrite, mode = 'solo', crew = false) {
   for (const skill of SKILLS) {
-    const content = resolveContent(readTemplate(`skills/${skill.id}.md`), mode);
+    const content = resolveContent(readTemplate(`skills/${skill.id}.md`), mode, crew);
     const skillMd =
       `---\nname: ${skill.id}\ndescription: '${skill.desc}'\n---\n\n` +
       content;
@@ -160,9 +172,9 @@ function writeSkills(targetDir, skillsDir, overwrite, mode = 'solo') {
   }
 }
 
-function writeAgentsAsSkills(targetDir, skillsDir, overwrite, mode = 'solo') {
+function writeAgentsAsSkills(targetDir, skillsDir, overwrite, mode = 'solo', crew = false) {
   for (const agent of AGENTS) {
-    const content = resolveContent(readTemplate(agent.file), mode);
+    const content = resolveContent(readTemplate(agent.file), mode, crew);
     const skillMd =
       `---\nname: ${agent.id}\ndescription: '${agent.desc}'\n---\n\n` +
       content;
@@ -170,9 +182,9 @@ function writeAgentsAsSkills(targetDir, skillsDir, overwrite, mode = 'solo') {
   }
 }
 
-function writeAgentsAsMd(targetDir, agentsDir, overwrite, mode = 'solo') {
+function writeAgentsAsMd(targetDir, agentsDir, overwrite, mode = 'solo', crew = false) {
   for (const agent of AGENTS) {
-    const content = resolveContent(readTemplate(agent.file), mode);
+    const content = resolveContent(readTemplate(agent.file), mode, crew);
     const agentMd =
       `---\nname: ${agent.id}\ndescription: "${agent.desc}"\n---\n\n` +
       content;
@@ -180,9 +192,9 @@ function writeAgentsAsMd(targetDir, agentsDir, overwrite, mode = 'solo') {
   }
 }
 
-function writeAgentsAsToml(targetDir, agentsDir, overwrite, mode = 'solo') {
+function writeAgentsAsToml(targetDir, agentsDir, overwrite, mode = 'solo', crew = false) {
   for (const agent of AGENTS) {
-    const content = resolveContent(readTemplate(agent.file), mode);
+    const content = resolveContent(readTemplate(agent.file), mode, crew);
     const toml =
       `name = "${agent.id}"\n` +
       `description = "${agent.desc}"\n` +
@@ -193,18 +205,18 @@ function writeAgentsAsToml(targetDir, agentsDir, overwrite, mode = 'solo') {
 
 // ─── IDE Generators ──────────────────────────────────────────
 
-function generateVscode(targetDir, overwrite, mode = 'solo') {
-  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
+function generateVscode(targetDir, overwrite, mode = 'solo', crew = false) {
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
 
   // Global instructions (dispatcher only — rules are embedded in skills)
   writeFile(targetDir, '.github/copilot-instructions.md', coreRules, true);
 
   // Skills (.github/skills — VS Code default search path, SKILL.md with frontmatter)
-  writeSkills(targetDir, '.github/skills', true, mode);
+  writeSkills(targetDir, '.github/skills', true, mode, crew);
 
   // Agents (.github/agents — VS Code uses .agent.md format with frontmatter)
   for (const agent of AGENTS) {
-    const content = resolveContent(readTemplate(agent.file), mode);
+    const content = resolveContent(readTemplate(agent.file), mode, crew);
     const agentMd =
       `---\nname: ${agent.id}\ndescription: "${agent.desc}"\n---\n\n` +
       content;
@@ -212,85 +224,85 @@ function generateVscode(targetDir, overwrite, mode = 'solo') {
   }
 
   // State files (respect user's --overwrite for data files)
-  writeStateFiles(targetDir, overwrite, mode);
+  writeStateFiles(targetDir, overwrite, mode, crew);
 }
 
-function generateClaude(targetDir, overwrite, mode = 'solo') {
+function generateClaude(targetDir, overwrite, mode = 'solo', crew = false) {
   // .claude/rules/core.md — dispatcher only (no paths = always loaded)
-  writeFile(targetDir, '.claude/rules/core.md', resolveContent(readTemplate('core-rules.md'), mode), true);
+  writeFile(targetDir, '.claude/rules/core.md', resolveContent(readTemplate('core-rules.md'), mode, crew), true);
 
   // Skills (SKILL.md with frontmatter)
-  writeSkills(targetDir, '.claude/skills', true, mode);
+  writeSkills(targetDir, '.claude/skills', true, mode, crew);
 
   // Agents (.claude/agents/ — Claude Code agent definition files)
-  writeAgentsAsMd(targetDir, '.claude/agents', true, mode);
+  writeAgentsAsMd(targetDir, '.claude/agents', true, mode, crew);
 
   // State files (respect user's --overwrite for data files)
-  writeStateFiles(targetDir, overwrite, mode);
+  writeStateFiles(targetDir, overwrite, mode, crew);
 }
 
-function generateCursor(targetDir, overwrite, mode = 'solo') {
+function generateCursor(targetDir, overwrite, mode = 'solo', crew = false) {
   // .cursor/rules/core.mdc — dispatcher only (always active)
-  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
   const coreMdc =
     '---\ndescription: Musher dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, true);
 
   // Skills (.cursor/skills — invokable by mentioning skill name)
-  writeSkills(targetDir, '.cursor/skills', true, mode);
+  writeSkills(targetDir, '.cursor/skills', true, mode, crew);
 
   // Agents (.cursor/agents/ — Cursor subagent definition files)
-  writeAgentsAsMd(targetDir, '.cursor/agents', true, mode);
+  writeAgentsAsMd(targetDir, '.cursor/agents', true, mode, crew);
 
   // State files (respect user's --overwrite for data files)
-  writeStateFiles(targetDir, overwrite, mode);
+  writeStateFiles(targetDir, overwrite, mode, crew);
 }
 
-function generateCodex(targetDir, overwrite, mode = 'solo') {
+function generateCodex(targetDir, overwrite, mode = 'solo', crew = false) {
   // AGENTS.md — dispatcher only
-  writeFile(targetDir, 'AGENTS.md', resolveContent(readTemplate('core-rules.md'), mode), true);
+  writeFile(targetDir, 'AGENTS.md', resolveContent(readTemplate('core-rules.md'), mode, crew), true);
 
   // Skills (SKILL.md with frontmatter — invokable via $skill-name)
-  writeSkills(targetDir, '.agents/skills', true, mode);
+  writeSkills(targetDir, '.agents/skills', true, mode, crew);
 
   // Agents (.codex/agents/ — Codex TOML agent definition files)
-  writeAgentsAsToml(targetDir, '.codex/agents', true, mode);
+  writeAgentsAsToml(targetDir, '.codex/agents', true, mode, crew);
 
   // State files (respect user's --overwrite for data files)
-  writeStateFiles(targetDir, overwrite, mode);
+  writeStateFiles(targetDir, overwrite, mode, crew);
 }
 
-function generateWindsurf(targetDir, overwrite, mode = 'solo') {
+function generateWindsurf(targetDir, overwrite, mode = 'solo', crew = false) {
   // .windsurf/rules/core.md — dispatcher (trigger: always_on)
-  const coreRules = resolveContent(readTemplate('core-rules.md'), mode);
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
   const coreRule =
     '---\ntrigger: always_on\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.windsurf/rules/core.md', coreRule, true);
 
   // Skills (.windsurf/skills — Agent Skills standard)
-  writeSkills(targetDir, '.windsurf/skills', true, mode);
+  writeSkills(targetDir, '.windsurf/skills', true, mode, crew);
 
   // Agents as skills
-  writeAgentsAsSkills(targetDir, '.windsurf/skills', true, mode);
+  writeAgentsAsSkills(targetDir, '.windsurf/skills', true, mode, crew);
 
   // State files (respect user's --overwrite for data files)
-  writeStateFiles(targetDir, overwrite, mode);
+  writeStateFiles(targetDir, overwrite, mode, crew);
 }
 
-function generateAntigravity(targetDir, overwrite, mode = 'solo') {
+function generateAntigravity(targetDir, overwrite, mode = 'solo', crew = false) {
   // GEMINI.md — project context (always loaded by Gemini CLI)
-  writeFile(targetDir, 'GEMINI.md', resolveContent(readTemplate('core-rules.md'), mode), true);
+  writeFile(targetDir, 'GEMINI.md', resolveContent(readTemplate('core-rules.md'), mode, crew), true);
 
   // Skills (.gemini/skills/ — SKILL.md format)
-  writeSkills(targetDir, '.gemini/skills', true, mode);
+  writeSkills(targetDir, '.gemini/skills', true, mode, crew);
 
   // Agents (.gemini/agents/ — Gemini CLI subagent definition files)
-  writeAgentsAsMd(targetDir, '.gemini/agents', true, mode);
+  writeAgentsAsMd(targetDir, '.gemini/agents', true, mode, crew);
 
   // State files (respect user's --overwrite for data files)
-  writeStateFiles(targetDir, overwrite, mode);
+  writeStateFiles(targetDir, overwrite, mode, crew);
 }
 
 // ─── IDE registry ────────────────────────────────────────────
@@ -582,6 +594,7 @@ function showHelp() {
     --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
     --mode <mode>    Project mode: solo (default) or team
     --dir <path>     Target directory (default: current directory)
+    --crew           Include crew pipeline content (multi-agent orchestration)
     --overwrite      Overwrite existing files (including state files)
     --batch          Non-interactive mode (requires --ide; defaults to solo mode)
     --version        Show version number
@@ -598,7 +611,7 @@ function showHelp() {
 }
 
 function parseArgs(argv) {
-  const args = { command: null, ide: null, mode: null, dir: process.cwd(), overwrite: false, help: false, batch: false, version: false };
+  const args = { command: null, ide: null, mode: null, dir: process.cwd(), overwrite: false, help: false, batch: false, version: false, crew: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === 'init') args.command = 'init';
@@ -607,6 +620,7 @@ function parseArgs(argv) {
     else if (arg === '--ide' && argv[i + 1]) { args.ide = argv[++i]; }
     else if (arg === '--mode' && argv[i + 1]) { args.mode = argv[++i]; }
     else if (arg === '--team') { args.mode = 'team'; }
+    else if (arg === '--crew') args.crew = true;
     else if (arg === '--dir' && argv[i + 1]) { args.dir = path.resolve(argv[++i]); }
     else if (arg === '--overwrite') args.overwrite = true;
     else if (arg === '--batch') args.batch = true;
@@ -704,9 +718,11 @@ async function run(argv) {
     }
 
     const gen = GENERATORS[ide];
+    const crew = args.crew;
     const lang = detectLanguage(args.dir);
-    console.log(`\n  Installing for ${gen.name} (${mode} mode)... (detected language: ${lang})\n`);
-    gen.fn(args.dir, overwrite, mode);
+    const modeDesc = crew ? `${mode} + crew` : mode;
+    console.log(`\n  Installing for ${gen.name} (${modeDesc} mode)... (detected language: ${lang})\n`);
+    gen.fn(args.dir, overwrite, mode, crew);
 
     // Team mode extras
     if (mode === 'team') {

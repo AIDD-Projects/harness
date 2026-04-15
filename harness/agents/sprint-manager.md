@@ -75,8 +75,10 @@ After every status check, recommend the next action based on current context:
 | All stories in sprint are done | → "Run `learn` to capture session lessons, then start a new sprint" |
 | A direction change was discussed | → "Run `pivot` to update all state files before continuing" |
 | Recent failure patterns apply | → "Watch out for FP-{NNN}: [description]" |
+<!-- CREW_MODE_START -->
 | Unplanned KPI/FR in Validation Tracker | → "Run `planner` — add Stories for unplanned KPI/FR items" |
 | All ARB Fail items resolved | → "ARB Fail items all resolved — deployment readiness can be checked" |
+<!-- CREW_MODE_END -->
 
 3. Format the recommendation as a 🧭 Next Step block:
 ```
@@ -119,8 +121,13 @@ When invoked after planner approval, verify that planner wrote state files corre
    d. Update Quick Summary section
    e. Report: "Planner가 state files에 반영하지 않아 sprint-manager가 보완했습니다."
    f. Proceed to set the first Story to `in-progress`
+<!-- CREW_MODE_START -->
 4. If 🟣 pipeline: verify `docs/project-brief.md` Validation Tracker has Story mappings. If missing, fill them from the plan.
-5. Display Sprint Status and Validation Dashboard
+<!-- CREW_MODE_END -->
+5. Display Sprint Status
+<!-- CREW_MODE_START -->
+6. Display Validation Dashboard (if Validation Tracker exists)
+<!-- CREW_MODE_END -->
 
 **Wave-Level Pacing (Turn-by-Turn Guidance)**
 
@@ -164,6 +171,7 @@ Progress: {done}/{total} Stories
 STATUS: DONE
 ```
 
+<!-- CREW_MODE_START -->
 #### Validation Dashboard (🟣 Pipeline only)
 
 When `docs/project-brief.md` contains a `## Validation Tracker` section with data, display the Validation Tracker as a dashboard in every status output.
@@ -180,6 +188,7 @@ If the Validation Tracker exists but has zero rows (no KPIs/FRs indexed yet), di
 ```
 
 **Sprint Manager reads and reports the Validation Tracker numbers.** It does NOT auto-create Stories for missing coverage — that is the planner's role. If unplanned items exist, recommend running `planner`.
+<!-- CREW_MODE_END -->
 
 ### 🧭 Navigation — What Comes After Sprint Manager
 

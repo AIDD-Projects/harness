@@ -75,6 +75,7 @@ Changed file list (user-provided or from `git diff --name-only`)
 - Compare current changes against all FP-NNN items in docs/failure-patterns.md
 - Warn if any pattern applies
 
+<!-- CREW_MODE_START -->
 **Step 5.5: Crew Artifact Compliance Check (🟣 Pipeline only)**
 
 If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
@@ -105,6 +106,7 @@ If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entrie
 All flags (`[ARB-COMPLIANCE]`, `[ARB-INDIRECT]`, `[NFR-GAP]`, `[ACCEPTANCE-GAP]`) are warnings, not blockers. Include them in the review output under a new "### Crew Artifact Compliance" section.
 
 If no Crew Artifact Index → skip this step entirely.
+<!-- CREW_MODE_END -->
 
 **Step 6: Feature Registry Check**
 - [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7). For features spanning multiple modules, one feature row covers all modules — list all key files in that row.

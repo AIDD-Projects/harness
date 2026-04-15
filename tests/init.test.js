@@ -826,6 +826,193 @@ describe('musher init', () => {
     });
   });
 
+  // ─── CREW_MODE marker tests ─────────────────────────────────
+
+  describe('CREW_MODE marker handling', () => {
+    describe('Solo without --crew strips Crew blocks entirely', () => {
+      let tmpDir;
+      let soloFiles = {};
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+        console.log = origLog;
+
+        // Read all skills
+        const skillDir = path.join(tmpDir, '.github/skills');
+        for (const skill of fs.readdirSync(skillDir)) {
+          const skillFile = path.join(skillDir, skill, 'SKILL.md');
+          if (fs.existsSync(skillFile)) {
+            soloFiles[`skill:${skill}`] = fs.readFileSync(skillFile, 'utf8');
+          }
+        }
+        // Read agents
+        const agentDir = path.join(tmpDir, '.github/agents');
+        if (fs.existsSync(agentDir)) {
+          for (const agent of fs.readdirSync(agentDir)) {
+            const agentFile = path.join(agentDir, agent);
+            if (agentFile.endsWith('.md')) {
+              soloFiles[`agent:${path.basename(agent, '.agent.md')}`] = fs.readFileSync(agentFile, 'utf8');
+            }
+          }
+        }
+        // Read core-rules
+        const coreRulesPath = path.join(tmpDir, '.github/copilot-instructions.md');
+        if (fs.existsSync(coreRulesPath)) {
+          soloFiles['core-rules'] = fs.readFileSync(coreRulesPath, 'utf8');
+        }
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('no Solo file contains CREW_MODE markers', () => {
+        for (const [name, content] of Object.entries(soloFiles)) {
+          assert.ok(!content.includes('CREW_MODE_START'), `${name} should not contain CREW_MODE_START`);
+          assert.ok(!content.includes('CREW_MODE_END'), `${name} should not contain CREW_MODE_END`);
+        }
+      });
+
+      it('Solo files do NOT contain Crew-specific keywords', () => {
+        const crewKeywords = ['Phase 1.5', 'Validation Tracker', 'Crew Artifact'];
+        for (const [name, content] of Object.entries(soloFiles)) {
+          for (const kw of crewKeywords) {
+            assert.ok(!content.includes(kw), `${name} should not contain Crew keyword "${kw}"`);
+          }
+        }
+      });
+    });
+
+    describe('Solo with --crew keeps Crew content, removes markers', () => {
+      let tmpDir;
+      let crewFiles = {};
+
+      before(async () => {
+        tmpDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'vscode', '--mode', 'solo', '--crew', '--dir', tmpDir]);
+        console.log = origLog;
+
+        // Read all skills
+        const skillDir = path.join(tmpDir, '.github/skills');
+        for (const skill of fs.readdirSync(skillDir)) {
+          const skillFile = path.join(skillDir, skill, 'SKILL.md');
+          if (fs.existsSync(skillFile)) {
+            crewFiles[`skill:${skill}`] = fs.readFileSync(skillFile, 'utf8');
+          }
+        }
+        // Read agents
+        const agentDir = path.join(tmpDir, '.github/agents');
+        if (fs.existsSync(agentDir)) {
+          for (const agent of fs.readdirSync(agentDir)) {
+            const agentFile = path.join(agentDir, agent);
+            if (agentFile.endsWith('.md')) {
+              crewFiles[`agent:${path.basename(agent, '.agent.md')}`] = fs.readFileSync(agentFile, 'utf8');
+            }
+          }
+        }
+      });
+
+      after(() => {
+        rmDir(tmpDir);
+      });
+
+      it('no --crew file contains CREW_MODE markers', () => {
+        for (const [name, content] of Object.entries(crewFiles)) {
+          assert.ok(!content.includes('CREW_MODE_START'), `${name} should not contain CREW_MODE_START`);
+          assert.ok(!content.includes('CREW_MODE_END'), `${name} should not contain CREW_MODE_END`);
+        }
+      });
+
+      it('--crew bootstrap contains Phase 1.5', () => {
+        const content = crewFiles['skill:bootstrap'];
+        assert.ok(content, 'bootstrap skill should exist');
+        assert.ok(content.includes('Phase 1.5'), '--crew bootstrap should have Phase 1.5');
+      });
+
+      it('--crew planner contains Crew Artifact', () => {
+        const content = crewFiles['agent:planner'];
+        assert.ok(content, 'planner agent should exist');
+        assert.ok(content.includes('Crew Artifact'), '--crew planner should have Crew Artifact content');
+      });
+
+      it('--crew reviewer contains Crew Artifact Compliance', () => {
+        const content = crewFiles['agent:reviewer'];
+        assert.ok(content, 'reviewer agent should exist');
+        assert.ok(content.includes('Crew Artifact'), '--crew reviewer should have Crew Artifact Compliance');
+      });
+
+      it('--crew learn contains Validation Tracker', () => {
+        const content = crewFiles['skill:learn'];
+        assert.ok(content, 'learn skill should exist');
+        assert.ok(content.includes('Validation Tracker'), '--crew learn should have Validation Tracker');
+      });
+
+      it('--crew sprint-manager contains Validation Dashboard', () => {
+        const content = crewFiles['agent:sprint-manager'];
+        assert.ok(content, 'sprint-manager agent should exist');
+        assert.ok(content.includes('Validation Dashboard'), '--crew sprint-manager should have Validation Dashboard');
+      });
+    });
+
+    describe('Crew content line count > non-crew', () => {
+      let noCrewLen = 0;
+      let crewLen = 0;
+
+      before(async () => {
+        const noCrewDir = makeTmpDir();
+        const crewDir = makeTmpDir();
+        const origLog = console.log;
+        console.log = () => {};
+        await run(['init', '--ide', 'claude', '--mode', 'solo', '--dir', noCrewDir]);
+        await run(['init', '--ide', 'claude', '--mode', 'solo', '--crew', '--dir', crewDir]);
+        console.log = origLog;
+
+        // Sum up all skill + agent file lengths
+        for (const dir of ['.claude/skills']) {
+          const base = path.join(noCrewDir, dir);
+          if (fs.existsSync(base)) {
+            for (const skill of fs.readdirSync(base)) {
+              const f = path.join(base, skill, 'SKILL.md');
+              if (fs.existsSync(f)) noCrewLen += fs.readFileSync(f, 'utf8').length;
+            }
+          }
+          const baseC = path.join(crewDir, dir);
+          if (fs.existsSync(baseC)) {
+            for (const skill of fs.readdirSync(baseC)) {
+              const f = path.join(baseC, skill, 'SKILL.md');
+              if (fs.existsSync(f)) crewLen += fs.readFileSync(f, 'utf8').length;
+            }
+          }
+        }
+        // Also sum agent files
+        const noCrewAgents = path.join(noCrewDir, '.claude/agents');
+        if (fs.existsSync(noCrewAgents)) {
+          for (const a of fs.readdirSync(noCrewAgents)) {
+            if (a.endsWith('.md')) noCrewLen += fs.readFileSync(path.join(noCrewAgents, a), 'utf8').length;
+          }
+        }
+        const crewAgents = path.join(crewDir, '.claude/agents');
+        if (fs.existsSync(crewAgents)) {
+          for (const a of fs.readdirSync(crewAgents)) {
+            if (a.endsWith('.md')) crewLen += fs.readFileSync(path.join(crewAgents, a), 'utf8').length;
+          }
+        }
+
+        rmDir(noCrewDir);
+        rmDir(crewDir);
+      });
+
+      it('--crew output has more content than non-crew (Crew blocks preserved)', () => {
+        assert.ok(crewLen > noCrewLen, `Crew content (${crewLen}) should be larger than non-crew (${noCrewLen})`);
+      });
+    });
+  });
+
   // ─── Batch mode tests ──────────────────────────────────────
 
   describe('--batch mode', () => {

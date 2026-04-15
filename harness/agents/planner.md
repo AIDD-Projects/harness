@@ -63,6 +63,7 @@ Apply these insights when creating the implementation plan. If the memory file i
 ### For New Feature
 
 1. Read `docs/project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
+<!-- CREW_MODE_START -->
 2. **Crew Artifact Integration** (🟣 Pipeline only):
    If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
 
@@ -97,6 +98,7 @@ Apply these insights when creating the implementation plan. If the memory file i
       Only ask about implementation-specific decisions (test framework, library choices).
 
    If no Crew Artifact Index → proceed with normal user-driven planning below.
+<!-- CREW_MODE_END -->
 
 3. **Direction Alignment**: Verify the requested feature against three checkpoints.
    > This check intentionally duplicates architect’s direction validation (Step 2). The redundancy is by design: architect validates STRUCTURAL proposals (module boundaries, layer rules), while planner validates FEATURE-level alignment (goals, non-goals, decisions). When both are used in the same session, this provides defense-in-depth.
@@ -129,6 +131,7 @@ Apply these insights when creating the implementation plan. If the memory file i
 ### For Refactor Plan
 
 1. Read `docs/dependency-map.md` to map the blast radius
+<!-- CREW_MODE_START -->
 2. **Crew Artifact Integration** (🟣 Pipeline only):
    If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
    - Read relevant crew artifacts (PRD, Architecture) for refactoring context
@@ -136,6 +139,7 @@ Apply these insights when creating the implementation plan. If the memory file i
    - Map ARB Fail items to refactoring tasks where applicable (prefix with `[ARB-FAIL]`)
    - Update Validation Tracker in `docs/project-brief.md` with mapped Stories
    If no Crew Artifact Index → proceed with normal refactoring flow below.
+<!-- CREW_MODE_END -->
 3. Run **impact-analysis** skill on each module being refactored
 4. Identify safe refactoring order (leaf modules first, core modules last)
 5. Produce refactoring plan with rollback checkpoints
@@ -172,16 +176,20 @@ After user approves the plan, perform these writes in order:
    - Add rows for modules introduced by the plan
    - Update relationship columns for modified modules
 
+<!-- CREW_MODE_START -->
 4. **`docs/project-brief.md`** — Update Validation Tracker (🟣 pipeline only):
    - KPI Coverage: fill Story column with mapped Story IDs
    - FR Coverage: fill Stories column with mapped Story IDs
    - ARB Fail Resolution: fill Story column with mapped Story IDs
+<!-- CREW_MODE_END -->
 
 **Completion Check**: Before outputting 🧭, verify:
 - [ ] features.md has new feature row(s)
 - [ ] project-state.md has Story rows with `⬜ todo` status
 - [ ] dependency-map.md has new module rows (if plan introduces new modules)
+<!-- CREW_MODE_START -->
 - [ ] project-brief.md Validation Tracker updated (if 🟣 pipeline)
+<!-- CREW_MODE_END -->
 
 If any write fails, report the failure and retry. Do NOT proceed to 🧭 with incomplete state files.
 
@@ -210,6 +218,7 @@ If any write fails, report the failure and retry. Do NOT proceed to 🧭 with in
 [Additions/modifications to docs/dependency-map.md]
 ```
 
+<!-- CREW_MODE_START -->
 ### New Feature Plan — Crew-Driven (🟣 Pipeline)
 
 Use this format when Crew Artifact Index exists in project-brief.md. If no Artifact Index, use the standard format above.
@@ -235,6 +244,7 @@ Use this format when Crew Artifact Index exists in project-brief.md. If no Artif
 - FR Coverage: [which FRs this story implements]
 - ARB Fail Resolution: [which Fail items this story resolves, if any]
 ```
+<!-- CREW_MODE_END -->
 
 ### Architecture Query Response
 ```markdown
@@ -252,7 +262,9 @@ After producing a plan, always append a 🧭 block:
 | Planner Result | 🧭 Next Step |
 |---|---|
 | Plan created (solo) | User confirmation — "이 경로(Plan)대로 구현을 시작할까요?" → approved → `sprint-manager` |
+<!-- CREW_MODE_START -->
 | Plan created (crew artifacts used) | User confirmation — "crew 기반 Plan을 확인해 주세요. 진행할까요?" → approved → `sprint-manager` |
+<!-- CREW_MODE_END -->
 | Non-Goal violation → stopped | User decision needed — "이 기능은 Non-Goal에 해당합니다. 계속하시겠습니까? → `pivot` 또는 취소" |
 | Direction change detected | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
 | State files empty | `bootstrap` — "프로젝트를 온보딩해줘" |
@@ -265,7 +277,7 @@ Example 🧭 block for normal completion:
 → After approval → Next: `sprint-manager` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
 → Prompt: "S{N}-{M} Story를 시작해줘"
 → Why: Plan is ready — user must confirm route before engine starts
-→ Pipeline: 🟢 Step 3/6 | 🟣 Step 3/6
+→ Pipeline: 🟢 Step 3/6
 ---
 ```
 
