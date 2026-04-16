@@ -126,7 +126,7 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 ## What Gets Installed
 
 ### Dispatcher (always active)
-- **Core Rules** — 42-line dispatcher: session start guidance, workflow references, state file list, and Iron Laws. Detailed rules are embedded in each skill/agent that enforces them.
+- **Core Rules** — 136-line dispatcher: session start guidance, workflow references, state file list, and Iron Laws. Detailed rules are embedded in each skill/agent that enforces them.
 
 ### Skills (on-demand procedures)
 - **bootstrap** — Onboard project into Musher: scans codebase + fills state files automatically
@@ -270,7 +270,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
 | Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (8 laws embedded in skills) |
 | Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`bootstrap` skill) |
-| Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (42-line dispatcher) |
+| Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (136-line dispatcher) |
 
 ## Roadmap
 
