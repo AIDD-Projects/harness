@@ -6,11 +6,12 @@
 
 [![npm version](https://img.shields.io/npm/v/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
 [![npm downloads](https://img.shields.io/npm/dm/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
+[![CI](https://github.com/AIDD-Projects/harness/actions/workflows/ci.yml/badge.svg)](https://github.com/AIDD-Projects/harness/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.8.0** — Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100-point quality audit.
+> **v0.9.2** — 6 IDE support (including Antigravity), Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100-point quality audit.
 
 ## From Harness to Musher
 
@@ -181,7 +182,7 @@ Musher provides **5 pipelines** for different scenarios:
 
 Each step ends with a 🧭 **Navigation block** telling you exactly what to do next — including the prompt to type.
 
-- **planner**: Checks direction alignment, breaks down features. **Confirm-First gate** — won’t proceed without your approval.
+- **planner**: Checks direction alignment, breaks down features. **Confirm-First gate** — won't proceed without your approval.
 - **reviewer**: Reviews code + audits state file updates
 - **sprint-manager**: Tracks progress via **Wave-Level Pacing** — runs tests between implementation waves
 - **learn**: Captures lessons before session ends
@@ -274,19 +275,20 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-Musher is at **v0.8.0** — the framework is feature-complete with Navigation Dispatcher and Crew Artifact Integration.
+Musher is at **v0.9.2** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
 | **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Flexibility** | v0.7.x | ✅ Done | Delegate team conventions to project-brief.md, remove prescriptive rules |
-| **Navigation** | v0.8.0 | ✅ Current | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
-| **Validation** | — | 🔜 Next | Real-world project adoption (kode:crew → Musher pilot), user feedback collection |
+| **Navigation** | v0.8.x | ✅ Done | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
+| **IDE Expansion** | v0.9.x | ✅ Current | Codex & Antigravity IDE support, CLI improvements, validate/doctor commands |
+| **Validation** | v1.0 | 🔜 Next | Real-world project adoption (kode:crew → Musher pilot), user feedback collection |
 
 ### What's Next
 
-- [ ] Pilot: Run kode:crew output through Musher’s 🟣 pipeline on a real project
+- [ ] Pilot: Run kode:crew output through Musher's 🟣 pipeline on a real project
 - [ ] Adopt Musher in real projects and collect usage data
 - [ ] Document case studies: solo vs team, crew vs no-crew
 - [ ] Gather user feedback on friction points and missing features
