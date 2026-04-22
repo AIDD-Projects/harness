@@ -447,7 +447,7 @@ function showPostInstallGuide(ideName, mode) {
     '     2. AI scans your codebase and fills state files automatically',
     '     3. Start coding: ask your AI to plan a new feature',
     '',
-    '  � IDE Settings (large projects with crew artifacts):',
+    '  ⚙️  IDE Settings (large projects):',
     '',
     '     VS Code      → settings.json: "chat.agent.maxRequests": 100',
     '     Cursor        → Default OK (auto-managed)',
@@ -601,7 +601,6 @@ function showHelp() {
     --ide <name>     IDE target: vscode, claude, cursor, codex, windsurf, antigravity
     --mode <mode>    Project mode: solo (default) or team
     --dir <path>     Target directory (default: current directory)
-    --crew           Include crew pipeline content (multi-agent orchestration)
     --overwrite      Overwrite existing files (including state files)
     --batch          Non-interactive mode (requires --ide; defaults to solo mode)
     --version        Show version number

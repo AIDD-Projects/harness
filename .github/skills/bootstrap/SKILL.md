@@ -60,7 +60,7 @@ One command does everything — no manual editing required.
 ### Phase 1.5: Crew Artifact Detection + Version Check
 
 Check if external planning artifacts exist:
-- `docs/crew/` directory — kode:crew output (requirements, analysis, design docs)
+- `docs/crew/` directory — external planning tool output (requirements, analysis, design docs)
 - User-provided documents — requirements specs, wireframes, API designs
 
 **If crew artifacts are found:**

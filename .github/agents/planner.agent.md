@@ -34,7 +34,7 @@ One of:
 - **New Feature**: "I want to add [feature description]"
 - **Architecture Query**: "What depends on [module]?" / "Show me the current module map"
 - **Refactor Plan**: "I need to refactor [module/area]"
-- **Crew-Driven Feature**: "crew 산출물을 기반으로 [기능]을 계획해줘" — when kode:crew artifacts exist in `docs/crew/`
+- **Crew-Driven Feature**: "crew 산출물을 기반으로 [기능]을 계획해줘" — when external planning artifacts exist in `docs/crew/`
 
 ## Procedure
 

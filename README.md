@@ -39,8 +39,8 @@ Musher manages your **project's direction** — goals, decisions, scope — so L
 
 - **Direction Guard** — Every coding request is checked against project goals/non-goals before execution
 - **Navigation Dispatcher** — 🧭 Turn-by-Turn navigation guides developers through 5 pipelines with explicit next-step prompts
-- **5 Pipelines** — 🟢 New Dev → 🔵 Continue → 🔴 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven (kode:crew artifact integration)
-- **Crew Artifact Integration** — Reads kode:crew output (PRD, Architecture, ARB Checklist) directly — no manual copy needed
+- **5 Pipelines** — 🟢 New Dev → 🟕 Continue → 🟤 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven (external planning artifact integration)
+- **Crew Artifact Integration** — Reads external planning output (PRD, Architecture, ARB Checklist) directly — no manual copy needed
 - **State Files** — 5 markdown files that persist project knowledge across LLM sessions
 - **Skills** — Step-by-step procedures for planning, review, debugging, and direction changes
 - **Agents** — Role-based personas that enforce the workflow (planner, reviewer, sprint-manager)
@@ -178,7 +178,7 @@ Musher provides **5 pipelines** for different scenarios:
 | 🔵 Continue | Resuming work | sprint-manager → [code] → reviewer → learn |
 | 🔴 Bug Fix | Debugging | investigate → [fix] → reviewer → learn |
 | 🟡 Direction Change | Goals/tech shift | pivot → planner → sprint-manager → [code] → reviewer → learn |
-| 🟣 Crew-Driven | With kode:crew artifacts | bootstrap(crew) → planner → sprint-manager → [code] → reviewer → learn |
+| 🟣 Crew-Driven | With external planning artifacts | bootstrap(crew) → planner → sprint-manager → [code] → reviewer → learn |
 
 Each step ends with a 🧭 **Navigation block** telling you exactly what to do next — including the prompt to type.
 
@@ -246,7 +246,7 @@ Existing AI coding frameworks focus on **what the AI does** (generate code, run 
 
 ### Crew Artifact Integration (🟣 Pipeline)
 
-If your team uses **kode:crew** (or any planning tool that produces PRD, Architecture, ARB Checklist documents), Musher reads them directly:
+If your team uses an **external planning tool** (or any tool that produces PRD, Architecture, ARB Checklist documents), Musher reads them directly:
 
 ```bash
 npx musher-engineering init
@@ -283,11 +283,11 @@ Musher is at **v0.8.3** — 6 IDE support complete, Navigation Dispatcher and Cr
 | **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Flexibility** | v0.7.x | ✅ Done | Delegate team conventions to project-brief.md, remove prescriptive rules |
 | **Navigation** | v0.8.x | ✅ Current | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
-| **Validation** | v1.0 | 🔜 Next | Real-world project adoption (kode:crew → Musher pilot), user feedback collection |
+| **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 
 ### What's Next
 
-- [ ] Pilot: Run kode:crew output through Musher's 🟣 pipeline on a real project
+- [ ] Pilot: Run external planning artifacts through Musher's 🟣 pipeline on a real project
 - [ ] Adopt Musher in real projects and collect usage data
 - [ ] Document case studies: solo vs team, crew vs no-crew
 - [ ] Gather user feedback on friction points and missing features

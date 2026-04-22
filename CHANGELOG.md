@@ -12,10 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FR Coverage cross-validation
 - `learn` skill Completion Gate enforcement
 - Agent Chaining terminology unification
+- OSS keyword sanitization: replace internal service names with generic terms across all files
+- `--crew` flag hidden from `--help` output (functionality preserved)
 
 ### Added
 - `--crew` flag for conditional crew pipeline content (v0.8.2)
 - Navigation UX improvements, planner state-write enforcement (v0.8.1)
+- `scripts/qa-check.sh` — automated QA validation script (12 categories, macOS/Linux)
+- `docs/qa/release-checklist.md` — Crew Integration compatibility checklist (§7)
+- Crew Integration Architecture section in `copilot-instructions.md`
 
 ## [0.8.0] - 2026-04-15
 

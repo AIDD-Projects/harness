@@ -56,8 +56,8 @@ One command does everything — no manual editing required.
 ### Phase 1.5: Crew Artifact Detection + Indexing
 
 Check if external planning artifacts exist:
-- `docs/crew/` directory — kode:crew output (requirements, analysis, design docs)
-- `docs/PM/`, `docs/Analyst/`, `docs/ARB/` directories — kode:crew role-based output
+- `docs/crew/` directory — external planning tool output (requirements, analysis, design docs)
+- `docs/PM/`, `docs/Analyst/`, `docs/ARB/` directories — role-based planning output
 - User-provided documents — requirements specs, wireframes, API designs
 - User mentions "산출물", "PRD", "요구사항", "설계서" in their prompt
 
@@ -107,7 +107,7 @@ Check if external planning artifacts exist:
 **Crew Artifact Path Detection** (bootstrap detects all patterns, priority order):
 1. Pattern C: User-provided paths (explicit in prompt) — highest priority, always authoritative
 2. Pattern B: `docs/crew/` (consolidated directory)
-3. Pattern A: `docs/PM/`, `docs/Analyst/`, `docs/ARB/` (kode:crew role-based directories)
+3. Pattern A: `docs/PM/`, `docs/Analyst/`, `docs/ARB/` (role-based planning directories)
 4. Pattern D: `docs/` files containing `prd`, `product-brief`, `architecture`, `checklist` keywords — lowest priority, fallback scan
 - If multiple patterns match, use the highest priority source. Artifact Index records the actual discovered paths.
 

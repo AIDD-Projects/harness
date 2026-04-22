@@ -54,7 +54,7 @@ Musher는 모든 개발자의 AI에게 동일한 목표·비목표·결정사항
 | 🧭 **Direction Guard** | 모든 코딩 요청을 프로젝트 목표/비목표와 대조 후 실행 |
 | 🧭 **Navigation Dispatcher** | Turn-by-Turn 네비게이션으로 5개 파이프라인을 따라 다음 단계 프롬프트를 자동 안내 |
 | 🟢🔵🔴🟡🟣 **5개 파이프라인** | New Dev → Continue → Bug Fix → Direction Change → Crew-Driven |
-| 🟣 **Crew Artifact Integration** | kode:crew 산출물(PRD, Architecture, ARB Checklist)을 직접 읽기 — 수동 복사 불필요 |
+| 🟣 **Crew Artifact Integration** | 외부 기획 도구 산출물(PRD, Architecture, ARB Checklist)을 직접 읽기 — 수동 복사 불필요 |
 | 📝 **State Files** | LLM 세션 간 프로젝트 지식을 유지하는 5개 마크다운 파일 |
 | 🛠️ **Skills** | 기획, 리뷰, 디버깅, 방향 전환을 위한 단계별 절차 10개 |
 | 🤖 **Agents** | 워크플로를 강제하는 역할 기반 페르소나 4개 |
@@ -201,7 +201,7 @@ Musher는 상황별 **5개 파이프라인**을 제공합니다:
 | 🔵 Continue | 작업 재개 | sprint-manager → [코딩] → reviewer → learn |
 | 🔴 Bug Fix | 디버깅 | investigate → [수정] → reviewer → learn |
 | 🟡 Direction Change | 목표/기술 변경 | pivot → planner → sprint-manager → [코딩] → reviewer → learn |
-| 🟣 Crew-Driven | kode:crew 산출물 | bootstrap(crew) → planner → sprint-manager → [코딩] → reviewer → learn |
+| 🟣 Crew-Driven | 외부 기획 산출물 | bootstrap(crew) → planner → sprint-manager → [코딩] → reviewer → learn |
 
 각 단계 완료 시 🧭 **Navigation 블록**이 다음에 무엇을 해야 하는지 — 입력할 프롬프트까지 안내합니다.
 
@@ -276,7 +276,7 @@ Musher는 **AI가 어디로 가는지** — 모든 개발자의 AI가 같은 방
 
 ### Crew Artifact Integration (🟣 파이프라인)
 
-팀이 **kode:crew** (또는 PRD, Architecture, ARB Checklist을 산출하는 기획 도구)를 사용한다면, Musher가 산출물을 직접 읽습니다:
+팀이 **외부 기획 도구** (또는 PRD, Architecture, ARB Checklist을 산출하는 기획 도구)를 사용한다면, Musher가 산출물을 직접 읽습니다:
 
 ```bash
 npx musher-engineering init
@@ -315,11 +315,11 @@ Musher는 현재 **v0.8.3** — 6개 IDE 지원 완료, Navigation Dispatcher와
 | **Hardening** | v0.6.5 | ✅ 완료 | 10 스킬, 4 에이전트, Iron Laws, CLI batch/doctor/validate, 방향 드리프트 감지 |
 | **Flexibility** | v0.7.x | ✅ 완료 | 팀 컨벤션을 project-brief.md에 위임, prescriptive 규칙 제거 |
 | **Navigation** | v0.8.x | ✅ 현재 | 🧭 Navigation Dispatcher, 5개 파이프라인, Crew Artifact Integration, 100점 품질 감사, Confirm-First 게이트, Wave-Level Pacing, Recalculating Mode |
-| **Validation** | v1.0 | 🔜 다음 | 실사용 검증 (kode:crew → Musher 파일럿), 사용자 피드백 수집 |
+| **Validation** | v1.0 | 🔜 다음 | 실사용 검증, 사용자 피드백 수집 |
 
 ### 다음 단계
 
-- [ ] 파일럿: kode:crew 산출물을 Musher의 🟣 파이프라인으로 실제 프로젝트에 적용
+- [ ] 파일럿: 외부 기획 산출물을 Musher의 🟣 파이프라인으로 실제 프로젝트에 적용
 - [ ] 실제 프로젝트에 Musher를 적용하고 사용 데이터 수집
 - [ ] 사용 사례 문서화: Solo vs Team, crew vs no-crew
 - [ ] 마찰 포인트와 부족한 기능에 대한 사용자 피드백 수집
