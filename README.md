@@ -11,7 +11,7 @@
 
 **Keep every developer's AI aligned on one project direction.**
 
-> **v0.9.2** — 6 IDE support (including Antigravity), Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100-point quality audit.
+> **v0.8.3** — 6 IDE support, Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100-point quality audit.
 
 ## From Harness to Musher
 
@@ -275,15 +275,14 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-Musher is at **v0.9.2** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
+Musher is at **v0.8.3** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
 | **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Flexibility** | v0.7.x | ✅ Done | Delegate team conventions to project-brief.md, remove prescriptive rules |
-| **Navigation** | v0.8.x | ✅ Done | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
-| **IDE Expansion** | v0.9.x | ✅ Current | Codex & Antigravity IDE support, CLI improvements, validate/doctor commands |
+| **Navigation** | v0.8.x | ✅ Current | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption (kode:crew → Musher pilot), user feedback collection |
 
 ### What's Next

@@ -5,36 +5,17 @@ All notable changes to Musher Engineering are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.9.2] - 2026-04-22
-
-### Added
-- Antigravity IDE support (GEMINI.md dispatcher, .gemini/ skills & agents)
-- Navigation Dispatcher improvements
-
-## [0.9.1] - 2026-04-21
-
-### Fixed
-- Codex IDE agent format (TOML)
-- CLI flag parsing improvements
-
-## [0.9.0] - 2026-04-20
-
-### Added
-- Codex IDE support (AGENTS.md dispatcher)
-- 6 IDE support complete
-
-## [0.8.4] - 2026-04-19
-
-### Added
-- `validate` CLI command for state file content verification
-- `doctor` CLI command for installation health check
-
 ## [0.8.3] - 2026-04-18
 
+### Fixed
+- Token Efficiency improvements (S1-S4)
+- FR Coverage cross-validation
+- `learn` skill Completion Gate enforcement
+- Agent Chaining terminology unification
+
 ### Added
-- Crew Artifact Integration (🟣 Pipeline)
-- Artifact Index and Validation Tracker generation
-- Auto-detection of crew artifacts in docs/crew/, docs/PM/, docs/Analyst/, docs/ARB/
+- `--crew` flag for conditional crew pipeline content (v0.8.2)
+- Navigation UX improvements, planner state-write enforcement (v0.8.1)
 
 ## [0.8.0] - 2026-04-15
 
@@ -83,10 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Solo and Team modes
 - CLI with `init` command
 
-[0.9.2]: https://github.com/AIDD-Projects/harness/compare/v0.9.1...v0.9.2
-[0.9.1]: https://github.com/AIDD-Projects/harness/compare/v0.9.0...v0.9.1
-[0.9.0]: https://github.com/AIDD-Projects/harness/compare/v0.8.4...v0.9.0
-[0.8.4]: https://github.com/AIDD-Projects/harness/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/AIDD-Projects/harness/compare/v0.8.0...v0.8.3
 [0.8.0]: https://github.com/AIDD-Projects/harness/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/AIDD-Projects/harness/compare/v0.6.5...v0.7.2
