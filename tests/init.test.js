@@ -9,7 +9,7 @@ const { run, detectLanguage, runDoctor, runValidate } = require('../src/init');
 
 // Helper: create a temp directory and clean up after
 function makeTmpDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'musher-test-'));
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'harness-test-'));
 }
 
 function rmDir(dir) {
@@ -134,7 +134,7 @@ function countFiles(dir) {
 
 // ─── Tests ──────────────────────────────────────────────────
 
-describe('musher init', () => {
+describe('harness init', () => {
   for (const [ide, spec] of Object.entries(EXPECTED_FILES)) {
     describe(`--ide ${ide}`, () => {
       let tmpDir;

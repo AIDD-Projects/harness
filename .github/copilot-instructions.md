@@ -22,7 +22,7 @@ docs/          # Documentation (architecture, analysis, strategy)
 
 ## Crew Integration Architecture
 
-Musher(이 프로젝트)는 **외부 기획 도구의 산출물을 소비하여 정밀한 개발을 지원**하는 구조이다.
+kode:harness(이 프로젝트)는 **외부 기획 도구의 산출물을 소비하여 정밀한 개발을 지원**하는 구조이다.
 현재 기획 도구는 사내 기획 서비스이지만, 도구명·산출물 형식은 언제든 변경될 수 있다.
 
 ### 핵심 규칙
@@ -37,7 +37,7 @@ Musher(이 프로젝트)는 **외부 기획 도구의 산출물을 소비하여 
 
 1. `qa-check.sh §8`이 사내 키워드를 자동 탐지 — 새 서비스명 추가 시 grep 패턴도 갱신
 2. README.md / README.ko.md에서 기획 도구 설명은 일반 용어로만 기술
-3. harness/ 템플릿 변경 → `musher init` 재실행으로 생성 파일(.github/ 등)에 반영 확인
+3. harness/ 템플릿 변경 → `harness init` 재실행으로 생성 파일(.github/ 등)에 반영 확인
 
 ## Iron Laws
 

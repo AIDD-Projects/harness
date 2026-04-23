@@ -33,7 +33,7 @@ const SKILLS = [
   { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
   { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
   { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
-  { id: 'bootstrap', desc: 'Onboard project into Musher. Scans codebase and fills state files. Use after musher init or when state files are empty.' },
+  { id: 'bootstrap', desc: 'Onboard project into kode:harness. Scans codebase and fills state files. Use after harness init or when state files are empty.' },
   { id: 'learn', desc: 'Capture session lessons and update state files. Use at the end of every session.' },
   { id: 'pivot', desc: 'Propagate direction changes across all state files. Use when project goals, technology, scope, or architecture changes.' },
   { id: 'code-review-pr', desc: 'Review external Pull Requests for quality, security, and direction alignment. Use when reviewing incoming PRs.' },
@@ -67,6 +67,28 @@ const PERSONAL_DIRS = ['agent-memory/'];
 
 const STATE_DEST_DIR = 'docs';
 const PERSONAL_DEST_DIR = '.harness';
+
+function hasFrameworkMarker(content) {
+  return content.includes('kode:harness')
+    || content.includes('harness engineering')
+    || content.includes('@kodevibe/harness')
+    || content.includes('harness-engineering')
+    || content.includes('musher-engineering');
+}
+
+function hasIdeLayout(targetDir, ide) {
+  const requiredByIde = {
+    vscode: '.github/skills/bootstrap/SKILL.md',
+    claude: '.claude/skills/bootstrap/SKILL.md',
+    cursor: '.cursor/skills/bootstrap/SKILL.md',
+    codex: '.agents/skills/bootstrap/SKILL.md',
+    windsurf: '.windsurf/skills/bootstrap/SKILL.md',
+    antigravity: '.gemini/skills/bootstrap/SKILL.md',
+  };
+
+  const requiredPath = requiredByIde[ide];
+  return requiredPath ? fs.existsSync(path.join(targetDir, requiredPath)) : false;
+}
 
 // ─── Team mode path resolver ─────────────────────────────────
 const TEAM_MODE_SECTION = `
@@ -245,7 +267,7 @@ function generateCursor(targetDir, overwrite, mode = 'solo', crew = false) {
   // .cursor/rules/core.mdc — dispatcher only (always active)
   const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
   const coreMdc =
-    '---\ndescription: Musher dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
+    '---\ndescription: kode:harness dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, true);
 
@@ -357,7 +379,7 @@ async function promptMode() {
 // ─── Team mode helpers ───────────────────────────────────────
 function appendGitignore(targetDir) {
   const gitignorePath = path.join(targetDir, '.gitignore');
-  const entry = '\n# Musher personal state (Team mode)\n.harness/\n';
+  const entry = '\n# kode:harness personal state (Team mode)\n.harness/\n';
   if (fs.existsSync(gitignorePath)) {
     const content = fs.readFileSync(gitignorePath, 'utf8');
     if (content.includes('.harness/')) {
@@ -372,7 +394,7 @@ function appendGitignore(targetDir) {
 }
 
 function detectExistingInstall(targetDir) {
-  // Musher state files — these contain user data that overwrite would destroy
+  // kode:harness state files — these contain user data that overwrite would destroy
   const stateMarkers = [
     'docs/project-state.md',
     'docs/features.md',
@@ -392,12 +414,13 @@ function detectExistingInstall(targetDir) {
     ['.windsurf/rules/core.md', 'windsurf'],
     ['GEMINI.md', 'antigravity'],
   ];
-  // Only count as existing if the file contains 'Musher' (not from other frameworks)
-  const existingIde = ideMarkers.filter(([f]) => {
+  // Only count as existing if the file contains a framework marker (not from other frameworks)
+  const existingIde = ideMarkers.filter(([f, ide]) => {
     const fullPath = path.join(targetDir, f);
     if (!fs.existsSync(fullPath)) return false;
+    if (hasIdeLayout(targetDir, ide)) return true;
     try {
-      return fs.readFileSync(fullPath, 'utf8').includes('Musher');
+      return hasFrameworkMarker(fs.readFileSync(fullPath, 'utf8'));
     } catch { return false; }
   });
 
@@ -406,7 +429,7 @@ function detectExistingInstall(targetDir) {
 
 function writeGitattributes(targetDir) {
   const content =
-    '# Musher Team mode — merge strategy for shared state files\n' +
+    '# kode:harness Team mode — merge strategy for shared state files\n' +
     'docs/features.md merge=union\n' +
     'docs/dependency-map.md merge=union\n';
   writeFile(targetDir, '.gitattributes', content, false);
@@ -418,7 +441,7 @@ function showPostInstallGuide(ideName, mode) {
   const lines = [
     '',
     '  ──────────────────────────────────────────',
-    '  ✅ Musher initialized successfully!',
+    '  ✅ kode:harness initialized successfully!',
     '',
     `  Mode: ${modeLabel}`,
     `  IDE:  ${ideName}`,
@@ -454,7 +477,7 @@ function showPostInstallGuide(ideName, mode) {
     '     Windsurf      → Default OK (auto-managed)',
     '     Claude Code   → Default OK (terminal-based)',
     '',
-    '  �📖 Docs: https://www.npmjs.com/package/musher-engineering',
+    '  📖 Docs: https://www.npmjs.com/package/@kodevibe/harness',
     '  ──────────────────────────────────────────',
     '',
   );
@@ -464,7 +487,7 @@ function showPostInstallGuide(ideName, mode) {
 
 // ─── Doctor command ──────────────────────────────────────────
 function runDoctor(targetDir) {
-  console.log('\n  Musher Doctor — Installation Health Check\n');
+  console.log('\n  kode:harness Doctor — Installation Health Check\n');
   const checks = [];
   let passed = 0;
   let failed = 0;
@@ -511,10 +534,16 @@ function runDoctor(targetDir) {
   for (const [file, ide] of ideChecks) {
     const fullPath = path.join(targetDir, file);
     if (fs.existsSync(fullPath)) {
-      // Verify it's a Musher file, not from another framework
+      if (hasIdeLayout(targetDir, ide)) {
+        detectedIde = ide;
+        checks.push(`  ✅  IDE detected: ${GENERATORS[ide].name}`);
+        passed++;
+        break;
+      }
+      // Verify it's a kode:harness-managed file, not from another framework
       try {
         const content = fs.readFileSync(fullPath, 'utf8');
-        if (!content.includes('Musher') && !content.includes('musher')) continue;
+        if (!hasFrameworkMarker(content)) continue;
       } catch { continue; }
       detectedIde = ide;
       checks.push(`  ✅  IDE detected: ${GENERATORS[ide].name}`);
@@ -523,7 +552,7 @@ function runDoctor(targetDir) {
     }
   }
   if (!detectedIde) {
-    checks.push('  ❌  No IDE configuration found — run `musher init` first');
+    checks.push('  ❌  No IDE configuration found — run `harness init` first');
     failed++;
   }
 
@@ -538,7 +567,7 @@ function runDoctor(targetDir) {
 
 // ─── Validate command ────────────────────────────────────────
 function runValidate(targetDir) {
-  console.log('\n  Musher Validate — State File Content Check\n');
+  console.log('\n  kode:harness Validate — State File Content Check\n');
   const results = [];
   let warnings = 0;
 
@@ -585,16 +614,16 @@ function runValidate(targetDir) {
 // ─── CLI entry ───────────────────────────────────────────────
 function showHelp() {
   console.log(`
-  Musher Engineering — IDE-agnostic AI Harness
+  kode:harness — Harness Engineering
 
   Usage:
-    npx musher-engineering init [options]
-    npx musher-engineering doctor [--dir <path>]
-    npx musher-engineering validate [--dir <path>]
+    npx @kodevibe/harness init [options]
+    npx @kodevibe/harness doctor [--dir <path>]
+    npx @kodevibe/harness validate [--dir <path>]
 
   Commands:
-    init             Install Musher files for your IDE
-    doctor           Check if Musher files are installed and healthy
+    init             Install kode:harness files for your IDE
+    doctor           Check if kode:harness files are installed and healthy
     validate         Verify state files have content (not just placeholders)
 
   Options:
@@ -607,12 +636,12 @@ function showHelp() {
     --help           Show this help
 
   Examples:
-    npx musher-engineering init
-    npx musher-engineering init --ide vscode
-    npx musher-engineering init --ide vscode --mode team
-    npx musher-engineering init --ide claude --dir ./my-project
-    npx musher-engineering doctor
-    npx musher-engineering validate
+    npx @kodevibe/harness init
+    npx @kodevibe/harness init --ide vscode
+    npx @kodevibe/harness init --ide vscode --mode team
+    npx @kodevibe/harness init --ide claude --dir ./my-project
+    npx @kodevibe/harness doctor
+    npx @kodevibe/harness validate
 `);
 }
 
@@ -661,7 +690,7 @@ async function run(argv) {
   }
 
   if (args.command === 'init') {
-    console.log('\n  Musher Engineering — IDE-agnostic AI Harness\n');
+    console.log('\n  kode:harness — Harness Engineering\n');
 
     // Determine IDE
     let ide = args.ide;
@@ -698,7 +727,7 @@ async function run(argv) {
     if (!overwrite && !args.batch && process.stdin.isTTY) {
       const existing = detectExistingInstall(args.dir);
       if (existing.hasAny) {
-        console.log('  ⚠  Existing Musher files detected:\n');
+        console.log('  ⚠  Existing kode:harness files detected:\n');
         if (existing.stateFiles.length > 0) {
           console.log('  📄 State files (contain your project data):');
           for (const f of existing.stateFiles) {

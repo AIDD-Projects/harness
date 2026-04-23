@@ -1,7 +1,7 @@
 {
-  "name": "musher-engineering",
+  "name": "@kodevibe/harness",
   "version": "0.8.3",
-  "description": "Musher Engineering — Keep every developer's AI aligned on one project direction. Direction management framework for multi-developer LLM-driven development.",
+  "description": "kode:harness — harness engineering for keeping every developer's AI aligned on one project direction.",
   "keywords": [
     "llm",
     "ai",
@@ -11,12 +11,12 @@
     "codex",
     "windsurf",
     "gemini",
-    "musher",
+    "kode-harness",
     "harness",
     "development",
     "agents",
     "skills",
-    "musher-engineering",
+    "kodevibe-harness",
     "direction-management",
     "multi-developer",
     "team-alignment",
@@ -30,8 +30,8 @@
   "author": "jungchihoon",
   "main": "src/init.js",
   "bin": {
-    "musher": "bin/cli.js",
-    "musher-engineering": "bin/cli.js"
+    "harness": "bin/cli.js",
+    "kodevibe-harness": "bin/cli.js"
   },
   "files": [
     "bin/",

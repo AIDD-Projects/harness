@@ -6,8 +6,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        IDE의 커스터마이징 경로가 바뀌었거나 Musher 파일이 IDE에서 인식되지 않을 때 사용하세요.
-        Use this when an IDE changed its customization paths or Musher files aren't recognized.
+        IDE의 커스터마이징 경로가 바뀌었거나 kode:harness 파일이 IDE에서 인식되지 않을 때 사용하세요.
+        Use this when an IDE changed its customization paths or kode:harness files aren't recognized.
 
   - type: dropdown
     id: ide
@@ -32,9 +32,9 @@ body:
       required: true
 
   - type: input
-    id: musher-version
+    id: harness-version
     attributes:
-      label: Musher 버전 / Musher Version
+      label: kode:harness 버전 / kode:harness Version
       placeholder: "0.6.5"
     validations:
       required: true

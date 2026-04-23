@@ -10,7 +10,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in Musher Engineering, please report it responsibly:
+If you discover a security vulnerability in kode:harness, please report it responsibly:
 
 1. **Do NOT open a public issue.**
 2. Email details to the maintainers or use [GitHub Security Advisories](https://github.com/AIDD-Projects/harness/security/advisories/new).
@@ -24,7 +24,7 @@ We will acknowledge receipt within 48 hours and aim to provide a fix within 7 da
 
 ## Security Design
 
-Musher Engineering is a **zero-dependency CLI tool** that:
+kode:harness is a **zero-dependency CLI tool** built on harness engineering principles and:
 - Generates static markdown files only
 - Does not make network requests
 - Does not execute user code

@@ -56,17 +56,3 @@ When modifying a module:
 
 | Date | Module | Change | Affected Modules | Status |
 |------|--------|--------|------------------|--------|
-
-<!-- TEAM_MODE_START -->
-## Team Mode: Dependency Ownership
-
-### Owner-Aware Module Registry
-- The **Owner** column in Module Registry tracks who owns each module
-- When adding a new module, always set the Owner to the responsible developer
-- Owner information is used by `impact-analysis` to flag cross-owner blast radius
-
-### Cross-Owner Dependency Rules
-- Before adding a dependency on a module owned by another developer, verify with them
-- Interface changes to modules with external dependents require Owner notification
-- The `reviewer` agent checks Owner consistency during Step 7 (dependency-map audit)
-<!-- TEAM_MODE_END -->

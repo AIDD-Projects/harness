@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Musher Engineering — QA 자동 점검 스크립트
+# kode:harness — QA 자동 점검 스크립트
 # 사용법: bash scripts/qa-check.sh [--oss] [--all]
 #   (기본)   로컬 프레임워크 점검만 실행
 #   --oss    GitHub OSS 프로젝트 건강성도 점검
@@ -28,7 +28,7 @@ done
 if $CHECK_OSS; then TOTAL=12; else TOTAL=9; fi
 
 echo "============================================"
-echo "  Musher Engineering QA 자동 점검"
+echo "  kode:harness QA 자동 점검"
 echo "  $(date +%Y-%m-%d) | $(git rev-parse --short HEAD 2>/dev/null || echo 'N/A')"
 echo "============================================"
 
@@ -232,12 +232,21 @@ fi
 # ═══════════════════════════════════════════════
 header 8 "사내 키워드 유출 방지"
 
-LEAK=$(git ls-files 2>/dev/null | grep -v 'scripts/qa-check.sh' | xargs grep -l -E "kode:musher|kode:crew|ktspace|CNCORE|ktspace\.atlassian" 2>/dev/null || true)
+# CREW_MODE 마커 블록 안의 kode:crew는 허용 — 블록 밖에서만 검출
+LEAK=""
+while IFS= read -r f; do
+  # 마커 블록 제거 후 검사 (CREW_MODE 안의 키워드는 무시)
+  content=$(sed '/CREW_MODE_START/,/CREW_MODE_END/d' "$f" 2>/dev/null)
+  if echo "$content" | grep -qE "kode:musher|kode:crew|ktspace|CNCORE|ktspace\.atlassian"; then
+    LEAK="$LEAK $f"
+  fi
+done < <(git ls-files 2>/dev/null | grep -v 'scripts/qa-check.sh')
+LEAK=$(echo "$LEAK" | xargs)
 if [ -z "$LEAK" ]; then
-  ok "git 추적 파일에 사내 키워드 없음"
+  ok "git 추적 파일에 사내 키워드 없음 (CREW_MODE 블록 제외)"
 else
-  fail "사내 키워드 노출 파일:"
-  echo "$LEAK" | while read f; do echo "    - $f"; done
+  fail "사내 키워드 노출 파일 (CREW_MODE 밖):"
+  for f in $LEAK; do echo "    - $f"; done
 fi
 
 # API 키/토큰 패턴
@@ -288,7 +297,7 @@ if $CHECK_OSS; then
   header 10 "GitHub 버전 정합성"
 
   PKG_VER=$(node -e "console.log(require('./package.json').version)" 2>/dev/null || echo "N/A")
-  NPM_VER=$(npm view musher-engineering version 2>/dev/null || echo "N/A")
+  NPM_VER=$(npm view @kodevibe/harness version 2>/dev/null || echo "N/A")
   RELEASE_TAG=$(gh api "repos/$OWNER/$REPO/releases/latest" --jq '.tag_name' 2>/dev/null || echo "N/A")
 
   echo "    package.json: v${PKG_VER} | npm: v${NPM_VER} | release: ${RELEASE_TAG}"
@@ -300,7 +309,7 @@ if $CHECK_OSS; then
   ghost_count=0
   while read tag; do
     ver=${tag#v}
-    npm view "musher-engineering@$ver" version >/dev/null 2>&1 || { warn "유령 태그: $tag (npm에 없음)"; ghost_count=$((ghost_count+1)); }
+    npm view "@kodevibe/harness@$ver" version >/dev/null 2>&1 || { warn "유령 태그: $tag (npm에 없음)"; ghost_count=$((ghost_count+1)); }
   done < <(gh api "repos/$OWNER/$REPO/tags" --jq '.[].name' 2>/dev/null)
   [ "$ghost_count" -eq 0 ] && ok "유령 태그 없음"
 

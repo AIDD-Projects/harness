@@ -41,9 +41,9 @@ Follow the pipeline that matches the current situation. After each step, output 
 2. `planner` → re-plan features for new direction
 
 <!-- CREW_MODE_START -->
-### 🟣 Crew-Driven Development (external planning artifacts provided)
+### 🟣 Crew-Driven Development (kode:crew artifacts provided)
 
-When external planning artifacts exist (requirements, analysis, design documents from an external planning tool):
+When external planning artifacts exist (requirements, analysis, design documents from kode:crew or similar):
 
 1. `bootstrap` → scan project & fill state files, **create Artifact Index + Validation Tracker** in project-brief.md (originals are never modified)
 2. `planner` → plan features **from crew artifacts**: map FR→Stories (`[FR-NNN]` prefix), ARB Fail→P0 Stories (`[ARB-FAIL]` prefix), update Validation Tracker

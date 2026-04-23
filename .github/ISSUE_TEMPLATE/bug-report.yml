@@ -12,8 +12,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: Musher 버전 / Version
-      description: "`npx musher-engineering --version`의 출력"
+      label: kode:harness 버전 / Version
+      description: "`npx harness-engineering --version`의 출력"
       placeholder: "0.6.5"
     validations:
       required: true
@@ -59,7 +59,7 @@ body:
       label: 재현 방법 / Steps to reproduce
       description: 버그를 재현하는 단계를 알려주세요.
       placeholder: |
-        1. `npx musher-engineering init --ide vscode`
+        1. `npx harness-engineering init --ide vscode`
         2. ...
     validations:
       required: true

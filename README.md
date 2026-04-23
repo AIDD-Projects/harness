@@ -2,24 +2,26 @@
   <a href="README.ko.md"><img src="https://img.shields.io/badge/lang-한국어-blue.svg" alt="한국어"></a>
 </div>
 
-# Musher Engineering
+# kode:harness
 
-[![npm version](https://img.shields.io/npm/v/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
-[![npm downloads](https://img.shields.io/npm/dm/musher-engineering.svg)](https://www.npmjs.com/package/musher-engineering)
+[![npm version](https://img.shields.io/npm/v/@kodevibe/harness.svg)](https://www.npmjs.com/package/@kodevibe/harness)
+[![npm downloads](https://img.shields.io/npm/dm/@kodevibe/harness.svg)](https://www.npmjs.com/package/@kodevibe/harness)
 [![CI](https://github.com/AIDD-Projects/harness/actions/workflows/ci.yml/badge.svg)](https://github.com/AIDD-Projects/harness/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Keep every developer's AI aligned on one project direction.**
 
+kode:harness is built on **harness engineering** for multi-developer, enterprise-grade AI-assisted development.
+
 > **v0.8.3** — 6 IDE support, Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100-point quality audit.
 
-## From Harness to Musher
+## From Harness to Enterprise Harness Engineering
 
 The concept of an AI "harness" — structured markdown files that guide LLM coding agents — has become a foundational pattern in AI-assisted development. Frameworks like BMAD, gstack, and GSD pioneered this approach for **solo developers**.
 
-**Musher Engineering** takes harness engineering to the next level. Built by [AIDD-Projects](https://github.com/AIDD-Projects), it evolves the harness concept from a 1-person tool into an **enterprise-grade direction management framework** for multi-developer teams.
+This approach takes harness engineering beyond solo tooling. It evolves the harness concept into an **enterprise-grade direction management method** for both multi-developer teams and solo developers. **kode:harness** is the product form of that approach.
 
-| | Traditional Harness | Musher Engineering |
+| | Traditional Harness | kode:harness + harness engineering |
 |---|---|---|
 | Target | Solo developer | **Multi-developer teams** |
 | Focus | What the AI does | **Where the AI is going** |
@@ -31,11 +33,11 @@ The concept of an AI "harness" — structured markdown files that guide LLM codi
 
 When one developer uses an AI coding assistant, direction stays consistent. But in **enterprise teams**, each developer runs their own AI sessions — and each AI drifts independently. Developer A's AI refactors toward microservices while Developer B's AI doubles down on the monolith. Without shared direction management, **AI agents across multiple developers pull the project apart.**
 
-Musher Engineering solves this. It gives every developer's AI the same goals, non-goals, decisions, and project state — so all AI sessions converge on **one direction**, regardless of who's coding or which IDE they use.
+kode:harness solves this. It gives every developer's AI the same goals, non-goals, decisions, and project state — so all AI sessions converge on **one direction**, regardless of who's coding or which IDE they use.
 
 ## What It Does
 
-Musher manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned **across developers and sessions**. Zero dependencies, 6 IDE support, native format generation.
+kode:harness manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned **across developers and sessions**. Zero dependencies, 6 IDE support, native format generation. The underlying approach is harness engineering for multi-developer and enterprise-grade execution.
 
 - **Direction Guard** — Every coding request is checked against project goals/non-goals before execution
 - **Navigation Dispatcher** — 🧭 Turn-by-Turn navigation guides developers through 5 pipelines with explicit next-step prompts
@@ -51,10 +53,10 @@ Musher manages your **project's direction** — goals, decisions, scope — so L
 
 ```bash
 # Solo mode (default)
-npx musher-engineering init
+npx @kodevibe/harness init
 
 # Team mode (multi-developer)
-npx musher-engineering init --team
+npx @kodevibe/harness init --team
 ```
 
 Select your IDE when prompted. Files are installed into the current directory.
@@ -68,12 +70,12 @@ This scans your codebase and fills all 5 state files automatically.
 ### Non-interactive
 
 ```bash
-npx musher-engineering init --ide vscode
-npx musher-engineering init --ide claude
-npx musher-engineering init --ide cursor
-npx musher-engineering init --ide codex
-npx musher-engineering init --ide windsurf
-npx musher-engineering init --ide antigravity
+npx @kodevibe/harness init --ide vscode
+npx @kodevibe/harness init --ide claude
+npx @kodevibe/harness init --ide cursor
+npx @kodevibe/harness init --ide codex
+npx @kodevibe/harness init --ide windsurf
+npx @kodevibe/harness init --ide antigravity
 ```
 
 ### Options
@@ -91,11 +93,11 @@ npx musher-engineering init --ide antigravity
 ### Health Check
 
 ```bash
-# Verify Musher files are installed
-npx musher-engineering doctor
+# Verify kode:harness files are installed
+npx @kodevibe/harness doctor
 
 # Verify state files have real content (not just placeholders)
-npx musher-engineering validate
+npx @kodevibe/harness validate
 ```
 
 ### IDE Configuration (Optional)
@@ -130,7 +132,7 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 - **Core Rules** — 136-line dispatcher: session start guidance, workflow references, state file list, and Iron Laws. Detailed rules are embedded in each skill/agent that enforces them.
 
 ### Skills (on-demand procedures)
-- **bootstrap** — Onboard project into Musher: scans codebase + fills state files automatically
+- **bootstrap** — Onboard project into kode:harness: scans codebase + fills state files automatically
 - **learn** — End-of-session wrap-up: captures failure patterns, updates project state, detects direction drift
 - **pivot** — Propagate direction changes across all state files when goals/tech/scope changes
 - **test-integrity** — Verify mock/interface synchronization before committing
@@ -157,7 +159,7 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 ## How It Works
 
 ### 1. Bootstrap (once)
-After `musher init`, run the `bootstrap` skill. It scans your codebase, interviews you about goals/non-goals, and fills all 5 state files automatically. **This is the most important step** — without it, Direction Guard and other skills have no context.
+After `harness init`, run the `bootstrap` skill. It scans your codebase, interviews you about goals/non-goals, and fills all 5 state files automatically. **This is the most important step** — without it, Direction Guard and other skills have no context.
 
 ### 2. Direction Guard (every request)
 Before ANY coding task, the LLM reads `project-brief.md` and checks:
@@ -170,7 +172,7 @@ Before ANY coding task, the LLM reads `project-brief.md` and checks:
 bootstrap → planner → [code] → reviewer → sprint-manager → learn
 ```
 
-Musher provides **5 pipelines** for different scenarios:
+kode:harness provides **5 pipelines** for different scenarios:
 
 | Pipeline | When | Flow |
 |---|---|---|
@@ -196,10 +198,10 @@ When goals, technology, or scope changes, run the `pivot` skill:
 
 ## Team Mode
 
-This is where Musher Engineering shines. When multiple developers each run their own AI sessions, direction divergence is inevitable — unless you have shared guardrails.
+This is where harness engineering matters most. When multiple developers each run their own AI sessions, direction divergence is inevitable — unless you have shared guardrails.
 
 ```bash
-npx musher-engineering init --team
+npx @kodevibe/harness init --team
 ```
 
 | | Solo Mode | Team Mode |
@@ -221,7 +223,7 @@ npx musher-engineering init --team
 
 ## Iron Laws
 
-These 8 rules are enforced across all skills and agents. They form the quality backbone of every Musher-managed project.
+These 8 rules are enforced across all skills and agents. They form the quality backbone of every kode:harness project managed with harness engineering.
 
 | # | Law | Enforced By |
 |---|-----|-------------|
@@ -238,18 +240,18 @@ These 8 rules are enforced across all skills and agents. They form the quality b
 
 See [docs/reference.md](docs/reference.md) for detailed descriptions of every skill, agent, rule, and state file.
 
-## Why Musher?
+## Why kode:harness?
 
 ### The Core Insight
 
-Existing AI coding frameworks focus on **what the AI does** (generate code, run tests, deploy). Musher focuses on **where the AI is going** — ensuring every developer's AI moves in the same direction. This is the difference between a dog sled where each dog runs wherever it wants, and one where a musher keeps the whole team on course.
+Existing AI coding frameworks focus on **what the AI does** (generate code, run tests, deploy). kode:harness focuses on **where the AI is going** — ensuring every developer's AI moves in the same direction. harness engineering is the discipline that keeps the whole team on course.
 
 ### Crew Artifact Integration (🟣 Pipeline)
 
-If your team uses an **external planning tool** (or any tool that produces PRD, Architecture, ARB Checklist documents), Musher reads them directly:
+If your team uses an **external planning tool** (or any tool that produces PRD, Architecture, ARB Checklist documents), kode:harness reads them directly:
 
 ```bash
-npx musher-engineering init
+npx @kodevibe/harness init
 # Then ask your LLM:
 > "crew 산출물을 기반으로 프로젝트를 세팅해줘"
 ```
@@ -262,7 +264,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ### Comparison
 
-| | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | Musher |
+| | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | kode:harness |
 |---|---|---|---|---|
 | Focus | Enterprise SDLC methodology | 1-person software factory | Full lifecycle automation | **Multi-developer direction alignment** |
 | Files | 200+ | ~40 | Hundreds | ~25 |
@@ -275,7 +277,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-Musher is at **v0.8.3** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
+kode:harness is at **v0.8.3** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
@@ -287,19 +289,19 @@ Musher is at **v0.8.3** — 6 IDE support complete, Navigation Dispatcher and Cr
 
 ### What's Next
 
-- [ ] Pilot: Run external planning artifacts through Musher's 🟣 pipeline on a real project
-- [ ] Adopt Musher in real projects and collect usage data
+- [ ] Pilot: Run external planning artifacts through kode:harness's 🟣 pipeline on a real project
+- [ ] Adopt kode:harness in real projects and collect usage data
 - [ ] Document case studies: solo vs team, crew vs no-crew
 - [ ] Gather user feedback on friction points and missing features
 - [ ] Iterate based on real-world evidence, not assumptions
 
 ## Contributing & Feedback
 
-Musher is in active development and we'd love your input.
+kode:harness is in active development and we'd love your input.
 
 - **Bug reports & feature requests** → [GitHub Issues](https://github.com/AIDD-Projects/harness/issues)
 - **Discussions & ideas** → [GitHub Discussions](https://github.com/AIDD-Projects/harness/discussions)
-- **Try it on your project** → `npx musher-engineering init` and tell us what works (or doesn't)
+- **Try it on your project** → `npx @kodevibe/harness init` and tell us what works (or doesn't)
 
 We're especially interested in:
 - How Direction Guard performs in teams of 3+ developers
