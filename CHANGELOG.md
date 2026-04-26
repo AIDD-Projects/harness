@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.4] - 2026-04-26
+
 ### Changed
 - Product branding transition: previous brand → `kode:harness`
 - Positioning update: harness engineering is now described as the direction-management approach behind kode:harness
+
+### Added
+- `EXTERNAL_DEP` classification in `feature-breakdown` skill — guides LLM to define mock boundary interfaces before implementing modules with external process/service dependencies (DB, Docker, message queue, network API)
 
 ## [0.8.3] - 2026-04-18
 
@@ -75,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Solo and Team modes
 - CLI with `init` command
 
+[0.8.4]: https://github.com/AIDD-Projects/harness/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/AIDD-Projects/harness/compare/v0.8.0...v0.8.3
 [0.8.0]: https://github.com/AIDD-Projects/harness/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/AIDD-Projects/harness/compare/v0.6.5...v0.7.2

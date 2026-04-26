@@ -30,6 +30,7 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
    - INTERFACE_CHANGE: Existing module's public interface changes
    - INTERNAL_CHANGE: Only internal implementation changes
    - TEST_ONLY: Only test updates needed
+   - EXTERNAL_DEP: External process/service dependency (DB, Docker, message queue, network API, etc.) — define mock boundary interface before implementation. No real external process execution in tests.
 6. **Build dependency order**:
    - List modules topologically: modules with zero dependencies first, then modules depending on first layer, etc.
    - Example: Module A (no deps) → Module B (depends A) → Module C (depends A, B)

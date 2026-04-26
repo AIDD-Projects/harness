@@ -13,7 +13,7 @@
 
 kode:harness is built on **harness engineering** for multi-developer, enterprise-grade AI-assisted development.
 
-> **v0.8.3** — 6 IDE support, Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration, 100-point quality audit.
+> **v0.8.4** — 6 IDE support, Navigation Dispatcher, 5 Pipelines ( 🟢🔵🔴🟡🟣), Crew Artifact Integration, EXTERNAL_DEP classification.
 
 ## From Harness to Enterprise Harness Engineering
 
@@ -277,7 +277,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-kode:harness is at **v0.8.3** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
+kode:harness is at **v0.8.4** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
