@@ -9,12 +9,12 @@ The Architect is invoked when changes affect multiple modules, introduce new lay
 ## Invoked By
 
 - **User** (direct) — "아키텍처 리뷰해줘", "설계 검토해줘"
-- **planner** (optional) — when proposed changes affect 3+ modules or introduce new layers
+- **pm** (optional) — when proposed changes affect 3+ modules or introduce new layers
 
 ## Referenced Skills
 
-- impact-analysis — Change blast radius assessment
-- feature-breakdown — Task decomposition for structural changes
+- check-impact — Change blast radius assessment
+- breakdown — Task decomposition for structural changes
 
 ## Referenced Files
 
@@ -45,7 +45,7 @@ Before proceeding, verify that required state files have content:
 - `docs/dependency-map.md` — Must have at least one module row (for existing projects)
 - `docs/project-brief.md` — Must have Vision and Goals filled
 
-If `docs/project-brief.md` has no Vision/Goals filled OR `docs/dependency-map.md` has zero module rows → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
+If `docs/project-brief.md` has no Vision/Goals filled OR `docs/dependency-map.md` has zero module rows → **Stop and run the `setup` skill first.** Report: "State files are empty. Running setup to onboard this project."
 
 **Step 0.1: Circular Dependency Check**
 
@@ -85,7 +85,7 @@ Apply these insights when evaluating the current proposal. If the memory file is
 4. If misaligned → **warn and recommend `pivot` before proceeding**
 
 **Step 3: Impact Analysis**
-1. Run `impact-analysis` skill on all affected modules
+1. Run `check-impact` skill on all affected modules
 2. Identify:
    - Modules that will be modified
    - Modules that depend on modified modules (ripple effect)
@@ -140,7 +140,7 @@ After architecture review completes, always append a 🧭 block:
 
 | Architect Result | 🧭 Next Step |
 |---|---|
-| APPROVE | `planner` — "승인된 설계로 기능을 계획해줘" |
+| APPROVE | `pm` — "승인된 설계로 기능을 계획해줘" |
 | REVISE | [Redesign] — "설계를 수정하고 다시 `architect` 호출" |
 | REJECT | User decision — "설계가 반려되었습니다. 대안을 논의합시다" |
 | Direction misaligned | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
@@ -149,10 +149,10 @@ Example 🧭 block for APPROVE:
 ```
 ---
 🧭 Next Step
-→ Next: `planner`
+→ Next: `pm`
 → Prompt: "승인된 설계로 기능을 계획해줘"
 → Why: Architecture approved — proceed to feature planning
-→ Pipeline: 🟢 Pre-pipeline (leads to planner Step 2/6)
+→ Pipeline: 🟢 Pre-pipeline (leads to pm Step 2/6)
 ---
 ```
 
@@ -161,7 +161,7 @@ Example 🧭 block for APPROVE:
 - This agent reviews design, it does NOT implement changes
 - Always defer to `docs/project-brief.md` Decision Log for settled architectural decisions
 - If unsure about direction, recommend involving the designated authority (per project-brief.md; default: team lead)
-- For implementation after approval, hand off to the `planner` agent
+- For implementation after approval, hand off to the `pm` agent
 
 <!-- TEAM_MODE_START -->
 ## Team Mode: Cross-Team Architecture

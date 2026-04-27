@@ -131,7 +131,7 @@ fi
 header 5 "구조적 무결성 — Direction Guard"
 
 if [ -d "harness/" ]; then
-  for f in harness/agents/planner.md harness/agents/reviewer.md harness/agents/architect.md harness/skills/feature-breakdown.md; do
+  for f in harness/agents/pm.md harness/agents/reviewer.md harness/agents/architect.md harness/skills/breakdown.md; do
     if [ -f "$f" ]; then
       grep -q "project-brief" "$f" && ok "$(basename $f): project-brief 참조" || fail "$(basename $f): project-brief 참조 없음 — 가드 끊어짐!"
     fi
@@ -165,7 +165,7 @@ if [ -d "harness/" ]; then
   fi
 
   # 에이전트 → agent-memory 참조
-  for agent in architect planner reviewer sprint-manager; do
+  for agent in architect pm reviewer lead; do
     if [ -f "harness/agents/$agent.md" ]; then
       grep -q "agent-memory/$agent" "harness/agents/$agent.md" && ok "$agent: agent-memory 참조" || fail "$agent: agent-memory 참조 없음 — 세션 학습 끊어짐"
     fi
@@ -201,7 +201,7 @@ header 7 "Agent Chaining & Learn 보증"
 
 if [ -d "harness/" ]; then
   # cross-agent: "새 채팅"
-  for f in harness/agents/sprint-manager.md harness/core-rules.md; do
+  for f in harness/agents/lead.md harness/core-rules.md; do
     if [ -f "$f" ]; then
       grep -q "새 채팅" "$f" && ok "$(basename $f): cross-agent '새 채팅' 안내" || fail "$(basename $f): cross-agent '새 채팅' 안내 누락"
     fi
@@ -212,13 +212,13 @@ if [ -d "harness/" ]; then
     grep -q "새 프롬프트" harness/agents/reviewer.md && ok "reviewer: same-agent '새 프롬프트' 안내" || fail "reviewer: '새 프롬프트' 안내 누락"
   fi
 
-  # learn MANDATORY (≥4)
-  if [ -f "harness/skills/learn.md" ]; then
-    mand=$(grep -c "MANDATORY" harness/skills/learn.md)
-    [ "$mand" -ge 4 ] && ok "learn MANDATORY: ${mand}개 (≥4)" || fail "learn MANDATORY: ${mand}개 — 최소 4 필요"
+  # wrap-up MANDATORY (≥4)
+  if [ -f "harness/skills/wrap-up.md" ]; then
+    mand=$(grep -c "MANDATORY" harness/skills/wrap-up.md)
+    [ "$mand" -ge 4 ] && ok "wrap-up MANDATORY: ${mand}개 (≥4)" || fail "wrap-up MANDATORY: ${mand}개 — 최소 4 필요"
 
-    self=$(grep -c "Self-check" harness/skills/learn.md)
-    [ "$self" -ge 3 ] && ok "learn Self-check: ${self}개 (≥3)" || fail "learn Self-check: ${self}개 — 최소 3 필요"
+    self=$(grep -c "Self-check" harness/skills/wrap-up.md)
+    [ "$self" -ge 3 ] && ok "wrap-up Self-check: ${self}개 (≥3)" || fail "wrap-up Self-check: ${self}개 — 최소 3 필요"
   fi
 
   # reviewer Cross-check
@@ -235,6 +235,7 @@ header 8 "사내 키워드 유출 방지"
 # CREW_MODE 마커 블록 안의 kode:crew는 허용 — 블록 밖에서만 검출
 LEAK=""
 while IFS= read -r f; do
+  [ -f "$f" ] || continue
   # 마커 블록 제거 후 검사 (CREW_MODE 안의 키워드는 무시)
   content=$(sed '/CREW_MODE_START/,/CREW_MODE_END/d' "$f" 2>/dev/null)
   if echo "$content" | grep -qE "kode:musher|kode:crew|ktspace|CNCORE|ktspace\.atlassian"; then

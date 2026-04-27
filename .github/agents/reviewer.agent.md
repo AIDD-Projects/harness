@@ -10,11 +10,17 @@ description: "Code review + auto-fix. Validates quality, security, and test inte
 Review code changes before commit or PR for quality, security, and test integrity.
 Finds issues and auto-fixes where safe, escalates where not.
 
+## Invoked By
+
+- **User** (direct) — "코드를 리뷰해줘", "커밋 전 검토해줘"
+- **[Coding done]** → reviewer (🟢/🔵/🔴 pipeline — after implementation)
+- **debug** → reviewer — "수정한 코드를 리뷰해줘"
+
 ## Referenced Skills
 
-- test-integrity — Mock synchronization verification
-- security-checklist — Security risk inspection
-- impact-analysis — Change blast radius assessment
+- sync-tests — Mock synchronization verification
+- secure — Security risk inspection
+- check-impact — Change blast radius assessment
 
 ## Referenced Files
 
@@ -36,7 +42,8 @@ Before reviewing, verify that required state files exist and are not empty:
 - `docs/failure-patterns.md` — Must exist (needed for Step 5 cross-check)
 - `docs/project-state.md` — Must have current Sprint info (needed for scope check)
 
-If state files are empty/placeholder-only → Warn: "State files are not filled. Review will proceed but scope check and failure pattern cross-check will be limited. Consider running `bootstrap` skill."
+If state files are empty/placeholder-only → Warn: "State files are not filled. Review will proceed but scope check and failure pattern cross-check will be limited. Consider running `setup` skill."
+If `docs/failure-patterns.md` is empty, FP-cross-check (Step 5) will be skipped. This increases risk of recurring bugs.
 
 ### Step 0.5: Load Agent Memory
 
@@ -63,12 +70,12 @@ Changed file list (user-provided or from `git diff --name-only`)
 - [ ] Constructor parameters match actual source (FP-002)
 - [ ] **Common First (Iron Law #9)**: No crew-specific logic outside crew marker blocks. All features must work without crew artifacts.
 
-**Step 3: Test Integrity (test-integrity skill)**
+**Step 3: Test Integrity (sync-tests skill)**
 - [ ] Interface changes have synchronized mocks (FP-001)
 - [ ] New features have tests
 - [ ] Existing tests pass
 
-**Step 4: Security Check (security-checklist skill)**
+**Step 4: Security Check (secure skill)**
 - [ ] No credentials, .env, or temp files in staging (FP-004)
 - [ ] No hardcoded API keys or passwords
 - [ ] No injection vulnerabilities (SQL, XSS)
@@ -77,8 +84,9 @@ Changed file list (user-provided or from `git diff --name-only`)
 - Compare current changes against all FP-NNN items in docs/failure-patterns.md
 - Warn if any pattern applies
 
+
 **Step 6: Feature Registry Check**
-- [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7)
+- [ ] If a new feature was added, verify it is registered in docs/features.md (Iron Law #7). For features spanning multiple modules, one feature row covers all modules — list all key files in that row.
 - [ ] If feature files changed, verify docs/features.md key files are up to date
 - [ ] If tests were added/removed, verify docs/features.md test files column is accurate
 
@@ -86,7 +94,7 @@ Changed file list (user-provided or from `git diff --name-only`)
 - [ ] If new modules were added, verify they are registered in docs/dependency-map.md (Iron Law #6)
 - [ ] If module interfaces changed, verify "Depends On" / "Depended By" columns are updated
 - [ ] If module was deleted/renamed, verify docs/dependency-map.md is cleaned up
-- [ ] Run impact-analysis skill if interface changes affect 2+ dependent modules
+- [ ] Run check-impact skill if interface changes affect 2+ dependent modules
 
 **Step 8: State File Audit**
 
@@ -101,14 +109,33 @@ Verify that state file updates actually happened. Check each:
 - [ ] **docs/dependency-map.md**: If new modules were created, are they registered? If dependencies changed, are relationships updated?
 - [ ] **docs/failure-patterns.md**: If a bug was fixed that matched a pattern, was frequency incremented?
 - [ ] **docs/project-brief.md**: If a technology or architectural decision was made, is it in Decision Log?
-- [ ] **docs/agent-memory/*.md**: If an agent (reviewer/planner/sprint-manager) was used this session, was its memory updated by the learn skill?
+- [ ] **docs/agent-memory/*.md**: If an agent (reviewer/pm/lead) was used this session, was its memory updated by the wrap-up skill?
 
 For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
-
 **Severity**:
 - Missing dependency-map or features.md entries for new modules/features are **blockers** — fix before commit.
-- `[STATE-AUDIT: FR-COVERAGE]` flags (features.md status ↔ Story 완료 불일치) are **blockers** — features.md 상태 갱신 후 commit. 30초면 해결되며 learn까지 미루면 FR 추적이 실제와 불일치합니다.
-- Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to learn skill.
+- `[STATE-AUDIT: FR-COVERAGE]` flags (features.md status ↔ Story 완료 불일치) are **blockers** — features.md 상태 갱신 후 commit. 30초면 해결되며 wrap-up까지 미루면 FR 추적이 실제와 불일치합니다.
+- Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to wrap-up skill.
+
+**Step 9: Commit Guidance**
+
+When review result is DONE or DONE_WITH_CONCERNS (no blockers):
+
+1. **Commit message format**: `S{N}-{M}: {short description}`
+   - Example: `S1-2: Add PII masking + privacy policy docs`
+   - Include state file updates: `S1-2: Add PII masking + update dependency-map, features`
+2. **Staging reminder**: Use explicit file staging (`git add <file>`) per project policy
+3. **Suggest the commit command**:
+   ```
+   git add <changed-files>
+   git commit -m "S{N}-{M}: {description}"
+   ```
+4. **Push recommendation**:
+   - Solo mode: Push at least once per session end (wrap-up skill will remind)
+   - Team mode: Push after each Story completion to share progress
+   - If remote is configured: `git push origin {branch}`
+
+If review is BLOCKED → do NOT suggest commit. Fix first.
 
 ### Output Format
 
@@ -176,20 +203,22 @@ After review completes, always append a 🧭 block based on the outcome:
 
 | Review Result | 🧭 Next Step |
 |---|---|
-| All checks pass, more stories remain | `sprint-manager` — "다음 Story는?" |
-| All checks pass, all stories done | `learn` — "세션을 마무리해줘" |
-| STATE-AUDIT flags found | Two valid paths: (1) `learn` now → "지금 state 파일을 정리해줘" or (2) `sprint-manager` → continue coding, resolve at session end |
+| All checks pass, more stories remain | Commit → `lead` — "커밋 후 다음 Story는?" |
+| All checks pass, all stories done | Commit → `wrap-up` — "커밋 후 세션을 마무리해줘" |
+| STATE-AUDIT flags found | Two valid paths: (1) `wrap-up` now → "지금 state 파일을 정리해줘" or (2) `lead` → continue coding, resolve at session end |
 | Security/architecture issues blocking | [Fix] — "리뷰 지적사항을 수정하세요. 완료 후 **새 프롬프트**에서 다시 `@reviewer` 호출" |
 
 Example 🧭 block for passing review:
 ```
 ---
 🧭 Next Step
-→ Call: `sprint-manager`
-→ Prompt example: "다음 Story는?"
-→ Why: Review passed — move to the next Story
+→ Action: 아래 커밋 명령을 실행하세요
+→ Command: git add <files> && git commit -m "S{N}-{M}: {description}"
+→ Next: `lead` (**새 채팅**에서 아래 입력)
+→ Prompt: "다음 Story는?"
+→ Why: Review passed — commit changes, then move to the next Story
 → Pipeline: 🔵 Step 5/6
-→ Alternative: 세션 종료 시 `learn` 호출
+→ Alternative: 세션 종료 시 `wrap-up` 호출 (push 포함)
 ---
 ```
 
@@ -197,6 +226,6 @@ Example 🧭 block for passing review:
 
 When Step 8 (State File Audit) produces `[STATE-AUDIT]` flags:
 1. List all flagged items in the review output
-2. The `learn` skill (run at session end) will verify and resolve these flags
-3. If a flag is critical (missing module in dependency-map, unregistered feature), recommend fixing immediately rather than deferring to learn
+2. The `wrap-up` skill (run at session end) will verify and resolve these flags
+3. If a flag is critical (missing module in dependency-map, unregistered feature), recommend fixing immediately rather than deferring to wrap-up
 

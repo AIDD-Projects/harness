@@ -13,7 +13,7 @@
 
 kode:harness is built on **harness engineering** for multi-developer, enterprise-grade AI-assisted development.
 
-> **v0.8.4** — 6 IDE support, Navigation Dispatcher, 5 Pipelines ( 🟢🔵🔴🟡🟣), Crew Artifact Integration, EXTERNAL_DEP classification.
+> **v0.9.0** — Naming redesign (clearer skill/agent names), 6 IDE support, Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration.
 
 ## From Harness to Enterprise Harness Engineering
 
@@ -45,7 +45,7 @@ kode:harness manages your **project's direction** — goals, decisions, scope �
 - **Crew Artifact Integration** — Reads external planning output (PRD, Architecture, ARB Checklist) directly — no manual copy needed
 - **State Files** — 5 markdown files that persist project knowledge across LLM sessions
 - **Skills** — Step-by-step procedures for planning, review, debugging, and direction changes
-- **Agents** — Role-based personas that enforce the workflow (planner, reviewer, sprint-manager)
+- **Agents** — Role-based personas that enforce the workflow (pm, reviewer, lead)
 - **Failure Patterns** — Project-specific failure log that prevents repeat mistakes
 - **Decision Log** — Records why decisions were made so LLMs don't re-debate settled choices
 
@@ -61,9 +61,9 @@ npx @kodevibe/harness init --team
 
 Select your IDE when prompted. Files are installed into the current directory.
 
-After installation, ask your LLM to run the `bootstrap` skill:
+After installation, ask your LLM to run the `setup` skill:
 
-> "Run bootstrap to onboard this project."
+> "Run setup to onboard this project."
 
 This scans your codebase and fills all 5 state files automatically.
 
@@ -111,7 +111,7 @@ Large projects with crew artifacts may require increased turn limits:
 | Windsurf | Auto-managed | Default OK |
 | Claude Code | Terminal-based | Default OK |
 
-> This is only needed when running `bootstrap` with crew artifacts on projects that have many existing frameworks. Normal coding/review operations work within default limits.
+> This is only needed when running `setup` with crew artifacts on projects that have many existing frameworks. Normal coding/review operations work within default limits.
 
 ## Supported IDEs
 
@@ -132,21 +132,21 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 - **Core Rules** — 136-line dispatcher: session start guidance, workflow references, state file list, and Iron Laws. Detailed rules are embedded in each skill/agent that enforces them.
 
 ### Skills (on-demand procedures)
-- **bootstrap** — Onboard project into kode:harness: scans codebase + fills state files automatically
-- **learn** — End-of-session wrap-up: captures failure patterns, updates project state, detects direction drift
+- **setup** — Onboard project into kode:harness: scans codebase + fills state files automatically
+- **wrap-up** — End-of-session wrap-up: captures failure patterns, updates project state, detects direction drift
 - **pivot** — Propagate direction changes across all state files when goals/tech/scope changes
-- **test-integrity** — Verify mock/interface synchronization before committing
-- **security-checklist** — Pre-commit security risk scan
-- **investigate** — 4-phase systematic debugging (evidence → scope → fix → verify)
-- **impact-analysis** — Assess change blast radius before modifying shared modules
-- **feature-breakdown** — Decompose features into dependency-ordered implementation tasks
-- **code-review-pr** — Review incoming Pull Requests for quality, security, and direction alignment
-- **deployment** — Pre-deployment validation checklist (tests, state files, security, versioning)
+- **sync-tests** — Verify mock/interface synchronization before committing
+- **secure** — Pre-commit security risk scan
+- **debug** — 4-phase systematic debugging (evidence → scope → fix → verify)
+- **check-impact** — Assess change blast radius before modifying shared modules
+- **breakdown** — Decompose features into dependency-ordered implementation tasks
+- **pr-review** — Review incoming Pull Requests for quality, security, and direction alignment
+- **release** — Pre-release validation checklist (tests, state files, security, versioning)
 
 ### Agents (role-based personas)
-- **planner** — Feature planning, dependency analysis, Direction Alignment (goal/non-goal/decision check)
+- **pm** — Feature planning, dependency analysis, Direction Alignment (goal/non-goal/decision check)
 - **reviewer** — Code review + State File Audit (verifies state files were actually updated)
-- **sprint-manager** — Sprint/Story state management, scope drift prevention, Next Step Recommendation
+- **lead** — Sprint/Story state management, scope drift prevention, Next Step Recommendation
 - **architect** — Design review gate: validates structural changes against project direction and module boundaries
 
 ### State Files (project memory)
@@ -159,7 +159,7 @@ All IDEs also get state files (`project-state.md`, `project-brief.md`, `features
 ## How It Works
 
 ### 1. Bootstrap (once)
-After `harness init`, run the `bootstrap` skill. It scans your codebase, interviews you about goals/non-goals, and fills all 5 state files automatically. **This is the most important step** — without it, Direction Guard and other skills have no context.
+After `harness init`, run the `setup` skill. It scans your codebase, interviews you about goals/non-goals, and fills all 5 state files automatically. **This is the most important step** — without it, Direction Guard and other skills have no context.
 
 ### 2. Direction Guard (every request)
 Before ANY coding task, the LLM reads `project-brief.md` and checks:
@@ -169,26 +169,26 @@ Before ANY coding task, the LLM reads `project-brief.md` and checks:
 
 ### 3. Workflow Pipeline
 ```
-bootstrap → planner → [code] → reviewer → sprint-manager → learn
+setup → pm → [code] → reviewer → lead → wrap-up
 ```
 
 kode:harness provides **5 pipelines** for different scenarios:
 
 | Pipeline | When | Flow |
 |---|---|---|
-| 🟢 New Dev | First feature | bootstrap → planner → sprint-manager → [code] → reviewer → learn |
-| 🔵 Continue | Resuming work | sprint-manager → [code] → reviewer → learn |
-| 🔴 Bug Fix | Debugging | investigate → [fix] → reviewer → learn |
-| 🟡 Direction Change | Goals/tech shift | pivot → planner → sprint-manager → [code] → reviewer → learn |
-| 🟣 Crew-Driven | With external planning artifacts | bootstrap(crew) → planner → sprint-manager → [code] → reviewer → learn |
+| 🟢 New Dev | First feature | setup → pm → lead → [code] → reviewer → wrap-up |
+| 🔵 Continue | Resuming work | lead → [code] → reviewer → wrap-up |
+| 🔴 Bug Fix | Debugging | debug → [fix] → reviewer → wrap-up |
+| 🟡 Direction Change | Goals/tech shift | pivot → pm → lead → [code] → reviewer → wrap-up |
+| 🟣 Crew-Driven | With external planning artifacts | setup(crew) → pm → lead → [code] → reviewer → wrap-up |
 
 Each step ends with a 🧭 **Navigation block** telling you exactly what to do next — including the prompt to type.
 
-- **planner**: Checks direction alignment, breaks down features. **Confirm-First gate** — won't proceed without your approval.
+- **pm**: Checks direction alignment, breaks down features. **Confirm-First gate** — won't proceed without your approval.
 - **reviewer**: Reviews code + audits state file updates
-- **sprint-manager**: Tracks progress via **Wave-Level Pacing** — runs tests between implementation waves
-- **learn**: Captures lessons before session ends
-- **investigate**: **Recalculating Mode** — after 3 failed attempts, proposes alternative approaches
+- **lead**: Tracks progress via **Wave-Level Pacing** — runs tests between implementation waves
+- **wrap-up**: Captures lessons before session ends
+- **debug**: **Recalculating Mode** — after 3 failed attempts, proposes alternative approaches
 
 ### 4. Direction Changes
 When goals, technology, or scope changes, run the `pivot` skill:
@@ -227,14 +227,14 @@ These 8 rules are enforced across all skills and agents. They form the quality b
 
 | # | Law | Enforced By |
 |---|-----|-------------|
-| 1 | **Mock Sync** — Interface change → update mocks in the same commit | `reviewer`, `test-integrity` |
+| 1 | **Mock Sync** — Interface change → update mocks in the same commit | `reviewer`, `sync-tests` |
 | 2 | **Type Check** — Read the source before calling constructors. Never trust memory. | `reviewer` |
-| 3 | **Scope Compliance** — Stay within current Story scope. Report before modifying out-of-scope files. | `sprint-manager`, `reviewer` |
-| 4 | **Security** — No credentials, passwords, or API keys in code or commits. | `security-checklist`, `reviewer` |
+| 3 | **Scope Compliance** — Stay within current Story scope. Report before modifying out-of-scope files. | `lead`, `reviewer` |
+| 4 | **Security** — No credentials, passwords, or API keys in code or commits. | `secure`, `reviewer` |
 | 5 | **3-Failure Stop** — Same approach fails 3 times → stop and report. | All agents |
-| 6 | **Dependency Map** — New/modified module → update `dependency-map.md` in the same commit. | `reviewer`, `learn` |
-| 7 | **Feature Registry** — New feature → register in `features.md` in the same commit. | `reviewer`, `learn` |
-| 8 | **Session Handoff** — Session end → update `project-state.md` Quick Summary. | `learn` |
+| 6 | **Dependency Map** — New/modified module → update `dependency-map.md` in the same commit. | `reviewer`, `wrap-up` |
+| 7 | **Feature Registry** — New feature → register in `features.md` in the same commit. | `reviewer`, `wrap-up` |
+| 8 | **Session Handoff** — Session end → update `project-state.md` Quick Summary. | `wrap-up` |
 
 ## Documentation
 
@@ -272,19 +272,20 @@ Original crew documents are **never modified**. Only the index and tracker are c
 | IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 6 (native format) |
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
 | Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (8 laws embedded in skills) |
-| Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`bootstrap` skill) |
+| Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`setup` skill) |
 | Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (136-line dispatcher) |
 
 ## Roadmap
 
-kode:harness is at **v0.8.4** — 6 IDE support complete, Navigation Dispatcher and Crew Artifact Integration stable.
+kode:harness is at **v0.9.0** — naming redesign complete, 6 IDE support, Navigation Dispatcher and Crew Artifact Integration stable.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
 | **Foundation** | v0.5.0 | ✅ Done | Core framework: 6 IDE support, 8 skills, 3 agents, Team Mode, Direction Guard |
 | **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Flexibility** | v0.7.x | ✅ Done | Delegate team conventions to project-brief.md, remove prescriptive rules |
-| **Navigation** | v0.8.x | ✅ Current | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
+| **Navigation** | v0.8.x | ✅ Done | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
+| **Naming** | v0.9.0 | ✅ Current | Skill/agent naming redesign for clarity and discoverability |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 
 ### What's Next

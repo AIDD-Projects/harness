@@ -22,13 +22,13 @@ const EXPECTED_FILES = {
     count: 24,
     required: [
       '.github/copilot-instructions.md',
-      '.github/skills/test-integrity/SKILL.md',
-      '.github/skills/investigate/SKILL.md',
-      '.github/skills/bootstrap/SKILL.md',
-      '.github/skills/learn/SKILL.md',
+      '.github/skills/sync-tests/SKILL.md',
+      '.github/skills/debug/SKILL.md',
+      '.github/skills/setup/SKILL.md',
+      '.github/skills/wrap-up/SKILL.md',
       '.github/skills/pivot/SKILL.md',
-      '.github/skills/code-review-pr/SKILL.md',
-      '.github/skills/deployment/SKILL.md',
+      '.github/skills/pr-review/SKILL.md',
+      '.github/skills/release/SKILL.md',
       '.github/agents/reviewer.agent.md',
       '.github/agents/architect.agent.md',
       'docs/project-state.md',
@@ -40,16 +40,16 @@ const EXPECTED_FILES = {
     count: 24,
     required: [
       '.claude/rules/core.md',
-      '.claude/skills/test-integrity/SKILL.md',
-      '.claude/skills/security-checklist/SKILL.md',
-      '.claude/skills/bootstrap/SKILL.md',
-      '.claude/skills/learn/SKILL.md',
+      '.claude/skills/sync-tests/SKILL.md',
+      '.claude/skills/secure/SKILL.md',
+      '.claude/skills/setup/SKILL.md',
+      '.claude/skills/wrap-up/SKILL.md',
       '.claude/skills/pivot/SKILL.md',
-      '.claude/skills/code-review-pr/SKILL.md',
-      '.claude/skills/deployment/SKILL.md',
+      '.claude/skills/pr-review/SKILL.md',
+      '.claude/skills/release/SKILL.md',
       '.claude/agents/reviewer.md',
-      '.claude/agents/planner.md',
-      '.claude/agents/sprint-manager.md',
+      '.claude/agents/pm.md',
+      '.claude/agents/lead.md',
       '.claude/agents/architect.md',
       'docs/project-state.md',
     ],
@@ -58,12 +58,12 @@ const EXPECTED_FILES = {
     count: 24,
     required: [
       '.cursor/rules/core.mdc',
-      '.cursor/skills/test-integrity/SKILL.md',
-      '.cursor/skills/bootstrap/SKILL.md',
-      '.cursor/skills/learn/SKILL.md',
+      '.cursor/skills/sync-tests/SKILL.md',
+      '.cursor/skills/setup/SKILL.md',
+      '.cursor/skills/wrap-up/SKILL.md',
       '.cursor/skills/pivot/SKILL.md',
-      '.cursor/skills/code-review-pr/SKILL.md',
-      '.cursor/skills/deployment/SKILL.md',
+      '.cursor/skills/pr-review/SKILL.md',
+      '.cursor/skills/release/SKILL.md',
       '.cursor/agents/reviewer.md',
       '.cursor/agents/architect.md',
       'docs/project-state.md',
@@ -73,16 +73,16 @@ const EXPECTED_FILES = {
     count: 24,
     required: [
       'AGENTS.md',
-      '.agents/skills/test-integrity/SKILL.md',
-      '.agents/skills/investigate/SKILL.md',
-      '.agents/skills/bootstrap/SKILL.md',
-      '.agents/skills/learn/SKILL.md',
+      '.agents/skills/sync-tests/SKILL.md',
+      '.agents/skills/debug/SKILL.md',
+      '.agents/skills/setup/SKILL.md',
+      '.agents/skills/wrap-up/SKILL.md',
       '.agents/skills/pivot/SKILL.md',
-      '.agents/skills/code-review-pr/SKILL.md',
-      '.agents/skills/deployment/SKILL.md',
+      '.agents/skills/pr-review/SKILL.md',
+      '.agents/skills/release/SKILL.md',
       '.codex/agents/reviewer.toml',
-      '.codex/agents/planner.toml',
-      '.codex/agents/sprint-manager.toml',
+      '.codex/agents/pm.toml',
+      '.codex/agents/lead.toml',
       '.codex/agents/architect.toml',
       'docs/project-state.md',
     ],
@@ -91,12 +91,12 @@ const EXPECTED_FILES = {
     count: 24,
     required: [
       '.windsurf/rules/core.md',
-      '.windsurf/skills/test-integrity/SKILL.md',
-      '.windsurf/skills/bootstrap/SKILL.md',
-      '.windsurf/skills/learn/SKILL.md',
+      '.windsurf/skills/sync-tests/SKILL.md',
+      '.windsurf/skills/setup/SKILL.md',
+      '.windsurf/skills/wrap-up/SKILL.md',
       '.windsurf/skills/pivot/SKILL.md',
-      '.windsurf/skills/code-review-pr/SKILL.md',
-      '.windsurf/skills/deployment/SKILL.md',
+      '.windsurf/skills/pr-review/SKILL.md',
+      '.windsurf/skills/release/SKILL.md',
       '.windsurf/skills/reviewer/SKILL.md',
       '.windsurf/skills/architect/SKILL.md',
       'docs/project-state.md',
@@ -106,13 +106,13 @@ const EXPECTED_FILES = {
     count: 24,
     required: [
       'GEMINI.md',
-      '.gemini/skills/test-integrity/SKILL.md',
-      '.gemini/skills/bootstrap/SKILL.md',
-      '.gemini/skills/learn/SKILL.md',
+      '.gemini/skills/sync-tests/SKILL.md',
+      '.gemini/skills/setup/SKILL.md',
+      '.gemini/skills/wrap-up/SKILL.md',
       '.gemini/skills/pivot/SKILL.md',
-      '.gemini/skills/code-review-pr/SKILL.md',
-      '.gemini/skills/deployment/SKILL.md',
-      '.gemini/agents/planner.md',
+      '.gemini/skills/pr-review/SKILL.md',
+      '.gemini/skills/release/SKILL.md',
+      '.gemini/agents/pm.md',
       '.gemini/agents/architect.md',
       'docs/project-state.md',
     ],
@@ -182,11 +182,11 @@ describe('harness init', () => {
 
     it('VS Code skills have name/description frontmatter', () => {
       const content = fs.readFileSync(
-        path.join(tmpDir, '.github/skills/test-integrity/SKILL.md'),
+        path.join(tmpDir, '.github/skills/sync-tests/SKILL.md'),
         'utf8',
       );
       assert.ok(content.startsWith('---\n'), 'Missing frontmatter opening');
-      assert.ok(content.includes('name: test-integrity'), 'Missing name field');
+      assert.ok(content.includes('name: sync-tests'), 'Missing name field');
       assert.ok(content.includes('description:'), 'Missing description field');
     });
 
@@ -420,8 +420,8 @@ describe('harness init', () => {
 
       it('places agent-memory in .harness/', () => {
         assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/reviewer.md')), 'Missing .harness/agent-memory/reviewer.md');
-        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/planner.md')), 'Missing .harness/agent-memory/planner.md');
-        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/sprint-manager.md')), 'Missing .harness/agent-memory/sprint-manager.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/pm.md')), 'Missing .harness/agent-memory/pm.md');
+        assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/lead.md')), 'Missing .harness/agent-memory/lead.md');
         assert.ok(fs.existsSync(path.join(tmpDir, '.harness/agent-memory/architect.md')), 'Missing .harness/agent-memory/architect.md');
       });
 
@@ -463,13 +463,13 @@ describe('harness init', () => {
       });
 
       it('skills reference .harness/ for personal files', () => {
-        const content = fs.readFileSync(path.join(tmpDir, '.github/skills/bootstrap/SKILL.md'), 'utf8');
+        const content = fs.readFileSync(path.join(tmpDir, '.github/skills/setup/SKILL.md'), 'utf8');
         assert.ok(content.includes('.harness/project-state.md') || !content.includes('docs/project-state.md'),
           'Should reference .harness/ instead of docs/ for personal files');
       });
 
       it('skills still reference docs/ for shared files', () => {
-        const content = fs.readFileSync(path.join(tmpDir, '.github/skills/bootstrap/SKILL.md'), 'utf8');
+        const content = fs.readFileSync(path.join(tmpDir, '.github/skills/setup/SKILL.md'), 'utf8');
         if (content.includes('features.md')) {
           assert.ok(content.includes('docs/features.md'), 'Shared files should remain in docs/');
         }
@@ -735,16 +735,16 @@ describe('harness init', () => {
         }
       });
 
-      it('Team bootstrap contains onboarding guidance', () => {
-        const content = teamFiles['skill:bootstrap'];
-        assert.ok(content, 'bootstrap skill should exist');
-        assert.ok(content.includes('Joining Developer'), 'Team bootstrap should have Joining Developer guidance');
+      it('Team setup contains onboarding guidance', () => {
+        const content = teamFiles['skill:setup'];
+        assert.ok(content, 'setup skill should exist');
+        assert.ok(content.includes('Joining Developer'), 'Team setup should have Joining Developer guidance');
       });
 
-      it('Team learn contains Pre-Pull guidance', () => {
-        const content = teamFiles['skill:learn'];
-        assert.ok(content, 'learn skill should exist');
-        assert.ok(content.includes('Pre-Pull'), 'Team learn should have Pre-Pull guidance');
+      it('Team wrap-up contains Pre-Pull guidance', () => {
+        const content = teamFiles['skill:wrap-up'];
+        assert.ok(content, 'wrap-up skill should exist');
+        assert.ok(content.includes('Pre-Pull'), 'Team wrap-up should have Pre-Pull guidance');
       });
 
       it('Team pivot contains Pivot Lock guidance', () => {
@@ -759,16 +759,16 @@ describe('harness init', () => {
         assert.ok(content.includes('Owner-Scoped'), 'Team reviewer should have Owner-Scoped guidance');
       });
 
-      it('Team planner contains team coordination', () => {
-        const content = teamFiles['agent:planner'];
-        assert.ok(content, 'planner agent should exist');
-        assert.ok(content.includes('Owner-Aware'), 'Team planner should have Owner-Aware guidance');
+      it('Team pm contains team coordination', () => {
+        const content = teamFiles['agent:pm'];
+        assert.ok(content, 'pm agent should exist');
+        assert.ok(content.includes('Owner-Aware'), 'Team pm should have Owner-Aware guidance');
       });
 
-      it('Team sprint-manager has ownership context', () => {
-        const content = teamFiles['agent:sprint-manager'];
-        assert.ok(content, 'sprint-manager agent should exist');
-        assert.ok(content.includes('Ownership'), 'Team sprint-manager should have Ownership guidance');
+      it('Team lead has ownership context', () => {
+        const content = teamFiles['agent:lead'];
+        assert.ok(content, 'lead agent should exist');
+        assert.ok(content.includes('Ownership'), 'Team lead should have Ownership guidance');
       });
     });
 
@@ -928,16 +928,16 @@ describe('harness init', () => {
         }
       });
 
-      it('--crew bootstrap contains Phase 1.5', () => {
-        const content = crewFiles['skill:bootstrap'];
-        assert.ok(content, 'bootstrap skill should exist');
-        assert.ok(content.includes('Phase 1.5'), '--crew bootstrap should have Phase 1.5');
+      it('--crew setup contains Phase 1.5', () => {
+        const content = crewFiles['skill:setup'];
+        assert.ok(content, 'setup skill should exist');
+        assert.ok(content.includes('Phase 1.5'), '--crew setup should have Phase 1.5');
       });
 
-      it('--crew planner contains Crew Artifact', () => {
-        const content = crewFiles['agent:planner'];
-        assert.ok(content, 'planner agent should exist');
-        assert.ok(content.includes('Crew Artifact'), '--crew planner should have Crew Artifact content');
+      it('--crew pm contains Crew Artifact', () => {
+        const content = crewFiles['agent:pm'];
+        assert.ok(content, 'pm agent should exist');
+        assert.ok(content.includes('Crew Artifact'), '--crew pm should have Crew Artifact content');
       });
 
       it('--crew reviewer contains Crew Artifact Compliance', () => {
@@ -946,16 +946,16 @@ describe('harness init', () => {
         assert.ok(content.includes('Crew Artifact'), '--crew reviewer should have Crew Artifact Compliance');
       });
 
-      it('--crew learn contains Validation Tracker', () => {
-        const content = crewFiles['skill:learn'];
-        assert.ok(content, 'learn skill should exist');
-        assert.ok(content.includes('Validation Tracker'), '--crew learn should have Validation Tracker');
+      it('--crew wrap-up contains Validation Tracker', () => {
+        const content = crewFiles['skill:wrap-up'];
+        assert.ok(content, 'wrap-up skill should exist');
+        assert.ok(content.includes('Validation Tracker'), '--crew wrap-up should have Validation Tracker');
       });
 
-      it('--crew sprint-manager contains Validation Dashboard', () => {
-        const content = crewFiles['agent:sprint-manager'];
-        assert.ok(content, 'sprint-manager agent should exist');
-        assert.ok(content.includes('Validation Dashboard'), '--crew sprint-manager should have Validation Dashboard');
+      it('--crew lead contains Validation Dashboard', () => {
+        const content = crewFiles['agent:lead'];
+        assert.ok(content, 'lead agent should exist');
+        assert.ok(content.includes('Validation Dashboard'), '--crew lead should have Validation Dashboard');
       });
     });
 
@@ -1170,20 +1170,20 @@ describe('harness init', () => {
       rmDir(tmpDir);
     });
 
-    it('code-review-pr skill has direction alignment step', () => {
+    it('pr-review skill has direction alignment step', () => {
       const content = fs.readFileSync(
-        path.join(tmpDir, '.github/skills/code-review-pr/SKILL.md'),
+        path.join(tmpDir, '.github/skills/pr-review/SKILL.md'),
         'utf8',
       );
-      assert.ok(content.includes('Direction Alignment'), 'code-review-pr should have direction alignment');
+      assert.ok(content.includes('Direction Alignment'), 'pr-review should have direction alignment');
     });
 
-    it('deployment skill has version check step', () => {
+    it('release skill has version check step', () => {
       const content = fs.readFileSync(
-        path.join(tmpDir, '.github/skills/deployment/SKILL.md'),
+        path.join(tmpDir, '.github/skills/release/SKILL.md'),
         'utf8',
       );
-      assert.ok(content.includes('Version Check'), 'deployment should have version check');
+      assert.ok(content.includes('Version Check'), 'release should have version check');
     });
 
     it('architect agent has design evaluation', () => {

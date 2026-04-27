@@ -18,7 +18,7 @@ Keep resolved patterns for regression prevention.
 - **Frequency**: 0
 - **Cause**: LLM treated interface change and mock update as separate tasks. Added method to interface but forgot to update the mock, causing test failures.
 - **Prevention**: Update mock in the same commit as the interface change.
-- **Applied in**: testing rules, test-integrity skill, reviewer agent
+- **Applied in**: testing rules, sync-tests skill, reviewer agent
 - **Status**: Template — activate when first occurrence is logged
 
 <!-- Activation example: When this pattern first occurs, update like this:
@@ -48,7 +48,7 @@ On subsequent occurrences, increment Frequency and append to Occurred (e.g., S1-
 - **Cause**: LLM lost track of current scope in large workflows. Skipped "report and wait for approval" steps.
 - **Concrete scenario**: Working on S1-002 (user auth), LLM noticed a bug in S1-001 (scaffolding) and fixed it without asking — breaking the unchanged module's tests.
 - **Prevention**: Track current Story in docs/project-state.md. Sprint manager agent detects scope violations. If root cause is in another module, STOP and ask user.
-- **Applied in**: sprint-manager agent, global instructions
+- **Applied in**: lead agent, global instructions
 - **Status**: Template — activate when first occurrence is logged
 
 ---
@@ -58,6 +58,6 @@ On subsequent occurrences, increment Frequency and append to Occurred (e.g., S1-
 - **Occurred**: <!-- Sprint/Story where this happened -->
 - **Frequency**: 0
 - **Cause**: LLM created temp files during work, then ran `git add .` which staged credentials or debug artifacts.
-- **Prevention**: Ban `git add .`. Run security-checklist skill before commits. Reviewer agent inspects staging area.
-- **Applied in**: security-checklist skill, reviewer agent, backend rules
+- **Prevention**: Ban `git add .`. Run secure skill before commits. Reviewer agent inspects staging area.
+- **Applied in**: secure skill, reviewer agent, backend rules
 - **Status**: Template — activate when first occurrence is logged

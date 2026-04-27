@@ -20,11 +20,11 @@
    ➡️ Next: Continue (no specific action)
 
    **Write Precedence**: Multiple skills update this file. Priority order:
-   1. `learn` (session end) — highest priority, overwrites Quick Summary
-   2. `sprint-manager` (story status changes) — updates Story Status table
-   3. `planner` (new stories) — adds rows to Story Status table
-   4. `investigate` (bug fixes) — adds to Recent Changes only
-   If conflicts: learn’s Quick Summary always wins (it captures final session state).
+   1. `wrap-up` (session end) — highest priority, overwrites Quick Summary
+   2. `lead` (story status changes) — updates Story Status table
+   3. `pm` (new stories) — adds rows to Story Status table
+   4. `debug` (bug fixes) — adds to Recent Changes only
+   If conflicts: wrap-up’s Quick Summary always wins (it captures final session state).
 -->
 
 ## Current Sprint

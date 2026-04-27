@@ -8,7 +8,7 @@ Without this, direction changes create silent inconsistencies:docs/project-brief
 ## Invoked By
 
 - **User** (direct) — "방향을 바꾸자", "GraphQL로 변경해줘"
-- **planner** (direction change detected) → BLOCK → pivot required before planning proceeds
+- **pm** (direction change detected) → BLOCK → pivot required before planning proceeds
 
 ## When to Apply
 
@@ -113,15 +113,15 @@ After pivot completes, always append a 🧭 block:
 
 | Pivot Result | 🧭 Next Step |
 |---|---|
-| All state files updated | `planner` — "변경된 방향에 맞춰 재계획해줘" |
-| Crew artifacts exist for new direction | `bootstrap` (🟣) — "crew 산출물을 기반으로 state를 다시 세팅해줘" |
+| All state files updated | `pm` — "변경된 방향에 맞춰 재계획해줘" |
+| Crew artifacts exist for new direction | `setup` (🟣) — "crew 산출물을 기반으로 state를 다시 세팅해줘" |
 | User cancelled | 🏁 No action — "기존 방향을 유지합니다" |
 
 Example 🧭 block:
 ```
 ---
 🧭 Next Step
-→ Next: `planner`
+→ Next: `pm`
 → Prompt: "변경된 방향에 맞춰 재계획해줘"
 → Why: Direction changed — re-plan features for new goals
 → Pipeline: 🟡 Step 2/2

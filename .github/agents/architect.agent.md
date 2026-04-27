@@ -11,10 +11,15 @@ Design review gate for structural changes.
 Validates that proposed architecture changes align with project direction and existing module boundaries.
 The Architect is invoked when changes affect multiple modules, introduce new layers, or modify the dependency graph significantly.
 
+## Invoked By
+
+- **User** (direct) — "아키텍처 리뷰해줘", "설계 검토해줘"
+- **pm** (optional) — when proposed changes affect 3+ modules or introduce new layers
+
 ## Referenced Skills
 
-- impact-analysis — Change blast radius assessment
-- feature-breakdown — Task decomposition for structural changes
+- check-impact — Change blast radius assessment
+- breakdown — Task decomposition for structural changes
 
 ## Referenced Files
 
@@ -45,7 +50,14 @@ Before proceeding, verify that required state files have content:
 - `docs/dependency-map.md` — Must have at least one module row (for existing projects)
 - `docs/project-brief.md` — Must have Vision and Goals filled
 
-If ALL files are empty/placeholder-only → **Stop and run the `bootstrap` skill first.** Report: "State files are empty. Running bootstrap to onboard this project."
+If `docs/project-brief.md` has no Vision/Goals filled OR `docs/dependency-map.md` has zero module rows → **Stop and run the `setup` skill first.** Report: "State files are empty. Running setup to onboard this project."
+
+**Step 0.1: Circular Dependency Check**
+
+Before evaluating proposals, verify dependency graph integrity:
+1. For each module in `docs/dependency-map.md`, check if it appears in its own "Depends On" chain (A→B→C→A = circular)
+2. If circular dependency found → flag as 🛑 **architectural blocker** before proceeding
+3. This check runs automatically on every architect invocation
 
 **Step 0.5: Load Agent Memory**
 
@@ -70,7 +82,7 @@ Apply these insights when evaluating the current proposal. If the memory file is
 4. If misaligned → **warn and recommend `pivot` before proceeding**
 
 **Step 3: Impact Analysis**
-1. Run `impact-analysis` skill on all affected modules
+1. Run `check-impact` skill on all affected modules
 2. Identify:
    - Modules that will be modified
    - Modules that depend on modified modules (ripple effect)
@@ -81,11 +93,11 @@ Apply these insights when evaluating the current proposal. If the memory file is
 
 Evaluate the proposal against these architectural principles:
 
-- [ ] **Dependency direction**: Dependencies flow in one direction (no circular deps)
+- [ ] **Dependency direction**: Dependencies flow in one direction (no circular deps). Verify by reading dependency-map.md — check that no module appears in both "Depends On" of A and "Depended By" of A for the same target.
 - [ ] **Layer isolation**: Each layer has clear boundaries and responsibilities
 - [ ] **Interface stability**: Public interfaces change less frequently than implementations
 - [ ] **Single responsibility**: Each module has one reason to change
-- [ ] **Minimal coupling**: Changes to one module require minimal changes to others
+- [ ] **Minimal coupling**: Changes to one module require minimal changes to others. Check "Depended By" count — if > 5, flag as high coupling.
 
 **Step 5: Produce Recommendation**
 
@@ -125,7 +137,7 @@ After architecture review completes, always append a 🧭 block:
 
 | Architect Result | 🧭 Next Step |
 |---|---|
-| APPROVE | `planner` — "승인된 설계로 기능을 계획해줘" |
+| APPROVE | `pm` — "승인된 설계로 기능을 계획해줘" |
 | REVISE | [Redesign] — "설계를 수정하고 다시 `architect` 호출" |
 | REJECT | User decision — "설계가 반려되었습니다. 대안을 논의합시다" |
 | Direction misaligned | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
@@ -134,10 +146,10 @@ Example 🧭 block for APPROVE:
 ```
 ---
 🧭 Next Step
-→ Call: `planner`
-→ Prompt example: "승인된 설계로 기능을 계획해줘"
+→ Next: `pm`
+→ Prompt: "승인된 설계로 기능을 계획해줘"
 → Why: Architecture approved — proceed to feature planning
-→ Pipeline: 🟢 Pre-pipeline (leads to planner Step 2/6)
+→ Pipeline: 🟢 Pre-pipeline (leads to pm Step 2/6)
 ---
 ```
 
@@ -146,5 +158,5 @@ Example 🧭 block for APPROVE:
 - This agent reviews design, it does NOT implement changes
 - Always defer to `docs/project-brief.md` Decision Log for settled architectural decisions
 - If unsure about direction, recommend involving the designated authority (per project-brief.md; default: team lead)
-- For implementation after approval, hand off to the `planner` agent
+- For implementation after approval, hand off to the `pm` agent
 

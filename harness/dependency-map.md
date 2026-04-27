@@ -40,11 +40,11 @@ When modifying a module:
 ## Interface Change Log
 
 <!-- Record interface changes as they happen. This is MANDATORY for all interface changes (Iron Law #1).
-   **Who fills this**: The `impact-analysis` skill adds rows during planning/review. The `reviewer` agent verifies rows exist (Step 7).
+   **Who fills this**: The `check-impact` skill adds rows during planning/review. The `reviewer` agent verifies rows exist (Step 7).
    After modifying any public interface (method signature, return type, parameters):
    1. Add a row here immediately
    2. Check "Affected Modules" by reading the Depended By column in Module Registry
-   3. Update mocks for all affected modules (run test-integrity skill)
+   3. Update mocks for all affected modules (run sync-tests skill)
    4. Set Status to "In Progress" until all dependents are updated, then "Updated"
 
    | Date | Module | Change | Affected Modules | Status |

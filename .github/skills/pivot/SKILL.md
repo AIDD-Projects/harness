@@ -10,6 +10,11 @@ description: 'Propagate direction changes across all state files. Use when proje
 When a project direction changes — technology swap, scope expansion/reduction, architecture shift — this skill propagates the change across ALL state files consistently.
 Without this, direction changes create silent inconsistencies:docs/project-brief.md says "GraphQL" but docs/dependency-map.md still references REST modules.
 
+## Invoked By
+
+- **User** (direct) — "방향을 바꾸자", "GraphQL로 변경해줘"
+- **pm** (direction change detected) → BLOCK → pivot required before planning proceeds
+
 ## When to Apply
 
 - Technology change: "Switch from REST to GraphQL", "Replace PostgreSQL with MongoDB"
@@ -59,6 +64,11 @@ Read ALL state files and identify what needs updating:
    - Are any existing patterns invalidated by this change?
    - Mark invalidated patterns as `Status: Obsolete (pivot: [reason])`
 
+6. **Rules files** (`.vscode/instructions/*.md`) — optional, flag only:
+   - Do any instruction files reference old direction (e.g., old framework names, deprecated patterns)?
+   - Flag for user to update manually if tech stack or architecture changed
+   - Note: Pivot does NOT auto-update rules files — they are outside harness scope. Only flag them for the user's attention.
+
 ### Step 3: Present Change Plan
 
 Before writing anything, present a summary to the user:
@@ -99,7 +109,7 @@ Add an entry to the Decision Log section in docs/project-brief.md:
 - **Change**: [What changed]
 - **Reason**: [Why this decision was made]
 - **Impact**: [What was affected]
-- **Alternatives Considered**: [What else was considered and rejected]
+- **Alternatives Considered**: [1-2 bullet points on what was rejected and why]
 ```
 
 ### 🧭 Navigation — After Pivot
@@ -108,16 +118,16 @@ After pivot completes, always append a 🧭 block:
 
 | Pivot Result | 🧭 Next Step |
 |---|---|
-| All state files updated | `planner` — "변경된 방향에 맞춰 재계획해줘" |
-| Crew artifacts exist for new direction | `bootstrap` (🟣) — "crew 산출물을 기반으로 state를 다시 세팅해줘" |
+| All state files updated | `pm` — "변경된 방향에 맞춰 재계획해줘" |
+| Crew artifacts exist for new direction | `setup` (🟣) — "crew 산출물을 기반으로 state를 다시 세팅해줘" |
 | User cancelled | 🏁 No action — "기존 방향을 유지합니다" |
 
 Example 🧭 block:
 ```
 ---
 🧭 Next Step
-→ Call: `planner`
-→ Prompt example: "변경된 방향에 맞춰 재계획해줘"
+→ Next: `pm`
+→ Prompt: "변경된 방향에 맞춰 재계획해줘"
 → Why: Direction changed — re-plan features for new goals
 → Pipeline: 🟡 Step 2/2
 ---

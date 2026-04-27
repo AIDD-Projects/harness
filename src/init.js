@@ -28,22 +28,22 @@ function writeFile(targetDir, relPath, content, overwrite) {
 // ─── Shared definitions ──────────────────────────────────────
 
 const SKILLS = [
-  { id: 'test-integrity', desc: 'Ensure test mocks stay synchronized when interfaces change. Use when modifying repository or service interfaces.' },
-  { id: 'security-checklist', desc: 'Security risk inspection before commits. Use when reviewing code for security issues.' },
-  { id: 'investigate', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
-  { id: 'impact-analysis', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
-  { id: 'feature-breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
-  { id: 'bootstrap', desc: 'Onboard project into kode:harness. Scans codebase and fills state files. Use after harness init or when state files are empty.' },
-  { id: 'learn', desc: 'Capture session lessons and update state files. Use at the end of every session.' },
+  { id: 'sync-tests', desc: 'Ensure test mocks stay synchronized when interfaces change. Use when modifying repository or service interfaces.' },
+  { id: 'secure', desc: 'Security risk inspection before commits. Use when reviewing code for security issues.' },
+  { id: 'debug', desc: 'Investigate and diagnose issues. Use when debugging or analyzing unexpected behavior.' },
+  { id: 'check-impact', desc: 'Assess change blast radius. Use when modifying shared modules or interfaces.' },
+  { id: 'breakdown', desc: 'Break down features into implementable stories. Use when planning new features.' },
+  { id: 'setup', desc: 'Onboard project into kode:harness. Scans codebase and fills state files. Use after harness init or when state files are empty.' },
+  { id: 'wrap-up', desc: 'Capture session lessons and update state files. Use at the end of every session.' },
   { id: 'pivot', desc: 'Propagate direction changes across all state files. Use when project goals, technology, scope, or architecture changes.' },
-  { id: 'code-review-pr', desc: 'Review external Pull Requests for quality, security, and direction alignment. Use when reviewing incoming PRs.' },
-  { id: 'deployment', desc: 'Pre-deployment validation checklist. Use before deploying, publishing, or creating release tags.' },
+  { id: 'pr-review', desc: 'Review external Pull Requests for quality, security, and direction alignment. Use when reviewing incoming PRs.' },
+  { id: 'release', desc: 'Pre-deployment validation checklist. Use before deploying, publishing, or creating release tags.' },
 ];
 
 const AGENTS = [
   { id: 'reviewer', file: 'agents/reviewer.md', desc: 'Code review + auto-fix. Validates quality, security, and test integrity before commits.' },
-  { id: 'sprint-manager', file: 'agents/sprint-manager.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
-  { id: 'planner', file: 'agents/planner.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
+  { id: 'lead', file: 'agents/lead.md', desc: 'Sprint/Story state tracking, next task guidance, scope drift prevention.' },
+  { id: 'pm', file: 'agents/pm.md', desc: 'Feature planning and dependency management. Analyze architecture, break down features.' },
   { id: 'architect', file: 'agents/architect.md', desc: 'Design review gate. Validates structural changes against project direction and module boundaries.' },
 ];
 
@@ -57,8 +57,8 @@ const STATE_FILES = [
 
 const AGENT_MEMORY_FILES = [
   'agent-memory/reviewer.md',
-  'agent-memory/planner.md',
-  'agent-memory/sprint-manager.md',
+  'agent-memory/pm.md',
+  'agent-memory/lead.md',
   'agent-memory/architect.md',
 ];
 
@@ -78,12 +78,12 @@ function hasFrameworkMarker(content) {
 
 function hasIdeLayout(targetDir, ide) {
   const requiredByIde = {
-    vscode: '.github/skills/bootstrap/SKILL.md',
-    claude: '.claude/skills/bootstrap/SKILL.md',
-    cursor: '.cursor/skills/bootstrap/SKILL.md',
-    codex: '.agents/skills/bootstrap/SKILL.md',
-    windsurf: '.windsurf/skills/bootstrap/SKILL.md',
-    antigravity: '.gemini/skills/bootstrap/SKILL.md',
+    vscode: '.github/skills/setup/SKILL.md',
+    claude: '.claude/skills/setup/SKILL.md',
+    cursor: '.cursor/skills/setup/SKILL.md',
+    codex: '.agents/skills/setup/SKILL.md',
+    windsurf: '.windsurf/skills/setup/SKILL.md',
+    antigravity: '.gemini/skills/setup/SKILL.md',
   };
 
   const requiredPath = requiredByIde[ide];
@@ -466,7 +466,7 @@ function showPostInstallGuide(ideName, mode) {
   lines.push(
     '',
     '  🚀 Next steps:',
-    '     1. Ask your AI: "Run bootstrap to onboard this project"',
+    '     1. Ask your AI: "Run setup to onboard this project"',
     '     2. AI scans your codebase and fills state files automatically',
     '     3. Start coding: ask your AI to plan a new feature',
     '',
@@ -573,7 +573,7 @@ function runValidate(targetDir) {
 
   // Each state file has a known sentinel that only exists in unfilled templates.
   // failure-patterns.md is excluded: it intentionally keeps FP-001~004 as templates
-  // after bootstrap (Frequency: 0 is the normal initial state, not a placeholder).
+  // after setup (Frequency: 0 is the normal initial state, not a placeholder).
   const templateSentinels = {
     'project-state.md': 'S1-1 | Project scaffolding',
     'dependency-map.md': 'Add new modules above this line',
@@ -599,7 +599,7 @@ function runValidate(targetDir) {
       // failure-patterns.md: no sentinel check — template state is normal
       results.push(`  ✅  ${file} — ok (no failures logged yet is normal)`);
     } else if (content.includes(sentinel)) {
-      results.push(`  ⚠️   ${file} — placeholder only. Run \`bootstrap\` to fill.`);
+      results.push(`  ⚠️   ${file} — placeholder only. Run \`setup\` to fill.`);
       warnings++;
     } else {
       results.push(`  ✅  ${file} — has content`);
