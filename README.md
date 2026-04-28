@@ -9,67 +9,33 @@
 [![CI](https://github.com/AIDD-Projects/harness/actions/workflows/ci.yml/badge.svg)](https://github.com/AIDD-Projects/harness/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Keep every developer's AI aligned on one project direction.**
+> **Your AI coding agent forgets everything between sessions. kode:harness makes it remember — goals, decisions, failures, and project direction.**
 
-kode:harness is built on **harness engineering** for multi-developer, enterprise-grade AI-assisted development.
+Production-grade guardrails for AI coding agents. Prevents context rot, enforces project direction, and persists state across sessions. Works with **Copilot, Claude, Cursor, Codex, Windsurf, and Gemini**. Zero dependencies.
 
-> **v0.9.0** — Naming redesign (clearer skill/agent names), 6 IDE support, Navigation Dispatcher, 5 Pipelines (🟢🔵🔴🟡🟣), Crew Artifact Integration.
-
-## From Harness to Enterprise Harness Engineering
-
-The concept of an AI "harness" — structured markdown files that guide LLM coding agents — has become a foundational pattern in AI-assisted development. Frameworks like BMAD, gstack, and GSD pioneered this approach for **solo developers**.
-
-This approach takes harness engineering beyond solo tooling. It evolves the harness concept into an **enterprise-grade direction management method** for both multi-developer teams and solo developers. **kode:harness** is the product form of that approach.
-
-| | Traditional Harness | kode:harness + harness engineering |
-|---|---|---|
-| Target | Solo developer | **Multi-developer teams** |
-| Focus | What the AI does | **Where the AI is going** |
-| Direction management | ❌ | ✅ Direction Guard + pivot + Decision Log |
-| Team state sharing | ❌ | ✅ Shared/personal state separation |
-| Token budget | 200+ files | **~25 files (~17K tokens)** — works with small LLMs too |
-
-## The Problem
-
-When one developer uses an AI coding assistant, direction stays consistent. But in **enterprise teams**, each developer runs their own AI sessions — and each AI drifts independently. Developer A's AI refactors toward microservices while Developer B's AI doubles down on the monolith. Without shared direction management, **AI agents across multiple developers pull the project apart.**
-
-kode:harness solves this. It gives every developer's AI the same goals, non-goals, decisions, and project state — so all AI sessions converge on **one direction**, regardless of who's coding or which IDE they use.
-
-## What It Does
-
-kode:harness manages your **project's direction** — goals, decisions, scope — so LLM coding agents stay aligned **across developers and sessions**. Zero dependencies, 6 IDE support, native format generation. The underlying approach is harness engineering for multi-developer and enterprise-grade execution.
-
-- **Direction Guard** — Every coding request is checked against project goals/non-goals before execution
-- **Navigation Dispatcher** — 🧭 Turn-by-Turn navigation guides developers through 5 pipelines with explicit next-step prompts
-- **5 Pipelines** — 🟢 New Dev → 🟕 Continue → 🟤 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven (external planning artifact integration)
-- **Crew Artifact Integration** — Reads external planning output (PRD, Architecture, ARB Checklist) directly — no manual copy needed
-- **State Files** — 5 markdown files that persist project knowledge across LLM sessions
-- **Skills** — Step-by-step procedures for planning, review, debugging, and direction changes
-- **Agents** — Role-based personas that enforce the workflow (pm, reviewer, lead)
-- **Failure Patterns** — Project-specific failure log that prevents repeat mistakes
-- **Decision Log** — Records why decisions were made so LLMs don't re-debate settled choices
+---
 
 ## Quick Start
 
 ```bash
-# Solo mode (default)
-npx @kodevibe/harness init
-
-# Team mode (multi-developer)
-npx @kodevibe/harness init --team
+npx @kodevibe/harness init          # pick your IDE
 ```
 
-Select your IDE when prompted. Files are installed into the current directory.
-
-After installation, ask your LLM to run the `setup` skill:
-
+```bash
+# Then tell your AI agent:
 > "Run setup to onboard this project."
+```
 
-This scans your codebase and fills all 5 state files automatically.
+That's it. Your AI now has persistent memory, direction guardrails, and self-correction loops.
 
-### Non-interactive
+<details>
+<summary>More install options</summary>
 
 ```bash
+# Team mode (multi-developer direction alignment)
+npx @kodevibe/harness init --team
+
+# Non-interactive (CI/scripts)
 npx @kodevibe/harness init --ide vscode
 npx @kodevibe/harness init --ide claude
 npx @kodevibe/harness init --ide cursor
@@ -77,8 +43,6 @@ npx @kodevibe/harness init --ide codex
 npx @kodevibe/harness init --ide windsurf
 npx @kodevibe/harness init --ide antigravity
 ```
-
-### Options
 
 | Flag | Description |
 |------|-------------|
@@ -90,28 +54,68 @@ npx @kodevibe/harness init --ide antigravity
 | `--overwrite` | Overwrite existing files (including state files) |
 | `--version` | Show version number |
 
-### Health Check
+</details>
+
+---
+
+## The Problem: Context Rot
+
+Your AI coding agent starts every session from zero. By session 3, it's forgotten the architecture decisions from session 1. By session 10, it's re-debating settled choices and contradicting its own earlier work.
+
+In teams, it's worse — Developer A's AI refactors toward microservices while Developer B's AI doubles down on the monolith. **Without shared guardrails, AI agents pull the project apart.**
+
+kode:harness solves this with three mechanisms:
+
+| Mechanism | What it prevents |
+|-----------|-----------------|
+| **State Persistence** | AI forgetting goals, decisions, and progress between sessions |
+| **Direction Guard** | AI drifting away from project goals or contradicting past decisions |
+| **Failure Patterns** | AI repeating the same mistakes across sessions |
+
+---
+
+## Why not just...?
+
+| Approach | Limitation | kode:harness difference |
+|----------|-----------|------------------------|
+| **`.cursorrules` / `copilot-instructions.md`** | Static. No state persistence, no self-correction, no cross-session memory. | Living state files that update every session. Direction Guard checks every request against goals. |
+| **LangChain / CrewAI** | Runtime orchestration for building AI apps. Not for directing AI coding agents. | Markdown-native guardrails that work inside your IDE. No runtime, no SDK. |
+| **BMAD / gstack / GSD** | Built for solo developers. 200+ files. No direction management. | ~25 files (~17K tokens). Direction Guard + Decision Log. Multi-developer team support. |
+| **"I'll just be careful"** | Works until you forget. LLMs don't learn from past sessions. | Automated: `wrap-up` captures lessons, `debug` tracks failures, `reviewer` audits state. |
+
+---
+
+<!--
+## See It in Action
+
+> TODO: Add terminal demo GIF showing:
+> 1. `npx @kodevibe/harness init` → IDE selection → file generation
+> 2. AI running `setup` → state files populated
+> 3. Direction Guard catching a non-goal request
+-->
+
+## What It Does
+
+| Feature | Description |
+|---------|-------------|
+| 🛡️ **Direction Guard** | Every coding request is checked against project goals/non-goals before execution |
+| 🧭 **Navigation Dispatcher** | Turn-by-Turn navigation through 5 pipelines with copy-paste next-step prompts |
+| 📝 **State Persistence** | 5 markdown files that persist project knowledge across LLM sessions |
+| 🔄 **5 Pipelines** | 🟢 New Dev → 🔵 Continue → 🔴 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven |
+| 🛠️ **10 Skills** | Step-by-step procedures: setup, debug, breakdown, review, pivot, and more |
+| 🤖 **4 Agents** | Role-based personas: pm, reviewer, lead, architect |
+| ⚠️ **Failure Patterns** | Project-specific failure log that prevents repeat mistakes across sessions |
+| 📋 **Decision Log** | Records why decisions were made so LLMs don't re-debate settled choices |
+| 🟣 **Crew Artifact Integration** | Reads external planning output (PRD, Architecture, ARB Checklist) directly |
+
+---
+
+## Health Check
 
 ```bash
-# Verify kode:harness files are installed
-npx @kodevibe/harness doctor
-
-# Verify state files have real content (not just placeholders)
-npx @kodevibe/harness validate
+npx @kodevibe/harness doctor    # verify files are installed
+npx @kodevibe/harness validate  # verify state files have real content
 ```
-
-### IDE Configuration (Optional)
-
-Large projects with crew artifacts may require increased turn limits:
-
-| IDE | Setting | Recommended |
-|-----|---------|-------------|
-| VS Code | `chat.agent.maxRequests` in settings.json | `100` |
-| Cursor | Auto-managed | Default OK |
-| Windsurf | Auto-managed | Default OK |
-| Claude Code | Terminal-based | Default OK |
-
-> This is only needed when running `setup` with crew artifacts on projects that have many existing frameworks. Normal coding/review operations work within default limits.
 
 ## Supported IDEs
 
@@ -240,11 +244,13 @@ These 8 rules are enforced across all skills and agents. They form the quality b
 
 See [docs/reference.md](docs/reference.md) for detailed descriptions of every skill, agent, rule, and state file.
 
-## Why kode:harness?
+## Why We Built This
 
-### The Core Insight
+Existing AI coding frameworks focus on **what the AI does** — generate code, run tests, deploy. But the real problem isn't capability. It's **direction**.
 
-Existing AI coding frameworks focus on **what the AI does** (generate code, run tests, deploy). kode:harness focuses on **where the AI is going** — ensuring every developer's AI moves in the same direction. harness engineering is the discipline that keeps the whole team on course.
+When one developer uses AI, direction stays consistent. But in teams, each developer's AI drifts independently. And even solo developers lose direction across sessions — what we call **Context Rot**. The AI forgets architecture decisions, re-debates settled choices, and contradicts its own earlier work.
+
+kode:harness focuses on **where the AI is going**. It gives every AI session — across developers, across IDEs, across time — the same goals, decisions, and project state. The underlying discipline is **harness engineering**: lightweight, markdown-native guardrails that any LLM can read.
 
 ### Crew Artifact Integration (🟣 Pipeline)
 
@@ -262,7 +268,7 @@ Bootstrap auto-detects crew artifacts in `docs/crew/`, `docs/PM/`, `docs/Analyst
 
 Original crew documents are **never modified**. Only the index and tracker are created.
 
-### Comparison
+### How It Compares
 
 | | BMAD v6.2.2 | gstack v0.15.1 | GSD v1.33.0 | kode:harness |
 |---|---|---|---|---|
