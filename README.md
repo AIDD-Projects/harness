@@ -274,7 +274,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-kode:harness is at **v0.9.0** — naming redesign complete, 6 IDE support, Navigation Dispatcher and Crew Artifact Integration stable.
+kode:harness is at **v0.9.2** — state-check skill, Iron Law #10 (Self-Verify), Confirmation Gate Defaults, multi-IDE installation fixes, and CI Artifact Index for crew mode.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
@@ -282,7 +282,8 @@ kode:harness is at **v0.9.0** — naming redesign complete, 6 IDE support, Navig
 | **Hardening** | v0.6.5 | ✅ Done | 10 skills, 4 agents, Iron Laws, CLI batch/doctor/validate, merge conflict SOP, direction drift detection |
 | **Flexibility** | v0.7.x | ✅ Done | Delegate team conventions to project-brief.md, remove prescriptive rules |
 | **Navigation** | v0.8.x | ✅ Done | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
-| **Naming** | v0.9.0 | ✅ Current | Skill/agent naming redesign for clarity and discoverability |
+| **Naming** | v0.9.0 | ✅ Done | Skill/agent naming redesign for clarity and discoverability |
+| **Self-Verify** | v0.9.2 | ✅ Current | state-check skill, Iron Law #10, Confirmation Gate Defaults, multi-IDE fix, CI Artifact Index |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 
 ### What's Next
