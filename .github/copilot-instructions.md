@@ -79,7 +79,7 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 | `lead` (story started) | [Coding] | "S{N}-{M} 구현을 시작해줘" → 완료 후 **새 채팅**에서 `@reviewer` 호출 |
 | [Coding done] | `reviewer` | "S{N}-{M} 코드를 리뷰해줘" |
 | `reviewer` (pass, more stories) | Commit → `lead` | \"커밋 후 다음 Story는?\" |
-| `reviewer` (pass, all done) | Commit → `wrap-up` | \"커밋 후 세션 마무리해줘\" |
+| `reviewer` (pass, sprint all done) | Commit → `pm` checkpoint | \"커밋 후 Sprint 완료 — pm checkpoint 실행\" |
 | `reviewer` (STATE-AUDIT) | `wrap-up` | "state 파일을 정리하고 세션 마무리해줘" |
 | `debug` | `reviewer` | "수정한 코드를 리뷰해줘" |
 | `pivot` | `pm` | "변경된 방향에 맞춰 재계획해줘" |

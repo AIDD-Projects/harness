@@ -68,9 +68,75 @@ Apply these insights when creating the implementation plan. If the memory file i
 
 > **Team Mode**: In Team mode, agent memory is personal (`.harness/agent-memory/`). Each developer accumulates their own planning insights.
 
+### Step 0.7: Feature Roadmap Planning (Draft & Correct)
+
+**Trigger**: `docs/project-brief.md`에 `## Feature Roadmap` 섹션이 없을 때
+
+<!-- CREW_MODE_START -->
+**Crew 파이프라인(🟣)**: FR목록이 이미 Roadmap 역할을 하므로 이 Step을 skip한다.
+<!-- CREW_MODE_END -->
+
+1. `docs/project-brief.md`의 Goals + `docs/dependency-map.md`의 현재 모듈 구조를 읽는다
+2. Phase 구조의 Feature Roadmap **초안**을 생성한다:
+   ```
+   ## Feature Roadmap
+   
+   ### Phase 1 — Core (Goal 달성 필수)
+   - [ ] F-001: [기능명] — [어떤 Goal에 대응하는지]
+   - [ ] F-002: ...
+   
+   ### Phase 2 — Enhancement (사용성/완성도)
+   - [ ] F-003: ...
+   
+   ### Phase 3 — Nice-to-have
+   - [ ] F-004: ...
+   ```
+3. 사용자에게 초안을 제시한다: **"이 Feature Roadmap을 검토하고, 추가/삭제/순서 변경을 알려주세요."**
+   > **물어보지 말고, 초안을 만들어서 교정받는다.** 빈 칸을 채우는 것보다 틀린 것을 고치는 것이 쉽다.
+4. 사용자 교정을 반영한 최종 Roadmap을 `docs/project-brief.md`에 `## Feature Roadmap` 섹션으로 기록한다
+5. Feature Roadmap이 확정되면 아래 "For New Feature" 절차로 진행한다
+
+> **pivot 이후**: pivot이 `project-brief.md`를 업데이트하면, pm은 변경된 Roadmap을 읽고 Checkpoint에서 반영한다.
+
 ### For New Feature
 
 1. Read `docs/project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
+<!-- CREW_MODE_START -->
+2. **Crew Artifact Integration** (🟣 Pipeline only):
+   If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+
+   a. **Read PRD** (path from Artifact Index):
+      - Extract functional requirements (FR-001, FR-002, ...)
+      - Extract priority (P0, P1, P2)
+      - Extract acceptance criteria for each FR
+      - Extract non-functional requirements (performance, security, scalability)
+
+   b. **Read Product Brief** (path from Artifact Index):
+      - Extract user personas → tag each Story with target persona
+      - Extract user journey steps → map to implementation order
+      - Extract KPIs → attach as acceptance criteria to relevant Stories
+
+   c. **Map FR → Stories**:
+      - Each FR-NNN generates 1+ Stories
+      - Story title includes `[FR-NNN]` prefix for traceability
+      - Story acceptance criteria = PRD's FR acceptance criteria (not invented)
+      - Story references related KPI (if applicable)
+
+   d. **Map ARB Fail Items → Mandatory Stories**:
+      - Read `docs/project-brief.md` § Validation Tracker → ARB Fail Resolution
+      - Each Fail item → P0 Story (highest priority)
+      - Story title includes `[ARB-FAIL]` prefix
+
+   e. **Update Validation Tracker** in `docs/project-brief.md`:
+      - KPI Coverage: fill Story column with mapped Story IDs
+      - FR Coverage: fill Stories column with mapped Story IDs
+      - ARB Fail Resolution: fill Story column with mapped Story IDs
+
+   f. Skip discovery questions that crew artifacts already answer.
+      Only ask about implementation-specific decisions (test framework, library choices).
+
+   If no Crew Artifact Index → proceed with normal user-driven planning below.
+<!-- CREW_MODE_END -->
 
 3. **Direction Alignment**: Verify the requested feature against three checkpoints.
    > This check intentionally duplicates architect’s direction validation (Step 2). The redundancy is by design: architect validates STRUCTURAL proposals (module boundaries, layer rules), while pm validates FEATURE-level alignment (goals, non-goals, decisions). When both are used in the same session, this provides defense-in-depth.
@@ -103,6 +169,15 @@ Apply these insights when creating the implementation plan. If the memory file i
 ### For Refactor Plan
 
 1. Read `docs/dependency-map.md` to map the blast radius
+<!-- CREW_MODE_START -->
+2. **Crew Artifact Integration** (🟣 Pipeline only):
+   If `docs/project-brief.md` contains a `## Crew Artifact Index` table with entries:
+   - Read relevant crew artifacts (PRD, Architecture) for refactoring context
+   - Check ARB Fail items — refactoring may address architectural issues flagged by ARB
+   - Map ARB Fail items to refactoring tasks where applicable (prefix with `[ARB-FAIL]`)
+   - Update Validation Tracker in `docs/project-brief.md` with mapped Stories
+   If no Crew Artifact Index → proceed with normal refactoring flow below.
+<!-- CREW_MODE_END -->
 3. Run **check-impact** skill on each module being refactored
 4. Identify safe refactoring order (leaf modules first, core modules last)
 5. Produce refactoring plan with rollback checkpoints
@@ -139,11 +214,20 @@ After user approves the plan, perform these writes in order:
    - Add rows for modules introduced by the plan
    - Update relationship columns for modified modules
 
+<!-- CREW_MODE_START -->
+4. **`docs/project-brief.md`** — Update Validation Tracker (🟣 pipeline only):
+   - KPI Coverage: fill Story column with mapped Story IDs
+   - FR Coverage: fill Stories column with mapped Story IDs
+   - ARB Fail Resolution: fill Story column with mapped Story IDs
+<!-- CREW_MODE_END -->
 
 **Completion Check**: Before outputting 🧭, verify:
 - [ ] features.md has new feature row(s)
 - [ ] project-state.md has Story rows with `⬜ todo` status
 - [ ] dependency-map.md has new module rows (if plan introduces new modules)
+<!-- CREW_MODE_START -->
+- [ ] project-brief.md Validation Tracker updated (if 🟣 pipeline)
+<!-- CREW_MODE_END -->
 
 If any write fails, report the failure and retry. Do NOT proceed to 🧭 with incomplete state files.
 
@@ -172,6 +256,77 @@ If any write fails, report the failure and retry. Do NOT proceed to 🧭 with in
 [Additions/modifications to docs/dependency-map.md]
 ```
 
+<!-- CREW_MODE_START -->
+### New Feature Plan — Crew-Driven (🟣 Pipeline)
+
+Use this format when Crew Artifact Index exists in project-brief.md. If no Artifact Index, use the standard format above.
+
+```markdown
+## Feature: [name]
+**Story**: S[sprint]-[number]
+**PRD Reference**: FR-[NNN]
+**KPI**: [related KPI, if any]
+**Acceptance Criteria**: [from PRD — not invented]
+**Scope**: [modules affected]
+**Risk**: Low | Medium | High
+
+### Architecture Impact
+- New modules: [list]
+- Modified modules: [list]
+
+### Implementation Plan
+[Output from breakdown skill]
+
+### Validation Tracker Updates
+- KPI Coverage: [which KPIs this story addresses]
+- FR Coverage: [which FRs this story implements]
+- ARB Fail Resolution: [which Fail items this story resolves, if any]
+```
+<!-- CREW_MODE_END -->
+
+## Sprint Completion Checkpoint
+
+**Trigger**: 현재 Sprint의 모든 Story가 ✅ 완료되었을 때 (reviewer pass → pm checkpoint)
+
+이 절차는 Sprint 종료 시 자동으로 실행된다. "계속할까요?"가 아니라 **구체적 선택을 강제**한다.
+
+### 절차
+
+1. **진척 현황 읽기**:
+<!-- CREW_MODE_START -->
+   - 🟣 crew 파이프라인: `docs/project-brief.md`의 Validation Tracker에서 FR Coverage를 읽는다
+<!-- CREW_MODE_END -->
+   - 🟢🔵 no-crew 파이프라인: `docs/project-brief.md`의 Feature Roadmap을 읽는다
+
+2. **Phase별 진척 표시**:
+   ```
+   📊 Feature Roadmap Progress
+   Phase 1 (Core):        ████████░░ 4/5
+   Phase 2 (Enhancement): ░░░░░░░░░░ 0/3
+   Phase 3 (Nice-to-have): ░░░░░░░░░░ 0/2
+   ```
+
+3. **선택지 제시** (Yes/No 아님 — Selection Forcing):
+   ```
+   다음 Sprint에 포함할 기능을 선택하세요:
+
+   Phase 1 (Core) — 미완료:
+     [ ] F-005: [기능명]
+
+   Phase 2 (Enhancement):
+     [ ] F-006: [기능명]
+     [ ] F-007: [기능명]
+
+   🏁 마무리: 현재 상태로 프로젝트를 완료하고 wrap-up 진행
+   ```
+   > **"계속"은 선택지에 없다.** 사용자는 구체적 기능을 골라야 하거나, 명시적으로 "마무리"를 선택해야 한다.
+
+4. **사용자 선택에 따라 분기**:
+   - **기능 선택** → 선택된 기능으로 Sprint 계획 (위의 "For New Feature" 절차 진행)
+   - **"마무리" 선택** → 🧭 Next Step을 `wrap-up`으로 출력
+   - Feature Roadmap에 없는 기능 추가 요청 → Roadmap에 먼저 추가한 후 Sprint 계획
+
+5. **Roadmap 업데이트**: 완료된 기능의 체크박스를 `[x]`로 변경하고 `docs/project-brief.md`에 기록
 
 ### Architecture Query Response
 ```markdown
@@ -189,6 +344,9 @@ After producing a plan, always append a 🧭 block:
 | Planner Result | 🧭 Next Step |
 |---|---|
 | Plan created (solo) | User confirmation — "이 경로(Plan)대로 구현을 시작할까요?" → approved → `lead` |
+<!-- CREW_MODE_START -->
+| Plan created (crew artifacts used) | User confirmation — "crew 기반 Plan을 확인해 주세요. 진행할까요?" → approved → `lead` |
+<!-- CREW_MODE_END -->
 | Non-Goal violation → stopped | User decision needed — "이 기능은 Non-Goal에 해당합니다. 계속하시겠습니까? → `pivot` 또는 취소" |
 | Direction change detected | `pivot` — "방향을 전환하고 state 파일을 업데이트해줘" |
 | State files empty | `setup` — "프로젝트를 온보딩해줘" |
@@ -224,3 +382,18 @@ Example 🧭 block for normal completion:
 - If a feature affects 5+ modules, flag as High Risk
 - If the plan exceeds one Sprint's worth of work, suggest splitting into sub-features
 
+<!-- TEAM_MODE_START -->
+## Team Mode: Planning
+
+### Pre-Pull
+Before reading or updating shared state files, run `git pull` on the default branch (per project-brief.md → Key Technical Decisions; default: main).
+
+### Owner-Aware Planning
+- When assigning tasks, check docs/dependency-map.md Owner column to identify module ownership
+- For features that cross module boundaries, identify all affected Owners and flag coordination needs
+- Set Owner on new rows you create in docs/features.md and docs/dependency-map.md
+
+### Agent Memory
+- Your personal docs/agent-memory/pm.md contains your individual estimation accuracy
+- Team velocity estimates should be coordinated through sprint planning meetings, not derived from personal metrics alone
+<!-- TEAM_MODE_END -->
