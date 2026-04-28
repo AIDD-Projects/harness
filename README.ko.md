@@ -85,15 +85,6 @@ kode:harness는 세 가지 메커니즘으로 해결합니다:
 
 ---
 
-<!--
-## 동작 데모
-
-> TODO: 터미널 데모 GIF 추가:
-> 1. `npx @kodevibe/harness init` → IDE 선택 → 파일 생성
-> 2. AI가 `setup` 실행 → state 파일 채워짐
-> 3. Direction Guard가 비목표 요청을 잡는 장면
--->
-
 ## 주요 기능
 
 | 기능 | 설명 |

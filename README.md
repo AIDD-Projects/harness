@@ -85,15 +85,6 @@ kode:harness solves this with three mechanisms:
 
 ---
 
-<!--
-## See It in Action
-
-> TODO: Add terminal demo GIF showing:
-> 1. `npx @kodevibe/harness init` → IDE selection → file generation
-> 2. AI running `setup` → state files populated
-> 3. Direction Guard catching a non-goal request
--->
-
 ## What It Does
 
 | Feature | Description |
