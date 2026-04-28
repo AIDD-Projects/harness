@@ -131,8 +131,12 @@ For each issue/error that occurred in this session:
    - New module without dependency-map entry → **add it now**
    - Interface change without Interface Change Log entry → **add it now**
 4. Cross-reference `docs/features.md` Key Files against `docs/dependency-map.md` modules — flag orphaned modules
+5. **Run `state-check` skill** (Iron Law #10 — mandatory before STATUS: DONE):
+   - PASS → proceed to Step 5.6
+   - WARN → include warnings in the final wrap-up report, then proceed
+   - FAIL → fix the listed drift (update affected state files), then re-run state-check until PASS or WARN
 
-> **Self-check**: `docs/dependency-map.md`에 이 세션에서 새로 추가한 모듈이 모두 등록되었는지 확인. 누락 시 즉시 추가.
+> **Self-check**: `docs/dependency-map.md`에 이 세션에서 새로 추가한 모듈이 모두 등록되었는지 확인. 누락 시 즉시 추가. state-check가 PASS 또는 WARN을 반환해야 다음 단계로 진행합니다.
 
 ### Step 5.6: Resolve STATE-AUDIT Flags (if applicable)
 

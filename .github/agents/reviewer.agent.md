@@ -70,6 +70,7 @@ Changed file list (user-provided or from `git diff --name-only`)
 - [ ] Constructor parameters match actual source (FP-002)
 - [ ] **Common First (Iron Law #9)**: No crew-specific logic outside crew marker blocks. All features must work without crew artifacts.
 
+
 **Step 3: Test Integrity (sync-tests skill)**
 - [ ] Interface changes have synchronized mocks (FP-001)
 - [ ] New features have tests
@@ -98,7 +99,11 @@ Changed file list (user-provided or from `git diff --name-only`)
 
 **Step 8: State File Audit**
 
-Verify that state file updates actually happened. Check each:
+Verify that state file updates actually happened. **Run the `state-check` skill first** (Iron Law #10) for deterministic cross-checks, then perform the human-judgment items below that state-check cannot mechanically verify.
+
+> `state-check` covers: file existence, Story↔Feature consistency, dependency-map↔src/ drift, and agent-memory legacy names. The items below complement it with semantic checks the skill cannot perform.
+
+After running state-check, also verify:
 - [ ] **docs/project-state.md**: If stories were worked on, is Quick Summary current? Are story statuses updated?
 - [ ] **docs/features.md**: If new features were added, are they registered? If features were completed, is status updated?
 - [ ] **Cross-check features ↔ stories**: If a feature status is `✅ done` in features.md, verify all related stories in project-state.md are also `done`. If stories are `done` but their feature is still `🔄 in-progress`, flag as `[STATE-AUDIT]`.

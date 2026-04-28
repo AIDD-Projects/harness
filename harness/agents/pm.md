@@ -226,6 +226,16 @@ After user approves the plan, perform these writes in order:
 
 If any write fails, report the failure and retry. Do NOT proceed to 🧭 with incomplete state files.
 
+### ✅ MANDATORY: Self-Verify with state-check (Iron Law #10)
+
+After the Post-Approval state writes complete, run the `state-check` skill:
+1. Invoke `state-check` skill — deterministic verification of state file consistency
+2. If state-check returns **PASS** → proceed to output 🧭 Next Step
+3. If state-check returns **WARN** → include the warnings in the plan output, then proceed
+4. If state-check returns **FAIL** → do NOT output STATUS: DONE. Fix the listed drift, then re-run state-check.
+
+> Iron Law #10 (Self-Verify) applies to every agent. The pm runs state-check **after** state writes — not before — because the writes are what create the consistency to verify.
+
 ## Output Format
 
 ### New Feature Plan

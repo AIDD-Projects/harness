@@ -54,6 +54,16 @@ One command does everything — no manual editing required.
 
 4. **Scan for existing tests**: Find test files and map them to source modules
 5. **Scan imports/dependencies**: Trace module relationships from import statements
+6. **Detect legacy agent-memory files** (v0.9 migration):
+   - Look in `docs/agent-memory/` and `.harness/agent-memory/` for these legacy names from earlier framework versions:
+     - `planner.md` → should be renamed to `pm.md`
+     - `sprint-manager.md` → should be renamed to `lead.md`
+     - `navigator.md` → should be renamed to `lead.md`
+     - `builder.md` → should be renamed to `pm.md`
+   - For each legacy file found:
+     - If the new name does NOT exist → offer to rename: `mv {legacy}.md {new}.md` (preserves history)
+     - If BOTH exist → ask the user which to keep, or merge contents into the new name and delete the legacy
+   - Confirm with the user before renaming. Record the migration in `docs/project-state.md` Recent Changes.
 
 **Do NOT modify any code files in this phase.**
 

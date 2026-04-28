@@ -1318,5 +1318,42 @@ describe('harness init', () => {
       );
       assert.ok(content.includes('Iron Laws'), 'core-rules should contain Iron Laws');
     });
+
+    it('state-check skill is generated with frontmatter', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/skills/state-check/SKILL.md'),
+        'utf8',
+      );
+      assert.ok(content.startsWith('---\n'), 'Missing frontmatter opening');
+      assert.ok(content.includes('name: state-check'), 'Missing name field');
+      assert.ok(content.includes('Deterministic'), 'Missing description');
+      assert.ok(content.includes('PASS') && content.includes('WARN') && content.includes('FAIL'),
+        'state-check should describe PASS/WARN/FAIL outcomes');
+    });
+
+    it('core-rules contains Iron Law #10 (Self-Verify) and Confirmation Gate Defaults', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/copilot-instructions.md'),
+        'utf8',
+      );
+      assert.ok(content.includes('Self-Verify'), 'core-rules should contain Iron Law #10 Self-Verify');
+      assert.ok(content.includes('Confirmation Gate Defaults'), 'core-rules should contain Confirmation Gate Defaults section');
+    });
+
+    it('pm agent invokes state-check after post-approval writes', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/agents/pm.agent.md'),
+        'utf8',
+      );
+      assert.ok(content.includes('state-check'), 'pm should reference state-check skill');
+    });
+
+    it('reviewer agent references state-check in Step 8', () => {
+      const content = fs.readFileSync(
+        path.join(tmpDir, '.github/agents/reviewer.agent.md'),
+        'utf8',
+      );
+      assert.ok(content.includes('state-check'), 'reviewer Step 8 should reference state-check');
+    });
   });
 });
