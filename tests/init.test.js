@@ -19,7 +19,7 @@ function rmDir(dir) {
 // ─── File count expectations per IDE ────────────────────────
 const EXPECTED_FILES = {
   vscode: {
-    count: 24,
+    count: 25,
     required: [
       '.github/copilot-instructions.md',
       '.github/skills/sync-tests/SKILL.md',
@@ -37,8 +37,9 @@ const EXPECTED_FILES = {
     ],
   },
   claude: {
-    count: 24,
+    count: 26,
     required: [
+      'CLAUDE.md',
       '.claude/rules/core.md',
       '.claude/skills/sync-tests/SKILL.md',
       '.claude/skills/secure/SKILL.md',
@@ -55,9 +56,10 @@ const EXPECTED_FILES = {
     ],
   },
   cursor: {
-    count: 24,
+    count: 26,
     required: [
       '.cursor/rules/core.mdc',
+      'AGENTS.md',
       '.cursor/skills/sync-tests/SKILL.md',
       '.cursor/skills/setup/SKILL.md',
       '.cursor/skills/wrap-up/SKILL.md',
@@ -70,7 +72,7 @@ const EXPECTED_FILES = {
     ],
   },
   codex: {
-    count: 24,
+    count: 25,
     required: [
       'AGENTS.md',
       '.agents/skills/sync-tests/SKILL.md',
@@ -80,15 +82,15 @@ const EXPECTED_FILES = {
       '.agents/skills/pivot/SKILL.md',
       '.agents/skills/pr-review/SKILL.md',
       '.agents/skills/release/SKILL.md',
-      '.codex/agents/reviewer.toml',
-      '.codex/agents/pm.toml',
-      '.codex/agents/lead.toml',
-      '.codex/agents/architect.toml',
+      '.codex/agents/reviewer.md',
+      '.codex/agents/pm.md',
+      '.codex/agents/lead.md',
+      '.codex/agents/architect.md',
       'docs/project-state.md',
     ],
   },
   windsurf: {
-    count: 24,
+    count: 25,
     required: [
       '.windsurf/rules/core.md',
       '.windsurf/skills/sync-tests/SKILL.md',
@@ -103,9 +105,10 @@ const EXPECTED_FILES = {
     ],
   },
   antigravity: {
-    count: 24,
+    count: 26,
     required: [
       'GEMINI.md',
+      'AGENTS.md',
       '.gemini/skills/sync-tests/SKILL.md',
       '.gemini/skills/setup/SKILL.md',
       '.gemini/skills/wrap-up/SKILL.md',
@@ -197,6 +200,90 @@ describe('harness init', () => {
       );
       assert.ok(content.startsWith('---\n'), 'Missing frontmatter opening');
       assert.ok(content.includes('name: reviewer'), 'Missing name field');
+    });
+  });
+
+  // ─── IDE-specific dispatcher / format checks (multi-IDE coverage) ──
+  describe('IDE-specific dispatcher and agent formats', () => {
+    async function build(ide) {
+      const tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', ide, '--mode', 'solo', '--batch', '--dir', tmpDir]);
+      console.log = origLog;
+      return tmpDir;
+    }
+
+    it('Claude writes CLAUDE.md at project root with dispatcher content', async () => {
+      const dir = await build('claude');
+      const claudeMd = path.join(dir, 'CLAUDE.md');
+      assert.ok(fs.existsSync(claudeMd), 'CLAUDE.md missing — Claude Code will not auto-load instructions');
+      const content = fs.readFileSync(claudeMd, 'utf8');
+      assert.ok(content.includes('## Session Start'), 'CLAUDE.md should contain dispatcher content');
+      assert.ok(content.includes('Iron Laws'), 'CLAUDE.md should contain Iron Laws');
+      rmDir(dir);
+    });
+
+    it('Cursor writes AGENTS.md at root (Cursor CLI compatibility)', async () => {
+      const dir = await build('cursor');
+      const agentsMd = path.join(dir, 'AGENTS.md');
+      assert.ok(fs.existsSync(agentsMd), 'AGENTS.md missing — Cursor CLI will not pick up rules');
+      rmDir(dir);
+    });
+
+    it('Cursor core.mdc has alwaysApply frontmatter', async () => {
+      const dir = await build('cursor');
+      const content = fs.readFileSync(path.join(dir, '.cursor/rules/core.mdc'), 'utf8');
+      assert.ok(content.startsWith('---\n'), 'core.mdc missing frontmatter');
+      assert.ok(content.includes('alwaysApply: true'), 'core.mdc must declare alwaysApply: true');
+      rmDir(dir);
+    });
+
+    it('Codex writes agents as markdown (.md), not TOML', async () => {
+      const dir = await build('codex');
+      for (const agent of ['reviewer', 'pm', 'lead', 'architect']) {
+        const mdPath = path.join(dir, '.codex/agents', `${agent}.md`);
+        const tomlPath = path.join(dir, '.codex/agents', `${agent}.toml`);
+        assert.ok(fs.existsSync(mdPath), `Missing markdown agent: ${agent}.md`);
+        assert.ok(!fs.existsSync(tomlPath), `Stale TOML agent should not exist: ${agent}.toml`);
+        const content = fs.readFileSync(mdPath, 'utf8');
+        assert.ok(content.startsWith('---\n'), `${agent}.md missing frontmatter`);
+        assert.ok(content.includes(`name: ${agent}`), `${agent}.md missing name field`);
+      }
+      rmDir(dir);
+    });
+
+    it('Codex AGENTS.md contains dispatcher (only file Codex CLI auto-loads)', async () => {
+      const dir = await build('codex');
+      const content = fs.readFileSync(path.join(dir, 'AGENTS.md'), 'utf8');
+      assert.ok(content.includes('## Session Start'), 'AGENTS.md must carry dispatcher');
+      assert.ok(content.includes('Iron Laws'), 'AGENTS.md must include Iron Laws');
+      rmDir(dir);
+    });
+
+    it('Windsurf core.md has trigger: always_on frontmatter', async () => {
+      const dir = await build('windsurf');
+      const content = fs.readFileSync(path.join(dir, '.windsurf/rules/core.md'), 'utf8');
+      assert.ok(content.startsWith('---\n'), 'core.md missing frontmatter');
+      assert.ok(content.includes('trigger: always_on'), 'core.md must use trigger: always_on');
+      rmDir(dir);
+    });
+
+    it('Antigravity writes both GEMINI.md and AGENTS.md at root', async () => {
+      const dir = await build('antigravity');
+      assert.ok(fs.existsSync(path.join(dir, 'GEMINI.md')), 'Missing GEMINI.md');
+      assert.ok(fs.existsSync(path.join(dir, 'AGENTS.md')), 'Missing AGENTS.md (Antigravity AGENTS.md compat)');
+      rmDir(dir);
+    });
+
+    it('VS Code keeps single-source dispatcher at .github/copilot-instructions.md', async () => {
+      const dir = await build('vscode');
+      assert.ok(fs.existsSync(path.join(dir, '.github/copilot-instructions.md')));
+      // VS Code generator must not also write AGENTS.md/CLAUDE.md/GEMINI.md (backward compat)
+      assert.ok(!fs.existsSync(path.join(dir, 'AGENTS.md')), 'VS Code should not emit AGENTS.md');
+      assert.ok(!fs.existsSync(path.join(dir, 'CLAUDE.md')), 'VS Code should not emit CLAUDE.md');
+      assert.ok(!fs.existsSync(path.join(dir, 'GEMINI.md')), 'VS Code should not emit GEMINI.md');
+      rmDir(dir);
     });
   });
 
@@ -436,8 +523,8 @@ describe('harness init', () => {
         assert.ok(!fs.existsSync(path.join(tmpDir, 'docs/failure-patterns.md')), 'docs/failure-patterns.md should not exist in team mode');
       });
 
-      it('generates total 26 files (24 base + .gitignore + .gitattributes)', () => {
-        assert.equal(countFiles(tmpDir), 26);
+      it('generates total 27 files (25 base + .gitignore + .gitattributes)', () => {
+        assert.equal(countFiles(tmpDir), 27);
       });
     });
 
@@ -515,15 +602,16 @@ describe('harness init', () => {
     });
 
     describe('all 6 IDEs team mode file count', () => {
-      for (const ide of Object.keys(EXPECTED_FILES)) {
-        it(`--ide ${ide} --mode team generates 26 files`, async () => {
+      for (const [ide, spec] of Object.entries(EXPECTED_FILES)) {
+        const teamCount = spec.count + 2; // +.gitignore +.gitattributes
+        it(`--ide ${ide} --mode team generates ${teamCount} files`, async () => {
           const tmpDir = makeTmpDir();
           const origLog = console.log;
           console.log = () => {};
           await run(['init', '--ide', ide, '--mode', 'team', '--dir', tmpDir]);
           console.log = origLog;
 
-          assert.equal(countFiles(tmpDir), 26, `${ide} team mode should have 26 files`);
+          assert.equal(countFiles(tmpDir), teamCount, `${ide} team mode should have ${teamCount} files`);
           rmDir(tmpDir);
         });
       }
@@ -884,6 +972,23 @@ describe('harness init', () => {
           }
         }
       });
+
+      it('Solo state files do NOT contain CI Artifact Index template', () => {
+        const projectBriefPath = path.join(tmpDir, 'docs/project-brief.md');
+        assert.ok(fs.existsSync(projectBriefPath), 'docs/project-brief.md should exist');
+        const content = fs.readFileSync(projectBriefPath, 'utf8');
+        assert.ok(!content.includes('CI Artifact Index'), 'Solo project-brief.md should NOT contain CI Artifact Index');
+        assert.ok(!content.includes('CREW_MODE_START'), 'Solo project-brief.md should NOT contain CREW_MODE markers');
+      });
+
+      it('Solo rules files do NOT contain CI Standards content', () => {
+        const ciKeywords = ['CI Standards Compliance', 'CI Artifact Index', '[CI-STANDARD]'];
+        for (const [name, content] of Object.entries(soloFiles)) {
+          for (const kw of ciKeywords) {
+            assert.ok(!content.includes(kw), `${name} should not contain CI keyword "${kw}"`);
+          }
+        }
+      });
     });
 
     describe('Solo with --crew keeps Crew content, removes markers', () => {
@@ -1023,7 +1128,7 @@ describe('harness init', () => {
       await run(['init', '--ide', 'vscode', '--batch', '--dir', tmpDir]);
       console.log = origLog;
 
-      assert.equal(countFiles(tmpDir), 24, 'Batch mode should generate 24 files (solo default)');
+      assert.equal(countFiles(tmpDir), 25, 'Batch mode should generate 25 files (solo default)');
       rmDir(tmpDir);
     });
 

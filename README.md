@@ -113,11 +113,11 @@ npx @kodevibe/harness validate  # verify state files have real content
 | IDE | Dispatcher (always-on) | Skills | Agents |
 |-----|----------------------|--------|--------|
 | **VS Code Copilot** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
-| **Claude Code** | `.claude/rules/core.md` | `.claude/skills/*/SKILL.md` | `.claude/agents/*.md` |
-| **Cursor** | `.cursor/rules/core.mdc` | `.cursor/skills/*/SKILL.md` | `.cursor/agents/*.md` |
-| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.toml` |
+| **Claude Code** | `CLAUDE.md` (+ `.claude/rules/core.md`) | `.claude/skills/*/SKILL.md` | `.claude/agents/*.md` |
+| **Cursor** | `.cursor/rules/core.mdc` (+ `AGENTS.md`) | `.cursor/skills/*/SKILL.md` | `.cursor/agents/*.md` |
+| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.md` |
 | **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | *(agents installed as skills)* |
-| **Antigravity** | `GEMINI.md` | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` |
+| **Antigravity** | `GEMINI.md` (+ `AGENTS.md`) | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` |
 
 All IDEs also get state files (`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`) in the `docs/` directory.
 

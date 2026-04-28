@@ -38,6 +38,7 @@ const SKILLS = [
   { id: 'pivot', desc: 'Propagate direction changes across all state files. Use when project goals, technology, scope, or architecture changes.' },
   { id: 'pr-review', desc: 'Review external Pull Requests for quality, security, and direction alignment. Use when reviewing incoming PRs.' },
   { id: 'release', desc: 'Pre-deployment validation checklist. Use before deploying, publishing, or creating release tags.' },
+  { id: 'state-check', desc: 'Deterministic verification of state file consistency. Use before STATUS: DONE (Iron Law #10) and when state drift is suspected.' },
 ];
 
 const AGENTS = [
@@ -250,8 +251,14 @@ function generateVscode(targetDir, overwrite, mode = 'solo', crew = false) {
 }
 
 function generateClaude(targetDir, overwrite, mode = 'solo', crew = false) {
-  // .claude/rules/core.md — dispatcher only (no paths = always loaded)
-  writeFile(targetDir, '.claude/rules/core.md', resolveContent(readTemplate('core-rules.md'), mode, crew), true);
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
+
+  // CLAUDE.md — Claude Code's canonical project memory file (auto-loaded at session start)
+  writeFile(targetDir, 'CLAUDE.md', coreRules, true);
+
+  // .claude/rules/core.md — secondary dispatcher (also auto-loaded by Claude Code's
+  // InstructionsLoaded mechanism; kept for redundancy and rule-discovery tooling)
+  writeFile(targetDir, '.claude/rules/core.md', coreRules, true);
 
   // Skills (SKILL.md with frontmatter)
   writeSkills(targetDir, '.claude/skills', true, mode, crew);
@@ -271,6 +278,9 @@ function generateCursor(targetDir, overwrite, mode = 'solo', crew = false) {
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, true);
 
+  // AGENTS.md — Cursor CLI also reads project-root AGENTS.md as a rule
+  writeFile(targetDir, 'AGENTS.md', coreRules, true);
+
   // Skills (.cursor/skills — invokable by mentioning skill name)
   writeSkills(targetDir, '.cursor/skills', true, mode, crew);
 
@@ -282,14 +292,16 @@ function generateCursor(targetDir, overwrite, mode = 'solo', crew = false) {
 }
 
 function generateCodex(targetDir, overwrite, mode = 'solo', crew = false) {
-  // AGENTS.md — dispatcher only
+  // AGENTS.md — Codex CLI's canonical project instructions file (the only file
+  // Codex CLI auto-loads). All skill/agent references must be discoverable from here.
   writeFile(targetDir, 'AGENTS.md', resolveContent(readTemplate('core-rules.md'), mode, crew), true);
 
   // Skills (SKILL.md with frontmatter — invokable via $skill-name)
   writeSkills(targetDir, '.agents/skills', true, mode, crew);
 
-  // Agents (.codex/agents/ — Codex TOML agent definition files)
-  writeAgentsAsToml(targetDir, '.codex/agents', true, mode, crew);
+  // Agents (.codex/agents/ — markdown subagent files with YAML frontmatter,
+  // matching the Cursor/Claude convention used as a Codex compat directory)
+  writeAgentsAsMd(targetDir, '.codex/agents', true, mode, crew);
 
   // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode, crew);
@@ -314,8 +326,14 @@ function generateWindsurf(targetDir, overwrite, mode = 'solo', crew = false) {
 }
 
 function generateAntigravity(targetDir, overwrite, mode = 'solo', crew = false) {
-  // GEMINI.md — project context (always loaded by Gemini CLI)
-  writeFile(targetDir, 'GEMINI.md', resolveContent(readTemplate('core-rules.md'), mode, crew), true);
+  const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
+
+  // GEMINI.md — Gemini CLI / Antigravity's canonical project context file
+  writeFile(targetDir, 'GEMINI.md', coreRules, true);
+
+  // AGENTS.md — Antigravity also follows the AGENTS.md convention shared by
+  // Codex / Cursor CLI; emitting it broadens compatibility with no downside
+  writeFile(targetDir, 'AGENTS.md', coreRules, true);
 
   // Skills (.gemini/skills/ — SKILL.md format)
   writeSkills(targetDir, '.gemini/skills', true, mode, crew);
@@ -520,14 +538,16 @@ function runDoctor(targetDir) {
     }
   }
 
-  // Check for IDE-specific files (detect which IDE was used)
+  // Check for IDE-specific files (detect which IDE was used).
+  // Order matters: IDE-unique markers MUST be checked before AGENTS.md,
+  // because Cursor and Antigravity now also emit AGENTS.md for compat.
   const ideChecks = [
     ['.github/copilot-instructions.md', 'vscode'],
     ['.claude/rules/core.md', 'claude'],
     ['.cursor/rules/core.mdc', 'cursor'],
-    ['AGENTS.md', 'codex'],
     ['.windsurf/rules/core.md', 'windsurf'],
     ['GEMINI.md', 'antigravity'],
+    ['AGENTS.md', 'codex'],
   ];
 
   let detectedIde = null;
