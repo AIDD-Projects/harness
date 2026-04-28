@@ -54,6 +54,7 @@ When external planning artifacts exist (requirements, analysis, design documents
 
 > Crew artifacts are detected by: `docs/crew/` directory, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` directories, or user explicitly provides requirements/design documents (e.g., mentions "PRD", "산출물", "설계서", or provides file paths to planning artifacts).
 > **Reference, don't summarize**: setup creates a Crew Artifact Index (path table) in project-brief.md — each skill reads the original artifact directly via the indexed path.
+> Crew mode also enables the **CI Artifact Index** reference layer: if `docs/project-brief.md` contains `## CI Artifact Index`, reviewer Step 2.5 and release Step 3.5 surface the indexed company CI/CD guide when build/CI files change. The guide content stays external; only the path and key constraints are indexed.
 > This pipeline produces the same state files as 🟢 — the difference is the INPUT source and the addition of Validation Tracker for traceability.
 <!-- CREW_MODE_END -->
 
@@ -134,3 +135,16 @@ These laws are enforced across all skills and agents. Violations should be flagg
 7. **Feature Registry**: When adding a feature, register it in features.md in the same commit.
 8. **Session Handoff**: At session end, update project-state.md Quick Summary so the next session has context.
 9. **Common First**: All features must work at Common level (🟢🔵🔴) without crew dependency. Crew-specific logic must be inside crew marker blocks only. Never add crew-only code to Common paths.
+10. **Self-Verify**: Every agent MUST run the `state-check` skill before reporting STATUS: DONE. If state-check returns FAIL, the agent must NOT report DONE — fix the listed drift first. WARN may proceed but warnings must be included in the agent's output.
+
+## Confirmation Gate Defaults
+
+When the user does not respond to a confirmation prompt within the conversation, agents must apply the SAFE default — never assume implicit approval. The SAFE default for each gate:
+
+| Gate | Owner | SAFE default (no response) | Rationale |
+|------|-------|---------------------------|-----------|
+| Plan Confirmation | `pm` | Do NOT write `features.md` / `project-state.md` / `dependency-map.md`. Hold the plan and re-prompt. | Prevents state file pollution from rejected plans. |
+| Scope Check | `lead` | NO — block edits outside the current Story scope. | Iron Law #3 (Scope Compliance) cannot be silently bypassed. |
+| Commit Approval | `reviewer` | Hold the commit. Output the proposed commit command but do NOT execute it. | Code commits are hard to reverse without `git reset` — user must explicitly approve. |
+
+Any agent that wants to proceed past one of these gates without explicit approval is in violation of Iron Law #10 and must STOP.

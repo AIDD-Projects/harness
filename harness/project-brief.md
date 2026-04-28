@@ -106,6 +106,28 @@
    Status legend: ⬜ Not started, 🟡 In progress, ✅ Done
    Update flow: setup creates → pm fills Story column → wrap-up updates Status
 -->
+
+## CI Artifact Index
+
+<!-- 🟣 Pipeline only — references to company CI/CD standard guides.
+   reviewer Step 2.5 and release Step 3.5 read this index to surface the relevant guide
+   when build/CI files change or before deploy.
+
+   Reference Layer pattern: the original guide lives outside this repo (Confluence,
+   internal wiki, etc.). This index stores ONLY the path/URL and the key constraints
+   so that AI agents do not need to re-read the guide every time. The actual guide
+   content is never copied into this repository.
+
+   | Language | Build Tool | Reference URL | Key Constraints |
+   |----------|-----------|---------------|-----------------|
+   | _(예: Java)_ | _(예: Maven)_ | _(URL placeholder — fill with the company guide URL)_ | _(예: 표준 base image 사용, ACR 캐시 사용, 보안 스캔 단계 포함)_ |
+
+   Tips for filling this table:
+   - 1행만 채워도 충분 — 프로젝트의 주 언어/빌드도구만 기재
+   - 다중 서비스 (모놀리식 X, 멀티 모듈 O)인 경우 서비스/모듈별로 한 행씩
+   - Key Constraints는 LLM이 변경된 파일 대비 자동 점검할 수 있도록 짧고 검증 가능한 형태로 작성 (e.g., "base image: company-base:latest", "cache: 회사 ACR 미러 사용")
+   - Reference URL은 회사 내부 가이드 위치 (Confluence, wiki 등). OSS 코드베이스에는 절대 회사 URL을 커밋하지 않음 — 이 파일은 사용자 로컬 또는 사내 저장소에서만 채움.
+-->
 <!-- CREW_MODE_END -->
 
 ## Key Technical Decisions

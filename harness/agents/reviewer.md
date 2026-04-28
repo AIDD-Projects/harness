@@ -65,6 +65,30 @@ Changed file list (user-provided or from `git diff --name-only`)
 - [ ] Constructor parameters match actual source (FP-002)
 - [ ] **Common First (Iron Law #9)**: No crew-specific logic outside crew marker blocks. All features must work without crew artifacts.
 
+<!-- CREW_MODE_START -->
+**Step 2.5: CI Standards Compliance (🟣 Pipeline only)**
+
+**Trigger**: Changed files include any build/CI artifacts:
+- `Dockerfile`, `.dockerignore`
+- `.github/workflows/*.yml`, `.gitlab-ci.yml`, `Jenkinsfile`
+- `pom.xml`, `build.gradle`, `gradle.properties`
+- `package.json` (scripts changes), `yarn.lock`, `package-lock.json`
+- `pyproject.toml`, `requirements.txt`, `Pipfile`, `poetry.lock`
+- `go.mod`, `go.sum`
+
+**Procedure**:
+1. Check if `docs/project-brief.md` has a `## CI Artifact Index` section (or `.harness/ci-index.md` exists). If neither → skip this step.
+2. Read the project's primary language/build tool from `docs/project-brief.md` Key Technical Decisions.
+3. Match the language/build tool to a row in the CI Artifact Index → get the reference URL and Key Constraints.
+4. Surface the reference in review output under a `### CI Standards Compliance` section:
+   - Reference URL (the indexed guide)
+   - Key Constraints listed in the index (echoed back so the user does not need to re-read the guide)
+   - `[CI-STANDARD]` flag if any obvious mismatch is detected against a listed constraint (best-effort LLM judgment based only on the changed files)
+5. **Warning only — do NOT block commit**. The user (or a human reviewer) decides whether the changes meet company standards. The reviewer agent never asserts compliance; it only points to the authoritative guide.
+
+If neither `## CI Artifact Index` nor `.harness/ci-index.md` is present → skip this step entirely (also true for 🟢/🔵/🔴 pipelines).
+<!-- CREW_MODE_END -->
+
 **Step 3: Test Integrity (sync-tests skill)**
 - [ ] Interface changes have synchronized mocks (FP-001)
 - [ ] New features have tests
@@ -125,7 +149,11 @@ If no Crew Artifact Index → skip this step entirely.
 
 **Step 8: State File Audit**
 
-Verify that state file updates actually happened. Check each:
+Verify that state file updates actually happened. **Run the `state-check` skill first** (Iron Law #10) for deterministic cross-checks, then perform the human-judgment items below that state-check cannot mechanically verify.
+
+> `state-check` covers: file existence, Story↔Feature consistency, dependency-map↔src/ drift, and agent-memory legacy names. The items below complement it with semantic checks the skill cannot perform.
+
+After running state-check, also verify:
 - [ ] **docs/project-state.md**: If stories were worked on, is Quick Summary current? Are story statuses updated?
 - [ ] **docs/features.md**: If new features were added, are they registered? If features were completed, is status updated?
 - [ ] **Cross-check features ↔ stories**: If a feature status is `✅ done` in features.md, verify all related stories in project-state.md are also `done`. If stories are `done` but their feature is still `🔄 in-progress`, flag as `[STATE-AUDIT]`.
@@ -180,6 +208,9 @@ If review is BLOCKED → do NOT suggest commit. Fix first.
 - Test integrity: ✅ / ⚠️ (detail)
 - Security check: ✅ / ❌ (detail)
 - Failure pattern check: ✅ / ⚠️ (FP-NNN)
+<!-- CREW_MODE_START -->
+- CI standards (🟣): ✅ / ⚠️ [CI-STANDARD] (detail) — included only when CI Artifact Index exists
+<!-- CREW_MODE_END -->
 
 STATUS: DONE / DONE_WITH_CONCERNS / BLOCKED
 ```

@@ -44,6 +44,24 @@ Verify all state files are up to date:
 - [ ] **Validation Tracker FR Coverage**: All Functional Requirements (FR) have at least one mapped Story (`docs/project-brief.md` → Validation Tracker)
 - [ ] **Validation Tracker ARB Fail Resolution**: All ARB Fail items resolved (✅) or explicitly deferred with rationale
 - [ ] **KPI Coverage**: All KPIs addressed or deferred with documented reason
+- [ ] **CI Standards (🟣)**: If `docs/project-brief.md` has `## CI Artifact Index`, deploy artifacts (Dockerfile, CI workflow, build config) match the indexed guide's Key Constraints (see Step 3.5)
+<!-- CREW_MODE_END -->
+
+<!-- CREW_MODE_START -->
+### Step 3.5: CI Standards Compliance (🟣 Pipeline only)
+
+If `docs/project-brief.md` has a `## CI Artifact Index` section:
+
+1. Read the indexed reference URL and Key Constraints for the project's primary language/build tool.
+2. Verify the deployed configuration matches each Key Constraint listed in the index:
+   - Base image (e.g., must use the standard company base image)
+   - Build cache strategy (e.g., must use the company-approved cache mirror)
+   - Required CI stages (e.g., security scan, signing)
+   - Any other constraint listed in the index row
+3. If **any** constraint is unmet → mark **NOT_READY** and list the unmet constraints in the verdict.
+4. If `## CI Artifact Index` does not exist (or is empty) → skip this step entirely.
+
+This step references the indexed company guide; it does not embed the guide content itself. The reviewer agent (Step 2.5) catches CI standard issues earlier in the cycle; this step is the final gate before deploy.
 <!-- CREW_MODE_END -->
 
 ### Step 4: Security Scan
@@ -77,6 +95,9 @@ Verify all state files are up to date:
 - [x/✗] Security scan clean
 - [x/✗] Git status clean
 - [x/✗] Release notes prepared
+<!-- CREW_MODE_START -->
+- [x/✗/–] CI standards (🟣): [verdict] — `–` if no CI Artifact Index
+<!-- CREW_MODE_END -->
 
 ### Verdict: READY / NOT_READY
 [blockers if not ready]

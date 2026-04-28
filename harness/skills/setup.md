@@ -49,6 +49,16 @@ One command does everything — no manual editing required.
 
 4. **Scan for existing tests**: Find test files and map them to source modules
 5. **Scan imports/dependencies**: Trace module relationships from import statements
+6. **Detect legacy agent-memory files** (v0.9 migration):
+   - Look in `docs/agent-memory/` and `.harness/agent-memory/` for these legacy names from earlier framework versions:
+     - `planner.md` → should be renamed to `pm.md`
+     - `sprint-manager.md` → should be renamed to `lead.md`
+     - `navigator.md` → should be renamed to `lead.md`
+     - `builder.md` → should be renamed to `pm.md`
+   - For each legacy file found:
+     - If the new name does NOT exist → offer to rename: `mv {legacy}.md {new}.md` (preserves history)
+     - If BOTH exist → ask the user which to keep, or merge contents into the new name and delete the legacy
+   - Confirm with the user before renaming. Record the migration in `docs/project-state.md` Recent Changes.
 
 **Do NOT modify any code files in this phase.**
 
@@ -137,6 +147,7 @@ Using data from Phase 1 + Phase 2, fill the following files:
 <!-- CREW_MODE_START -->
 - Crew Artifact Index → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
 - Validation Tracker → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
+- CI Artifact Index → 🟣 pipeline only. After filling crew fields, ask the user: "회사 CI/CD 표준 가이드(Dockerfile/CI 파이프라인 규약)가 있다면 한 줄로 인덱싱하시겠습니까? (URL과 Key Constraints만 기록 — 가이드 본문은 외부에 둠)". If yes, fill one row in the CI Artifact Index table with their primary language/build tool, the guide URL, and 2-3 short Key Constraints. If no or skip → leave template comment as-is. Never commit company-specific URLs to the OSS template — this row is meant to be filled in the user's local/private project-brief.md only.
 <!-- CREW_MODE_END -->
 - Key Technical Decisions → from Phase 1 scan + user answer #4, #5
 

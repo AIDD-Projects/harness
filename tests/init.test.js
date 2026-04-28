@@ -1062,6 +1062,18 @@ describe('harness init', () => {
         assert.ok(content, 'lead agent should exist');
         assert.ok(content.includes('Validation Dashboard'), '--crew lead should have Validation Dashboard');
       });
+
+      it('--crew reviewer contains CI Standards Compliance step', () => {
+        const content = crewFiles['agent:reviewer'];
+        assert.ok(content, 'reviewer agent should exist');
+        assert.ok(content.includes('CI Standards Compliance'), '--crew reviewer should have CI Standards Compliance step');
+      });
+
+      it('--crew release contains CI Standards step', () => {
+        const content = crewFiles['skill:release'];
+        assert.ok(content, 'release skill should exist');
+        assert.ok(content.includes('CI Standards'), '--crew release should have CI Standards content');
+      });
     });
 
     describe('Crew content line count > non-crew', () => {
