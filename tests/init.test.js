@@ -59,15 +59,17 @@ const EXPECTED_FILES = {
     count: 26,
     required: [
       '.cursor/rules/core.mdc',
+      '.cursor/rules/reviewer.mdc',
+      '.cursor/rules/pm.mdc',
+      '.cursor/rules/lead.mdc',
+      '.cursor/rules/architect.mdc',
       'AGENTS.md',
-      '.cursor/skills/sync-tests/SKILL.md',
-      '.cursor/skills/setup/SKILL.md',
-      '.cursor/skills/wrap-up/SKILL.md',
-      '.cursor/skills/pivot/SKILL.md',
-      '.cursor/skills/pr-review/SKILL.md',
-      '.cursor/skills/release/SKILL.md',
-      '.cursor/agents/reviewer.md',
-      '.cursor/agents/architect.md',
+      '.agents/skills/sync-tests/SKILL.md',
+      '.agents/skills/setup/SKILL.md',
+      '.agents/skills/wrap-up/SKILL.md',
+      '.agents/skills/pivot/SKILL.md',
+      '.agents/skills/pr-review/SKILL.md',
+      '.agents/skills/release/SKILL.md',
       'docs/project-state.md',
     ],
   },
@@ -82,10 +84,10 @@ const EXPECTED_FILES = {
       '.agents/skills/pivot/SKILL.md',
       '.agents/skills/pr-review/SKILL.md',
       '.agents/skills/release/SKILL.md',
-      '.codex/agents/reviewer.md',
-      '.codex/agents/pm.md',
-      '.codex/agents/lead.md',
-      '.codex/agents/architect.md',
+      '.codex/agents/reviewer.toml',
+      '.codex/agents/pm.toml',
+      '.codex/agents/lead.toml',
+      '.codex/agents/architect.toml',
       'docs/project-state.md',
     ],
   },
@@ -107,16 +109,18 @@ const EXPECTED_FILES = {
   antigravity: {
     count: 26,
     required: [
-      'GEMINI.md',
       'AGENTS.md',
-      '.gemini/skills/sync-tests/SKILL.md',
-      '.gemini/skills/setup/SKILL.md',
-      '.gemini/skills/wrap-up/SKILL.md',
-      '.gemini/skills/pivot/SKILL.md',
-      '.gemini/skills/pr-review/SKILL.md',
-      '.gemini/skills/release/SKILL.md',
-      '.gemini/agents/pm.md',
-      '.gemini/agents/architect.md',
+      '.agents/rules/core.md',
+      '.agents/rules/reviewer.md',
+      '.agents/rules/pm.md',
+      '.agents/rules/lead.md',
+      '.agents/rules/architect.md',
+      '.agents/skills/sync-tests/SKILL.md',
+      '.agents/skills/setup/SKILL.md',
+      '.agents/skills/wrap-up/SKILL.md',
+      '.agents/skills/pivot/SKILL.md',
+      '.agents/skills/pr-review/SKILL.md',
+      '.agents/skills/release/SKILL.md',
       'docs/project-state.md',
     ],
   },
@@ -239,16 +243,17 @@ describe('harness init', () => {
       rmDir(dir);
     });
 
-    it('Codex writes agents as markdown (.md), not TOML', async () => {
+    it('Codex writes agents as TOML (.toml), not markdown', async () => {
       const dir = await build('codex');
       for (const agent of ['reviewer', 'pm', 'lead', 'architect']) {
-        const mdPath = path.join(dir, '.codex/agents', `${agent}.md`);
         const tomlPath = path.join(dir, '.codex/agents', `${agent}.toml`);
-        assert.ok(fs.existsSync(mdPath), `Missing markdown agent: ${agent}.md`);
-        assert.ok(!fs.existsSync(tomlPath), `Stale TOML agent should not exist: ${agent}.toml`);
-        const content = fs.readFileSync(mdPath, 'utf8');
-        assert.ok(content.startsWith('---\n'), `${agent}.md missing frontmatter`);
-        assert.ok(content.includes(`name: ${agent}`), `${agent}.md missing name field`);
+        const mdPath = path.join(dir, '.codex/agents', `${agent}.md`);
+        assert.ok(fs.existsSync(tomlPath), `Missing TOML agent: ${agent}.toml`);
+        assert.ok(!fs.existsSync(mdPath), `Stale markdown agent should not exist: ${agent}.md`);
+        const content = fs.readFileSync(tomlPath, 'utf8');
+        assert.ok(content.includes(`name = "${agent}"`), `${agent}.toml missing name field`);
+        assert.ok(content.includes('description = '), `${agent}.toml missing description field`);
+        assert.ok(content.includes('developer_instructions = '), `${agent}.toml missing developer_instructions field`);
       }
       rmDir(dir);
     });
@@ -269,10 +274,27 @@ describe('harness init', () => {
       rmDir(dir);
     });
 
-    it('Antigravity writes both GEMINI.md and AGENTS.md at root', async () => {
+    it('Antigravity writes AGENTS.md + .agents/rules/core.md (no project-root GEMINI.md)', async () => {
       const dir = await build('antigravity');
-      assert.ok(fs.existsSync(path.join(dir, 'GEMINI.md')), 'Missing GEMINI.md');
-      assert.ok(fs.existsSync(path.join(dir, 'AGENTS.md')), 'Missing AGENTS.md (Antigravity AGENTS.md compat)');
+      assert.ok(fs.existsSync(path.join(dir, 'AGENTS.md')), 'Missing AGENTS.md (cross-tool compat)');
+      assert.ok(fs.existsSync(path.join(dir, '.agents/rules/core.md')), 'Missing .agents/rules/core.md (Antigravity workspace rules)');
+      assert.ok(!fs.existsSync(path.join(dir, 'GEMINI.md')), 'Antigravity should not emit project-root GEMINI.md (global only at ~/.gemini/GEMINI.md)');
+      rmDir(dir);
+    });
+
+    it('Antigravity does NOT create legacy .gemini/ directory (regression guard)', async () => {
+      const dir = await build('antigravity');
+      assert.ok(!fs.existsSync(path.join(dir, '.gemini')),
+        'Antigravity must not create .gemini/ — official spec uses .agents/ (workspace) and ~/.gemini/ (global only)');
+      rmDir(dir);
+    });
+
+    it('Cursor does NOT create unofficial .cursor/skills/ or .cursor/agents/ (regression guard)', async () => {
+      const dir = await build('cursor');
+      assert.ok(!fs.existsSync(path.join(dir, '.cursor/skills')),
+        'Cursor must not create .cursor/skills/ — not in Cursor official docs; use .agents/skills/ (cross-tool)');
+      assert.ok(!fs.existsSync(path.join(dir, '.cursor/agents')),
+        'Cursor must not create .cursor/agents/ — not in Cursor official docs; agents live in .cursor/rules/<id>.mdc');
       rmDir(dir);
     });
 

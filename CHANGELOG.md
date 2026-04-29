@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.4] - 2026-04-29
+
+### Fixed
+- **All 6 IDE adapters re-aligned with official documentation** — every generator now cites its source of truth in code comments:
+  - **Antigravity** (critical fix): was generating `.gemini/skills/` and `.gemini/agents/` plus a project-root `GEMINI.md`, contradicting [antigravity.google/docs/skills](https://antigravity.google/docs/skills) and [/docs/rules-workflows](https://antigravity.google/docs/rules-workflows). Now writes `.agents/skills/<name>/SKILL.md` and `.agents/rules/*.md`; project-root `GEMINI.md` removed (the spec defines GEMINI.md only at the global `~/.gemini/GEMINI.md`).
+  - **Codex** (format fix): subagents were emitted as Markdown; the official [Codex CLI subagents docs](https://developers.openai.com/codex/subagents) require TOML with `name`, `description`, `developer_instructions` fields. Now writes `.codex/agents/*.toml`.
+  - **Cursor** (scope fix): unofficial `.cursor/skills/` and `.cursor/agents/` paths replaced with the cross-tool open Agent Skills standard at `.agents/skills/`, plus per-agent rules at `.cursor/rules/<agent>.mdc`.
+  - **VS Code, Claude Code, Windsurf**: re-verified, no changes required.
+- **Doctor / `detectExistingInstall` markers** updated to match the new layout (`.agents/rules/core.md` for Antigravity, `.codex/agents/reviewer.toml` for Codex).
+
+### Added
+- **Regression assertions** in `tests/init.test.js` to prevent reintroducing the removed paths (`.gemini/`, `.cursor/skills/`, `.cursor/agents/`, project-root `GEMINI.md`).
+
+## [0.9.3] - 2026-04-29
+
+### Fixed
+- **OSS templates** — replaced legacy `Musher` / `musher-engineering` references with `kode:harness` / `harness-engineering` across `harness/core-rules.md`, `harness/project-brief.md`, `harness/skills/setup.md`, `harness/skills/wrap-up.md`.
+
 ## [0.9.2] - 2026-04-28
 
 ### Added

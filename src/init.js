@@ -78,13 +78,16 @@ function hasFrameworkMarker(content) {
 }
 
 function hasIdeLayout(targetDir, ide) {
+  // IDE-unique layout markers — used to disambiguate when multiple IDEs share
+  // common files (e.g., AGENTS.md, .agents/skills/). Each marker MUST be unique
+  // to its IDE and aligned with the IDE's official docs.
   const requiredByIde = {
-    vscode: '.github/skills/setup/SKILL.md',
-    claude: '.claude/skills/setup/SKILL.md',
-    cursor: '.cursor/skills/setup/SKILL.md',
-    codex: '.agents/skills/setup/SKILL.md',
-    windsurf: '.windsurf/skills/setup/SKILL.md',
-    antigravity: '.gemini/skills/setup/SKILL.md',
+    vscode: '.github/skills/setup/SKILL.md',          // VS Code: .github/skills/ (official)
+    claude: '.claude/skills/setup/SKILL.md',          // Claude Code: .claude/skills/ (official)
+    cursor: '.cursor/rules/core.mdc',                 // Cursor: .cursor/rules/*.mdc (official)
+    codex: '.codex/agents/reviewer.toml',             // Codex CLI: .codex/agents/*.toml (official)
+    windsurf: '.windsurf/skills/setup/SKILL.md',      // Windsurf: .windsurf/skills/ (official)
+    antigravity: '.agents/rules/core.md',             // Antigravity: .agents/rules/ (official)
   };
 
   const requiredPath = requiredByIde[ide];
@@ -271,37 +274,55 @@ function generateClaude(targetDir, overwrite, mode = 'solo', crew = false) {
 }
 
 function generateCursor(targetDir, overwrite, mode = 'solo', crew = false) {
-  // .cursor/rules/core.mdc — dispatcher only (always active)
+  // Cursor official docs: https://cursor.com/docs/context/rules
+  // Officially supported surfaces ONLY:
+  //   - .cursor/rules/*.mdc (with frontmatter: alwaysApply, description, globs)
+  //   - AGENTS.md at project root (and nested directories)
+  // Cursor does NOT publicly document custom skills/agents directories, so we
+  // emit Skills via the open Agent Skills standard path .agents/skills/
+  // (also recognized by VS Code, Codex, Antigravity), and skip a Cursor-specific
+  // agents directory entirely.
   const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
   const coreMdc =
     '---\ndescription: kode:harness dispatcher — workflow guidance and state file references\nalwaysApply: true\n---\n\n' +
     coreRules;
   writeFile(targetDir, '.cursor/rules/core.mdc', coreMdc, true);
 
-  // AGENTS.md — Cursor CLI also reads project-root AGENTS.md as a rule
+  // AGENTS.md — Cursor reads project-root AGENTS.md as agent instructions
   writeFile(targetDir, 'AGENTS.md', coreRules, true);
 
-  // Skills (.cursor/skills — invokable by mentioning skill name)
-  writeSkills(targetDir, '.cursor/skills', true, mode, crew);
+  // Skills (.agents/skills — open Agent Skills standard, cross-tool)
+  writeSkills(targetDir, '.agents/skills', true, mode, crew);
 
-  // Agents (.cursor/agents/ — Cursor subagent definition files)
-  writeAgentsAsMd(targetDir, '.cursor/agents', true, mode, crew);
+  // Agents as additional rules (.cursor/rules/) so they auto-load with Cursor
+  // and are user-invocable via @rule-name. We use .md plain (no frontmatter
+  // beyond alwaysApply omitted → default "manual" activation).
+  for (const agent of AGENTS) {
+    const content = resolveContent(readTemplate(agent.file), mode, crew);
+    const ruleMd =
+      `---\ndescription: ${agent.desc}\nalwaysApply: false\n---\n\n` +
+      content;
+    writeFile(targetDir, `.cursor/rules/${agent.id}.mdc`, ruleMd, true);
+  }
 
   // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode, crew);
 }
 
 function generateCodex(targetDir, overwrite, mode = 'solo', crew = false) {
-  // AGENTS.md — Codex CLI's canonical project instructions file (the only file
-  // Codex CLI auto-loads). All skill/agent references must be discoverable from here.
+  // Codex CLI official docs:
+  //   - AGENTS.md: https://developers.openai.com/codex/guides/agents-md
+  //   - Skills: https://developers.openai.com/codex/skills (.agents/skills/SKILL.md)
+  //   - Subagents: https://developers.openai.com/codex/subagents (.codex/agents/*.toml)
+  // AGENTS.md — Codex CLI's canonical project instructions file (auto-loaded).
   writeFile(targetDir, 'AGENTS.md', resolveContent(readTemplate('core-rules.md'), mode, crew), true);
 
-  // Skills (SKILL.md with frontmatter — invokable via $skill-name)
+  // Skills (.agents/skills/<name>/SKILL.md — official cross-tool standard)
   writeSkills(targetDir, '.agents/skills', true, mode, crew);
 
-  // Agents (.codex/agents/ — markdown subagent files with YAML frontmatter,
-  // matching the Cursor/Claude convention used as a Codex compat directory)
-  writeAgentsAsMd(targetDir, '.codex/agents', true, mode, crew);
+  // Subagents (.codex/agents/*.toml — Codex CLI's official format with
+  // name, description, developer_instructions fields)
+  writeAgentsAsToml(targetDir, '.codex/agents', true, mode, crew);
 
   // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode, crew);
@@ -326,20 +347,31 @@ function generateWindsurf(targetDir, overwrite, mode = 'solo', crew = false) {
 }
 
 function generateAntigravity(targetDir, overwrite, mode = 'solo', crew = false) {
+  // Antigravity official docs:
+  //   - Skills: https://antigravity.google/docs/skills (.agents/skills/<name>/SKILL.md)
+  //   - Rules: https://antigravity.google/docs/rules-workflows (.agents/rules/*.md)
+  // Note: Antigravity does NOT recognize a project-root GEMINI.md — the global
+  // GEMINI.md lives only at ~/.gemini/GEMINI.md. We emit AGENTS.md for cross-tool
+  // compat (harmless to Antigravity, useful when Codex/Cursor share the repo).
   const coreRules = resolveContent(readTemplate('core-rules.md'), mode, crew);
 
-  // GEMINI.md — Gemini CLI / Antigravity's canonical project context file
-  writeFile(targetDir, 'GEMINI.md', coreRules, true);
-
-  // AGENTS.md — Antigravity also follows the AGENTS.md convention shared by
-  // Codex / Cursor CLI; emitting it broadens compatibility with no downside
+  // AGENTS.md — cross-tool agent instructions (recognized by Codex/Cursor;
+  // ignored by Antigravity but provides compatibility for mixed teams)
   writeFile(targetDir, 'AGENTS.md', coreRules, true);
 
-  // Skills (.gemini/skills/ — SKILL.md format)
-  writeSkills(targetDir, '.gemini/skills', true, mode, crew);
+  // .agents/rules/core.md — workspace rules (Antigravity's official location)
+  writeFile(targetDir, '.agents/rules/core.md', coreRules, true);
 
-  // Agents (.gemini/agents/ — Gemini CLI subagent definition files)
-  writeAgentsAsMd(targetDir, '.gemini/agents', true, mode, crew);
+  // Skills (.agents/skills/<name>/SKILL.md — Antigravity's official location)
+  writeSkills(targetDir, '.agents/skills', true, mode, crew);
+
+  // Agents → Rules (Antigravity has no separate agents directory; agents
+  // are persistent rule prompts. We emit one rule file per agent under
+  // .agents/rules/, with alwaysApply implied — manual @-mention also works.)
+  for (const agent of AGENTS) {
+    const content = resolveContent(readTemplate(agent.file), mode, crew);
+    writeFile(targetDir, `.agents/rules/${agent.id}.md`, content, true);
+  }
 
   // State files (respect user's --overwrite for data files)
   writeStateFiles(targetDir, overwrite, mode, crew);
@@ -430,7 +462,7 @@ function detectExistingInstall(targetDir) {
     ['.claude/rules/core.md', 'claude'],
     ['.cursor/rules/core.mdc', 'cursor'],
     ['.windsurf/rules/core.md', 'windsurf'],
-    ['GEMINI.md', 'antigravity'],
+    ['.agents/rules/core.md', 'antigravity'],
   ];
   // Only count as existing if the file contains a framework marker (not from other frameworks)
   const existingIde = ideMarkers.filter(([f, ide]) => {
@@ -546,7 +578,8 @@ function runDoctor(targetDir) {
     ['.claude/rules/core.md', 'claude'],
     ['.cursor/rules/core.mdc', 'cursor'],
     ['.windsurf/rules/core.md', 'windsurf'],
-    ['GEMINI.md', 'antigravity'],
+    ['.agents/rules/core.md', 'antigravity'],
+    ['.codex/agents/reviewer.toml', 'codex'],
     ['AGENTS.md', 'codex'],
   ];
 
