@@ -1,6 +1,6 @@
-# Musher
+# kode:harness
 
-This project uses Musher for structured AI-assisted development.
+This project uses kode:harness for structured AI-assisted development.
 Skills and agents work together through shared state files.
 **Every response must end with a 🧭 Next Step block** — guide the user to the next action.
 

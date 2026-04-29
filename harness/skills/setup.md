@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Onboard a new or existing project into Musher by filling **state files AND rules files** automatically.
+Onboard a new or existing project into kode:harness by filling **state files AND rules files** automatically.
 Solves the cold-start problem: users don't know which `.md` files to fill or how.
 One command does everything — no manual editing required.
 
 ## When to Apply
 
-- Right after running `musher init` on a new project
+- Right after running `@kodevibe/harness init` on a new project
 - When joining an existing project that has empty state files
 - When state files are outdated and need a refresh
 - When any agent reports "state files are empty"
@@ -318,14 +318,14 @@ When starting a NEW session (not during setup), read these files in order:
 When running setup in Team mode:
 
 ### New Project (first developer)
-1. Run `musher init --team` to create shared + personal state files
+1. Run `@kodevibe/harness init --team` to create shared + personal state files
 2. Fill all state files via normal setup procedure
 3. Commit shared files (docs/) to git
 4. Push to remote — teammates will clone this
 
 ### Joining Developer (existing project)
 1. Clone the repository (shared docs/ already exist)
-2. Run `musher init --team` — only personal files (.harness/) are created; shared files are skipped
+2. Run `@kodevibe/harness init --team` — only personal files (.harness/) are created; shared files are skipped
 3. **DO NOT re-run setup interviews** — shared state is already filled by the first developer
 4. Review docs/project-brief.md to understand project goals
 5. Create your personal .harness/project-state.md with your current Story assignment
