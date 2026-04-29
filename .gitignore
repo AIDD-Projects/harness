@@ -24,4 +24,14 @@ project-brief.md
 features.md
 dependency-map.md
 failure-patterns.md
+
+# k-harness develops the framework — does NOT self-bootstrap.
+# These are byproducts of running the framework on itself; not committed.
+docs/project-state.md
+docs/project-brief.md
+docs/features.md
+docs/dependency-map.md
+docs/failure-patterns.md
+docs/agent-memory/
+failure-patterns.md
 .vscode/instructions/

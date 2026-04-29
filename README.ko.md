@@ -116,10 +116,10 @@ npx @kodevibe/harness validate  # state 파일에 실제 내용 확인
 |-----|---------------------|------|----------|
 | **VS Code Copilot** | `.github/copilot-instructions.md` | `.github/skills/*/SKILL.md` | `.github/agents/*.agent.md` |
 | **Claude Code** | `CLAUDE.md` (+ `.claude/rules/core.md`) | `.claude/skills/*/SKILL.md` | `.claude/agents/*.md` |
-| **Cursor** | `.cursor/rules/core.mdc` (+ `AGENTS.md`) | `.cursor/skills/*/SKILL.md` | `.cursor/agents/*.md` |
-| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.md` |
+| **Cursor** | `.cursor/rules/core.mdc` (+ `AGENTS.md`) | `.agents/skills/*/SKILL.md` (cross-tool) | `.cursor/rules/<agent>.mdc` |
+| **Codex** | `AGENTS.md` | `.agents/skills/*/SKILL.md` | `.codex/agents/*.toml` |
 | **Windsurf** | `.windsurf/rules/core.md` | `.windsurf/skills/*/SKILL.md` | *(스킬로 설치)* |
-| **Antigravity** | `GEMINI.md` (+ `AGENTS.md`) | `.gemini/skills/*/SKILL.md` | `.gemini/agents/*.md` |
+| **Antigravity** | `AGENTS.md` | `.agents/skills/*/SKILL.md` (cross-tool) | `.agents/rules/<agent>.md` |
 
 모든 IDE에 `docs/` 디렉토리에 State 파일(`project-state.md`, `project-brief.md`, `features.md`, `failure-patterns.md`, `dependency-map.md`)도 함께 설치됩니다.
 
