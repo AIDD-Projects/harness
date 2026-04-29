@@ -41,13 +41,19 @@ if [ -d "harness/" ]; then
   file_count=$(find harness/ -name "*.md" | wc -l | tr -d ' ')
   [ "$file_count" -le 30 ] && ok "총 파일: ${file_count}개 (≤30)" || fail "총 파일: ${file_count}개 — 상한 30 초과!"
 
+  # Lightness budget rationale (recalibrated v0.9.5):
+  # - Token estimate is `words × 1.3`, which has ±20% drift on markdown with tables/code blocks.
+  # - v0.8 budgets (35K/1300/2300) were tight for v0.9.x feature additions:
+  #   Iron Law #9 (Common First), #10 (Self-Verify), 🟣 Crew Pipeline, state-check skill,
+  #   IDE adapter doc-cite comments. Recalibrated to 40K/1500/2500 to provide realistic
+  #   headroom while preserving the OSS lightness intent (still ≤50% of typical context window).
   total_words=$(find harness/ -name "*.md" -exec cat {} + | wc -w | tr -d ' ')
   est_tokens=$((total_words * 13 / 10))
-  [ "$est_tokens" -le 35000 ] && ok "추정 토큰: ${est_tokens} (≤35K)" || fail "추정 토큰: ${est_tokens} — 상한 35K 초과!"
+  [ "$est_tokens" -le 40000 ] && ok "추정 토큰: ${est_tokens} (≤40K)" || fail "추정 토큰: ${est_tokens} — 상한 40K 초과!"
 
   if [ -f "harness/core-rules.md" ]; then
     disp_words=$(wc -w < harness/core-rules.md | tr -d ' ')
-    [ "$disp_words" -le 1300 ] && ok "디스패처: ${disp_words}단어 (≤1300)" || fail "디스패처: ${disp_words}단어 — 상한 초과!"
+    [ "$disp_words" -le 1500 ] && ok "디스패처: ${disp_words}단어 (≤1500)" || fail "디스패처: ${disp_words}단어 — 상한 초과!"
   else
     warn "harness/core-rules.md 없음 (디스패처 점검 스킵)"
   fi
@@ -55,7 +61,7 @@ if [ -d "harness/" ]; then
   max_line=$(find harness/ -name "*.md" -exec wc -w {} + | sort -rn | head -2 | tail -1)
   max_words=$(echo "$max_line" | awk '{print $1}')
   max_name=$(echo "$max_line" | awk '{$1=""; print $0}' | xargs)
-  [ "$max_words" -le 2300 ] && ok "최대 파일: ${max_name} (${max_words}단어, ≤2300)" || fail "최대 파일: ${max_name} (${max_words}단어) — 상한 초과!"
+  [ "$max_words" -le 2500 ] && ok "최대 파일: ${max_name} (${max_words}단어, ≤2500)" || fail "최대 파일: ${max_name} (${max_words}단어) — 상한 초과!"
 
   state_files="harness/project-brief.md harness/project-state.md harness/features.md harness/dependency-map.md harness/failure-patterns.md"
   existing_states=""

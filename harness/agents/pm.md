@@ -61,8 +61,6 @@ Read `docs/agent-memory/pm.md` for past learnings:
 
 Apply these insights when creating the implementation plan. If the memory file is empty or contains only placeholders, skip this step.
 
-> **Team Mode**: In Team mode, agent memory is personal (`.harness/agent-memory/`). Each developer accumulates their own planning insights.
-
 ### Step 0.7: Feature Roadmap Planning (Draft & Correct)
 
 **Trigger**: `docs/project-brief.md`에 `## Feature Roadmap` 섹션이 없을 때
@@ -87,11 +85,8 @@ Apply these insights when creating the implementation plan. If the memory file i
    - [ ] F-004: ...
    ```
 3. 사용자에게 초안을 제시한다: **"이 Feature Roadmap을 검토하고, 추가/삭제/순서 변경을 알려주세요."**
-   > **물어보지 말고, 초안을 만들어서 교정받는다.** 빈 칸을 채우는 것보다 틀린 것을 고치는 것이 쉽다.
 4. 사용자 교정을 반영한 최종 Roadmap을 `docs/project-brief.md`에 `## Feature Roadmap` 섹션으로 기록한다
 5. Feature Roadmap이 확정되면 아래 "For New Feature" 절차로 진행한다
-
-> **pivot 이후**: pivot이 `project-brief.md`를 업데이트하면, pm은 변경된 Roadmap을 읽고 Checkpoint에서 반영한다.
 
 ### For New Feature
 
@@ -133,12 +128,11 @@ Apply these insights when creating the implementation plan. If the memory file i
    If no Crew Artifact Index → proceed with normal user-driven planning below.
 <!-- CREW_MODE_END -->
 
-3. **Direction Alignment**: Verify the requested feature against three checkpoints.
-   > This check intentionally duplicates architect’s direction validation (Step 2). The redundancy is by design: architect validates STRUCTURAL proposals (module boundaries, layer rules), while pm validates FEATURE-level alignment (goals, non-goals, decisions). When both are used in the same session, this provides defense-in-depth.
-   - **Goal Alignment**: Does it serve a listed Goal? If no clear link → **warn but proceed**. Include the warning in the plan output under a `### Direction Alignment` section: `⚠️ Goal Alignment: [feature] does not directly map to listed goals`.
-   - **Non-Goal Violation**: Does it fall into Non-Goals? If yes → **stop and ask the user**. Do not proceed until the user confirms this is intentional (may need `pivot` skill).
-   - **Decision Consistency**: Does it contradict any Decision Log entry? If yes → **stop and warn**. Recommend running the `pivot` skill before proceeding.
-   If the request represents a clear direction change → **stop and require the `pivot` skill** before proceeding with any planning. Do not proceed even if the user insists — direction changes must be formally tracked.
+3. **Direction Alignment**: Verify against three checkpoints (architect validates STRUCTURE; pm validates FEATURE-level alignment):
+   - **Goal Alignment**: Serves a listed Goal? If no clear link → **warn but proceed**. Add `⚠️ Goal Alignment: [feature] does not directly map to listed goals` under `### Direction Alignment` in the plan output.
+   - **Non-Goal Violation**: Falls into Non-Goals? → **stop and ask the user**. May need `pivot`.
+   - **Decision Consistency**: Contradicts a Decision Log entry? → **stop and warn**. Recommend `pivot`.
+   If the request represents a clear direction change → **stop and require `pivot`** before planning. Do not proceed even if the user insists.
 3. Read `docs/features.md` to understand what already exists
 4. Read `docs/dependency-map.md` to understand current architecture
 5. Read `docs/project-state.md` for current Sprint context
@@ -153,7 +147,7 @@ Apply these insights when creating the implementation plan. If the memory file i
 13. **After user approves** → Update `docs/project-state.md` with the new Story
 14. **After user approves** → Update `docs/features.md` with the new feature entry
 
-> **State File Write Deferral**: Steps 13-14 execute ONLY after user confirms the plan. If the user rejects or requests changes, no state files are modified — the plan is revised and re-presented. This prevents state file pollution from rejected plans.
+State file writes (Steps 13-14) execute ONLY after user approval. Rejected plans never touch state.
 
 ### For Architecture Query
 
@@ -186,8 +180,6 @@ After producing ANY plan (New Feature, Refactor, or Crew-Driven), **do NOT proce
 3. Wait for explicit user approval (`Yes`, `Go`, `진행해줘`, etc.)
 4. **Only after approval** → execute **MANDATORY State File Write** (below), then output 🧭 Next Step pointing to `lead`
 5. If the user requests changes → revise the plan and re-confirm. **No state files are written until approval.**
-
-> **Why**: The pm is planning a route, not driving. The user must confirm the route before the engine starts. This prevents irreversible code changes based on a misunderstood plan.
 
 ### ⚠️ MANDATORY: Post-Approval State File Write
 
@@ -233,8 +225,6 @@ After the Post-Approval state writes complete, run the `state-check` skill:
 2. If state-check returns **PASS** → proceed to output 🧭 Next Step
 3. If state-check returns **WARN** → include the warnings in the plan output, then proceed
 4. If state-check returns **FAIL** → do NOT output STATUS: DONE. Fix the listed drift, then re-run state-check.
-
-> Iron Law #10 (Self-Verify) applies to every agent. The pm runs state-check **after** state writes — not before — because the writes are what create the consistency to verify.
 
 ## Output Format
 
@@ -291,9 +281,8 @@ Use this format when Crew Artifact Index exists in project-brief.md. If no Artif
 
 ## Sprint Completion Checkpoint
 
-**Trigger**: 현재 Sprint의 모든 Story가 ✅ 완료되었을 때 (reviewer pass → pm checkpoint)
-
-이 절차는 Sprint 종료 시 자동으로 실행된다. "계속할까요?"가 아니라 **구체적 선택을 강제**한다.
+**Trigger**: 현재 Sprint의 모든 Story가 ✅ 완료되었을 때 (reviewer pass → pm checkpoint).
+Sprint 종료 시 자동 실행 — **구체적 선택을 강제**한다 ("계속할까요?" 가 아님).
 
 ### 절차
 
@@ -324,7 +313,7 @@ Use this format when Crew Artifact Index exists in project-brief.md. If no Artif
 
    🏁 마무리: 현재 상태로 프로젝트를 완료하고 wrap-up 진행
    ```
-   > **"계속"은 선택지에 없다.** 사용자는 구체적 기능을 골라야 하거나, 명시적으로 "마무리"를 선택해야 한다.
+   **"계속"은 선택지에 없다** — 사용자는 구체적 기능 또는 "마무리"를 명시적으로 선택해야 한다.
 
 4. **사용자 선택에 따라 분기**:
    - **기능 선택** → 선택된 기능으로 Sprint 계획 (위의 "For New Feature" 절차 진행)

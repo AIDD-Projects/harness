@@ -217,17 +217,7 @@ STATUS: DONE / DONE_WITH_CONCERNS / BLOCKED
 
 ## Embedded Rules
 
-These rules are enforced during every review:
-
-### Iron Laws
-1. **Mock Sync**: Interface change → mock updated in same commit (FP-001)
-2. **Type Check**: Verify constructor/factory parameters from source, not memory (FP-002)
-3. **Scope Compliance**: Changes must be within current Story scope (docs/project-state.md)
-4. **Security**: No credentials, passwords, or API keys in code or commits
-5. **3-Failure Stop**: Same approach failed 3 times → stop and report
-6. **Dependency Map**: New/modified module → docs/dependency-map.md updated
-7. **Feature Registry**: New feature → docs/features.md updated
-8. **Session Handoff**: Session end → docs/project-state.md Quick Summary updated
+These rules are enforced during every review. The full Iron Laws (10) are defined in `harness/core-rules.md` — reviewer enforces all of them. Below are review-specific rules that supplement the Iron Laws.
 
 ### Testing Rules
 - New feature = New test. No feature code without tests.

@@ -278,28 +278,6 @@ For projects with fewer than 3 modules (e.g., single-file scripts, small CLI too
 - `breakdown` Waves may collapse into a single Wave — skip Wave-level pacing
 - Consider a simplified workflow: `setup → pm → [code] → reviewer → wrap-up` (skip lead for single-story projects)
 
-## Embedded Knowledge
-
-### Session Bootstrap Protocol
-When starting a NEW session (not during setup), read these files in order:
-1. `docs/project-state.md` — Quick Summary tells you where we left off
-2. `docs/features.md` — What features exist
-3. `docs/failure-patterns.md` — What mistakes to avoid
-4. `docs/project-brief.md` — Project vision and non-goals
-
-### Workflow Pipeline
-- New feature: `pm → [code] → reviewer → lead → wrap-up`
-- Bug fix: `debug → [fix] → sync-tests → reviewer → wrap-up`
-- Session lifecycle: `lead ("where are we?") → [work] → wrap-up`
-
-### State File Size Limits
-- docs/project-brief.md: Max 200 lines
-- docs/project-state.md: Max 300 lines
-- docs/failure-patterns.md: Max 50 patterns
-- docs/dependency-map.md: Max 100 modules
-- docs/features.md: Max 50 features
-- docs/agent-memory/*.md: Max 100 lines each
-
 ## Anti-patterns
 
 | Anti-pattern | Correct Approach |

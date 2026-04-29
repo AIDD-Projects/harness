@@ -40,6 +40,24 @@ Follow the pipeline that matches the current situation. After each step, output 
 1. `pivot` → update all state files for new direction
 2. `pm` → re-plan features for new direction
 
+<!-- CREW_MODE_START -->
+### 🟣 Crew-Driven Development (kode:crew artifacts provided)
+
+When external planning artifacts exist (requirements, analysis, design documents from kode:crew or similar):
+
+1. `setup` → scan project & fill state files, **create Artifact Index + Validation Tracker** in project-brief.md (originals are never modified)
+2. `pm` → plan features **from crew artifacts**: map FR→Stories (`[FR-NNN]` prefix), ARB Fail→P0 Stories (`[ARB-FAIL]` prefix), update Validation Tracker
+3. `lead` → start Story (includes Validation Dashboard showing KPI/FR/ARB coverage)
+4. [Coding] → implement Stories in order from pm
+5. `reviewer` → code review + crew artifact compliance check → commit → push
+6. `wrap-up` → capture session lessons + update Validation Tracker + verify push
+
+> Crew artifacts are detected by: `docs/crew/` directory, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` directories, or user explicitly provides requirements/design documents (e.g., mentions "PRD", "산출물", "설계서", or provides file paths to planning artifacts).
+> **Reference, don't summarize**: setup creates a Crew Artifact Index (path table) in project-brief.md — each skill reads the original artifact directly via the indexed path.
+> Crew mode also enables the **CI Artifact Index** reference layer: if `docs/project-brief.md` contains `## CI Artifact Index`, reviewer Step 2.5 and release Step 3.5 surface the indexed company CI/CD guide when build/CI files change. The guide content stays external; only the path and key constraints are indexed.
+> This pipeline produces the same state files as 🟢 — the difference is the INPUT source and the addition of Validation Tracker for traceability.
+<!-- CREW_MODE_END -->
+
 
 ## User Request Routing
 
@@ -52,6 +70,9 @@ When the user provides a feature request or development goal in their prompt:
    - Bug report or error → Start 🔴 Pipeline from `debug`
    - Structural/design change → Run `architect` first, then `pm`
    - Direction change → Start 🟡 Pipeline from `pivot`
+<!-- CREW_MODE_START -->
+   - Crew artifacts detected (`docs/crew/` exists, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` exist, or user provided design docs) → Start 🟣 Pipeline from `setup`
+<!-- CREW_MODE_END -->
    - Any other request (info, explanation, status) → `lead` — route with context
 3. Announce which pipeline and step you are starting, then execute
 
@@ -85,6 +106,9 @@ When a skill or agent reports STATUS: DONE, output the next step in this format:
 | `pivot` | `pm` | "변경된 방향에 맞춰 재계획해줘" |
 | `architect` | `pm` | "승인된 설계로 기능을 계획해줘" |
 | `wrap-up` | 🏁 Session End | "다음 세션 시작 시 `lead` 호출" |
+<!-- CREW_MODE_START -->
+| Crew artifacts provided | `setup` (🟣) | "crew 산출물을 기반으로 프로젝트를 세팅해줘" |
+<!-- CREW_MODE_END -->
 
 ## State Files
 

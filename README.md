@@ -274,7 +274,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-kode:harness is at **v0.9.4** — all 6 IDE adapters realigned with official documentation (Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`), state-check skill, Iron Law #10 (Self-Verify), Confirmation Gate Defaults, and CI Artifact Index for crew mode.
+kode:harness is at **v0.9.5** — lightness budget recalibrated (40K/1500/2500), Iron Laws consistency fix in reviewer.md, dispatcher synchronization between `harness/core-rules.md` and `.github/copilot-instructions.md`. v0.9.4 brought all 6 IDE adapters into alignment with official documentation (Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`).
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
@@ -284,7 +284,8 @@ kode:harness is at **v0.9.4** — all 6 IDE adapters realigned with official doc
 | **Navigation** | v0.8.x | ✅ Done | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
 | **Naming** | v0.9.0 | ✅ Done | Skill/agent naming redesign for clarity and discoverability |
 | **Self-Verify** | v0.9.2 | ✅ Done | state-check skill, Iron Law #10, Confirmation Gate Defaults, multi-IDE fix, CI Artifact Index |
-| **IDE Realignment** | v0.9.4 | ✅ Current | All 6 IDE adapters aligned with official docs; Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`; release skill Step 6.5 + qa-check.sh §10 regression guards |
+| **IDE Realignment** | v0.9.4 | ✅ Done | All 6 IDE adapters aligned with official docs; Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`; release skill Step 6.5 + qa-check.sh §10 regression guards |
+| **Consistency & Budget** | v0.9.5 | ✅ Current | Iron Laws stale-copy fix (reviewer.md), dispatcher sync (core-rules.md ↔ copilot-instructions.md), lightness budgets recalibrated (40K/1500/2500) with rationale |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 
 ### What's Next

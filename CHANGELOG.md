@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.5] - 2026-04-29
+
+### Fixed
+- **Iron Laws consistency** — `harness/agents/reviewer.md` carried a stale 8-law copy of the Iron Laws (missing #9 Common First, #10 Self-Verify). Replaced the embedded copy with a single reference to `harness/core-rules.md` § Iron Laws (the canonical source). Reviewer continues to enforce all 10 laws.
+- **Dispatcher synchronization** — `.github/copilot-instructions.md` (this repo's own dispatcher) was missing the three 🟣 Crew Pipeline blocks present in `harness/core-rules.md` (the distributed template). Added the blocks so both dispatchers tell the same truth.
+
+### Changed
+- **Lightness budget recalibration** — `scripts/qa-check.sh` §1 budgets adjusted with rationale comment:
+  - Total tokens: 35K → 40K
+  - Dispatcher: 1300 → 1500 words
+  - Per-file: 2300 → 2500 words
+  - The v0.8 budgets did not account for v0.9.x feature additions (Iron Law #9/#10, 🟣 Crew Pipeline, state-check skill, IDE adapter doc-cite comments). Recalibrated to provide realistic headroom while preserving OSS lightness intent (still ≤50% of typical context window).
+- **`harness/skills/setup.md`** — removed the "Embedded Knowledge" section (Session Bootstrap Protocol, Workflow Pipeline, State File Size Limits) which duplicated information already authoritative in `core-rules.md` and skill-specific docs. Anti-patterns table retained.
+- **`harness/agents/pm.md`** — trimmed philosophical asides ("by design", "defense-in-depth", "why" rationales) without touching any decision logic. All Confirmation Gates, MANDATORY blocks, state file write order, Self-Verify (Iron Law #10), and Direction Alignment checkpoint actions are preserved.
+
+### Verified
+- 174/174 tests PASS
+- `bash scripts/qa-check.sh` 1–10 PASS
+  - `§1 경량성 예산`: 4/4 ✅
+  - `§10 IDE 어댑터 경로 회귀`: 4/4 ✅
+
 ## [0.9.4] - 2026-04-29
 
 ### Fixed
