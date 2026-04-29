@@ -7,13 +7,13 @@ description: 'Onboard project into kode:harness. Scans codebase and fills state 
 
 ## Purpose
 
-Onboard a new or existing project into Musher by filling **state files AND rules files** automatically.
+Onboard a new or existing project into kode:harness by filling **state files AND rules files** automatically.
 Solves the cold-start problem: users don't know which `.md` files to fill or how.
 One command does everything — no manual editing required.
 
 ## When to Apply
 
-- Right after running `musher init` on a new project
+- Right after running `harness init` on a new project
 - When joining an existing project that has empty state files
 - When state files are outdated and need a refresh
 - When any agent reports "state files are empty"

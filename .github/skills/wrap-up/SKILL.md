@@ -9,7 +9,7 @@ description: 'Capture session lessons and update state files. Use at the end of 
 
 Capture lessons from the current session before ending.
 Updates docs/failure-patterns.md with new patterns and refreshes docs/project-state.md Quick Summary.
-This is Musher's memory mechanism — without it, the same mistakes repeat across sessions.
+This is kode:harness's memory mechanism — without it, the same mistakes repeat across sessions.
 
 ## Invoked By
 

@@ -93,7 +93,7 @@ kode:harness solves this with three mechanisms:
 | 🧭 **Navigation Dispatcher** | Turn-by-Turn navigation through 5 pipelines with copy-paste next-step prompts |
 | 📝 **State Persistence** | 5 markdown files that persist project knowledge across LLM sessions |
 | 🔄 **5 Pipelines** | 🟢 New Dev → 🔵 Continue → 🔴 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven |
-| 🛠️ **10 Skills** | Step-by-step procedures: setup, debug, breakdown, review, pivot, and more |
+| 🛠️ **11 Skills** | Step-by-step procedures: setup, debug, breakdown, review, pivot, state-check, and more |
 | 🤖 **4 Agents** | Role-based personas: pm, reviewer, lead, architect |
 | ⚠️ **Failure Patterns** | Project-specific failure log that prevents repeat mistakes across sessions |
 | 📋 **Decision Log** | Records why decisions were made so LLMs don't re-debate settled choices |
@@ -218,7 +218,7 @@ npx @kodevibe/harness init --team
 
 ## Iron Laws
 
-These 8 rules are enforced across all skills and agents. They form the quality backbone of every kode:harness project managed with harness engineering.
+These 10 rules are enforced across all skills and agents. They form the quality backbone of every kode:harness project managed with harness engineering.
 
 | # | Law | Enforced By |
 |---|-----|-------------|
@@ -268,13 +268,13 @@ Original crew documents are **never modified**. Only the index and tracker are c
 | Dependencies | Node 20+ | Bun + Node + Playwright | Node 18+ | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 6 (native format) |
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
-| Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (8 laws embedded in skills) |
+| Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (10 laws embedded in skills) |
 | Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`setup` skill) |
 | Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (136-line dispatcher) |
 
 ## Roadmap
 
-kode:harness is at **v0.9.2** — state-check skill, Iron Law #10 (Self-Verify), Confirmation Gate Defaults, multi-IDE installation fixes, and CI Artifact Index for crew mode.
+kode:harness is at **v0.9.4** — all 6 IDE adapters realigned with official documentation (Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`), state-check skill, Iron Law #10 (Self-Verify), Confirmation Gate Defaults, and CI Artifact Index for crew mode.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
@@ -283,7 +283,8 @@ kode:harness is at **v0.9.2** — state-check skill, Iron Law #10 (Self-Verify),
 | **Flexibility** | v0.7.x | ✅ Done | Delegate team conventions to project-brief.md, remove prescriptive rules |
 | **Navigation** | v0.8.x | ✅ Done | 🧭 Navigation Dispatcher, 5 Pipelines, Crew Artifact Integration, 100-point quality audit, Confirm-First gate, Wave-Level Pacing, Recalculating Mode |
 | **Naming** | v0.9.0 | ✅ Done | Skill/agent naming redesign for clarity and discoverability |
-| **Self-Verify** | v0.9.2 | ✅ Current | state-check skill, Iron Law #10, Confirmation Gate Defaults, multi-IDE fix, CI Artifact Index |
+| **Self-Verify** | v0.9.2 | ✅ Done | state-check skill, Iron Law #10, Confirmation Gate Defaults, multi-IDE fix, CI Artifact Index |
+| **IDE Realignment** | v0.9.4 | ✅ Current | All 6 IDE adapters aligned with official docs; Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`; release skill Step 6.5 + qa-check.sh §10 regression guards |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 
 ### What's Next

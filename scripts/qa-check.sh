@@ -25,7 +25,7 @@ for arg in "$@"; do
   esac
 done
 
-if $CHECK_OSS; then TOTAL=12; else TOTAL=9; fi
+if $CHECK_OSS; then TOTAL=13; else TOTAL=10; fi
 
 echo "============================================"
 echo "  kode:harness QA 자동 점검"
@@ -280,6 +280,53 @@ if [ -f "package.json" ]; then
 fi
 
 # ═══════════════════════════════════════════════
+# 10. IDE 어댑터 경로 회귀 (v0.9.4+)
+# ═══════════════════════════════════════════════
+# 공식 docs와 어긋나는 stale 경로가 src/init.js / 템플릿 / README에 살아있는지 검증.
+# 회귀 발생 시 사용자가 init 했을 때 잘못된 디렉토리가 만들어진다.
+header 10 "IDE 어댑터 경로 회귀"
+
+# 10-1. src/init.js 에서 stale 경로 패턴 검출 (코드만; 주석/문서 인용 제외)
+# - .gemini/ → Antigravity는 .agents/ 사용 (공식)
+# - .cursor/skills/ → Cursor는 .cursor/rules/ + cross-tool .agents/skills/
+# - .cursor/agents/ → Cursor는 .cursor/rules/<agent>.mdc
+# 주석 라인(// 또는 *)은 의도적인 doc-cite 인 경우가 많아 제외.
+STALE=$(grep -nE "\.gemini/|\.cursor/skills/|\.cursor/agents/" src/init.js 2>/dev/null \
+  | grep -vE "^[0-9]+:[[:space:]]*(//|\*|#)" \
+  | grep -vE "legacy|musher-engineering" || true)
+if [ -z "$STALE" ]; then
+  ok "src/init.js stale 경로 없음"
+else
+  fail "src/init.js stale IDE 경로 검출:"
+  echo "$STALE" | while read line; do echo "    $line"; done
+fi
+
+# 10-2. README/한글 README 동기화
+README_STALE=$(grep -nE "\.gemini/|\.cursor/skills/|\.cursor/agents/|\.codex/agents/[^|]*\.md" README.md README.ko.md 2>/dev/null || true)
+if [ -z "$README_STALE" ]; then
+  ok "README IDE 경로 표 최신"
+else
+  fail "README stale IDE 경로:"
+  echo "$README_STALE" | while read line; do echo "    $line"; done
+fi
+
+# 10-3. Codex agents 가 .toml 인지 (.md가 아닌지) generator에서 확인
+if grep -q "writeAgentsAsToml" src/init.js 2>/dev/null; then
+  ok "Codex agents writeAgentsAsToml 사용 중"
+else
+  fail "Codex agents가 .toml 형식이 아님 (writeAgentsAsToml 호출 누락)"
+fi
+
+# 10-4. Antigravity 가 .agents/ 만 사용하는지 (.gemini/ 미사용)
+if grep -q "generateAntigravity" src/init.js 2>/dev/null; then
+  if grep -A 50 "function generateAntigravity" src/init.js | grep -qE "'\.gemini" ; then
+    fail "generateAntigravity 가 여전히 .gemini/ 를 생성"
+  else
+    ok "generateAntigravity .agents/ 만 사용"
+  fi
+fi
+
+# ═══════════════════════════════════════════════
 # OSS 점검 (--oss 또는 --all)
 # ═══════════════════════════════════════════════
 if $CHECK_OSS; then
@@ -295,7 +342,7 @@ if $CHECK_OSS; then
   # ═══════════════════════════════════════════════
   # 10. GitHub 버전 정합성
   # ═══════════════════════════════════════════════
-  header 10 "GitHub 버전 정합성"
+  header 11 "GitHub 버전 정합성"
 
   PKG_VER=$(node -e "console.log(require('./package.json').version)" 2>/dev/null || echo "N/A")
   NPM_VER=$(npm view @kodevibe/harness version 2>/dev/null || echo "N/A")
@@ -317,7 +364,7 @@ if $CHECK_OSS; then
   # ═══════════════════════════════════════════════
   # 11. CI 상태
   # ═══════════════════════════════════════════════
-  header 11 "CI 상태"
+  header 12 "CI 상태"
 
   CI_JSON=$(gh api "repos/$OWNER/$REPO/actions/runs" --jq '.workflow_runs[0]' 2>/dev/null || echo "{}")
   CI_STATUS=$(echo "$CI_JSON" | jq -r '.conclusion // "unknown"')
@@ -333,7 +380,7 @@ if $CHECK_OSS; then
   # ═══════════════════════════════════════════════
   # 12. GitHub 커뮤니티 & 설정
   # ═══════════════════════════════════════════════
-  header 12 "GitHub 커뮤니티 & 설정"
+  header 13 "GitHub 커뮤니티 & 설정"
 
   for f in LICENSE CODE_OF_CONDUCT.md SECURITY.md .github/PULL_REQUEST_TEMPLATE.md .github/workflows/ci.yml; do
     gh api "repos/$OWNER/$REPO/contents/$f" --jq '.name' >/dev/null 2>&1 \

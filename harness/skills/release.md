@@ -83,6 +83,25 @@ This step references the indexed company guide; it does not embed the guide cont
 2. If yes → verify they include entries for all changes since last release
 3. If no → generate a summary from `git log --oneline <last-tag>..HEAD`
 
+### Step 6.5: IDE Adapter 공식 문서 정합성 (IDE-targeting 프로젝트만)
+
+If the project ships IDE-specific adapters or generators (e.g., `src/init.js` with multiple `generate<IDE>` functions, OR distributes templates installed under IDE-specific directories like `.cursor/`, `.codex/`, `.windsurf/`, `.agents/`):
+
+1. **List all IDEs supported** by the project (read source — do not guess).
+2. For **each IDE**, fetch the **official current documentation** for that IDE's agent/rules/skills layout. Do not rely on training data.
+3. **Diff** the project's generated paths/file formats against the official docs:
+   - File extensions (e.g., Codex requires `.toml`, not `.md`)
+   - Directory locations (e.g., Antigravity uses `.agents/`, not `.gemini/`)
+   - Frontmatter schema (required fields per IDE)
+   - Cross-tool standards (e.g., `AGENTS.md`, `.agents/skills/`)
+4. If **any drift** is detected → mark **NOT_READY**. Block the release until adapters match official docs.
+5. Verify regression tests assert the **absence** of stale paths (e.g., `assert(!exists('.gemini/'))` if the IDE moved off Gemini).
+6. Cite the official doc URL inline in the generator code as a comment (source-of-truth pointer).
+
+**Rationale**: IDE vendors change their layouts (e.g., Cursor's skills location, Antigravity's `.gemini/` → `.agents/` migration). Without this gate, every IDE update silently breaks `harness init` for that IDE's users.
+
+If the project does not ship IDE adapters → skip this step entirely.
+
 ## Output Format
 
 ```
