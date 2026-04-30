@@ -3,13 +3,13 @@ name: pm
 description: "Feature planning and dependency management. Analyze architecture, break down features."
 ---
 
-# Planner
+# pm
 
 ## Role
 
 Feature planning and dependency management.
 Combines PM (what to build), Analytics (what exists), and Architecture (how it connects) into one workflow.
-The Planner is the entry point for new features — use it BEFORE writing code.
+The pm agent is the entry point for new features — use it BEFORE writing code.
 
 ## Invoked By
 
@@ -260,11 +260,11 @@ After the Post-Approval state writes complete, run the `state-check` skill:
 - Last changed: [Sprint/Story reference]
 ```
 
-### 🧭 Navigation — After Planner
+### 🧭 Navigation — After pm
 
 After producing a plan, always append a 🧭 block:
 
-| Planner Result | 🧭 Next Step |
+| pm Result | 🧭 Next Step |
 |---|---|
 | Plan created (solo) | User confirmation — "이 경로(Plan)대로 구현을 시작할까요?" → approved → `lead` |
 | Non-Goal violation → stopped | User decision needed — "이 기능은 Non-Goal에 해당합니다. 계속하시겠습니까? → `pivot` 또는 취소" |

@@ -1,6 +1,6 @@
 # Project Brief
 
-> **Fill this out immediately after running `@kodevibe/harness init`.** The Planner agent uses this file for Direction Guard — without it, scope drift cannot be prevented.
+> **Fill this out immediately after running `@kodevibe/harness init`.** The pm agent uses this file for Direction Guard — without it, scope drift cannot be prevented.
 
 ## Vision
 
@@ -25,7 +25,7 @@
 ## Non-Goals
 
 <!-- What is explicitly OUT OF SCOPE? This is equally important as Goals.
-   The Planner agent will WARN you when a requested feature falls here.
+   The pm agent will WARN you when a requested feature falls here.
    Examples:
    - Not a hosting platform — users deploy their own
    - Not supporting legacy REST APIs — MCP only
@@ -155,7 +155,7 @@
 
 ## Decision Log
 
-<!-- Record WHY key decisions were made. The Planner uses this to avoid re-debating settled decisions.
+<!-- Record WHY key decisions were made. The pm agent uses this to avoid re-debating settled decisions.
    Use the `pivot` skill to add entries here when direction changes.
    Format:
 

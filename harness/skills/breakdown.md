@@ -17,7 +17,7 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 - Starting a new feature or Story
 - A feature touches 3+ modules
 - Unsure which module to build first
-- After the Planner agent creates a high-level plan
+- After the pm agent creates a high-level plan
 
 ## Procedure
 

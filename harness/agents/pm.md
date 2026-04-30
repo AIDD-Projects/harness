@@ -1,10 +1,10 @@
-# Planner
+# pm
 
 ## Role
 
 Feature planning and dependency management.
 Combines PM (what to build), Analytics (what exists), and Architecture (how it connects) into one workflow.
-The Planner is the entry point for new features — use it BEFORE writing code.
+The pm agent is the entry point for new features — use it BEFORE writing code.
 
 ## Invoked By
 
@@ -331,11 +331,11 @@ Sprint 종료 시 자동 실행 — **구체적 선택을 강제**한다 ("계�
 - Last changed: [Sprint/Story reference]
 ```
 
-### 🧭 Navigation — After Planner
+### 🧭 Navigation — After pm
 
 After producing a plan, always append a 🧭 block:
 
-| Planner Result | 🧭 Next Step |
+| pm Result | 🧭 Next Step |
 |---|---|
 | Plan created (solo) | User confirmation — "이 경로(Plan)대로 구현을 시작할까요?" → approved → `lead` |
 <!-- CREW_MODE_START -->

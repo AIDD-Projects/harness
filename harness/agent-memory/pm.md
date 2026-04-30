@@ -1,4 +1,4 @@
-# Planner Memory
+# pm Memory
 
 > Auto-updated by the `wrap-up` skill at session end. Do not edit manually.
 > **Initialization**: After the first sprint completes, replace placeholder comments below with real data.

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.6] - 2026-04-30
+
+### Added
+- **Init overwrite backups** — when `init` refreshes existing IDE config files, the previous file is now copied to `.harness/init-backups/<timestamp>/...` before being overwritten. State files keep the existing `--overwrite` protection behavior.
+
+### Changed
+- **pm naming cleanup** — user-facing shipped files now refer to the `pm` agent instead of the legacy `Planner` label. Migration guidance such as `planner.md` → `pm.md` remains intact where it is needed.
+
+### Fixed
+- **LICENSE branding** — copyright holder text now uses `kode:harness contributors` instead of the legacy Musher branding.
+
+### Verified
+- 175/175 tests PASS
+- `bash scripts/qa-check.sh` 1–10 PASS
+- `npm pack --dry-run` PASS
+
 ## [0.9.5] - 2026-04-29
 
 ### Fixed

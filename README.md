@@ -274,7 +274,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-kode:harness is at **v0.9.5** — lightness budget recalibrated (40K/1500/2500), Iron Laws consistency fix in reviewer.md, dispatcher synchronization between `harness/core-rules.md` and `.github/copilot-instructions.md`. v0.9.4 brought all 6 IDE adapters into alignment with official documentation (Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`).
+kode:harness is at **v0.9.6** — init now backs up overwritten IDE files under `.harness/init-backups/<timestamp>/...`, shipped pm naming is aligned, and LICENSE branding is cleaned up. v0.9.5 recalibrated lightness budgets (40K/1500/2500) and fixed Iron Laws/dispatcher consistency.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
@@ -285,7 +285,8 @@ kode:harness is at **v0.9.5** — lightness budget recalibrated (40K/1500/2500),
 | **Naming** | v0.9.0 | ✅ Done | Skill/agent naming redesign for clarity and discoverability |
 | **Self-Verify** | v0.9.2 | ✅ Done | state-check skill, Iron Law #10, Confirmation Gate Defaults, multi-IDE fix, CI Artifact Index |
 | **IDE Realignment** | v0.9.4 | ✅ Done | All 6 IDE adapters aligned with official docs; Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`; release skill Step 6.5 + qa-check.sh §10 regression guards |
-| **Consistency & Budget** | v0.9.5 | ✅ Current | Iron Laws stale-copy fix (reviewer.md), dispatcher sync (core-rules.md ↔ copilot-instructions.md), lightness budgets recalibrated (40K/1500/2500) with rationale |
+| **Consistency & Budget** | v0.9.5 | ✅ Done | Iron Laws stale-copy fix (reviewer.md), dispatcher sync (core-rules.md ↔ copilot-instructions.md), lightness budgets recalibrated (40K/1500/2500) with rationale |
+| **Safety & Branding** | v0.9.6 | ✅ Current | init overwrite backups, shipped pm naming cleanup, LICENSE branding cleanup |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 
 ### What's Next

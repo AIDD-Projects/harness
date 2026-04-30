@@ -342,6 +342,32 @@ describe('harness init', () => {
       const content = fs.readFileSync(statePath, 'utf8');
       assert.equal(content, 'CUSTOM CONTENT', 'Should preserve existing file');
     });
+
+    it('backs up existing IDE files before overwriting them', async () => {
+      const dir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+
+      try {
+        await run(['init', '--ide', 'vscode', '--mode', 'solo', '--batch', '--dir', dir]);
+
+        const dispatcherPath = path.join(dir, '.github/copilot-instructions.md');
+        fs.writeFileSync(dispatcherPath, 'CUSTOM IDE CONFIG', 'utf8');
+
+        await run(['init', '--ide', 'vscode', '--mode', 'solo', '--batch', '--dir', dir]);
+
+        const backupRoot = path.join(dir, '.harness/init-backups');
+        const backupRuns = fs.readdirSync(backupRoot);
+        assert.equal(backupRuns.length, 1, 'Should create one backup run directory');
+
+        const backupPath = path.join(backupRoot, backupRuns[0], '.github/copilot-instructions.md');
+        assert.equal(fs.readFileSync(backupPath, 'utf8'), 'CUSTOM IDE CONFIG');
+        assert.notEqual(fs.readFileSync(dispatcherPath, 'utf8'), 'CUSTOM IDE CONFIG');
+      } finally {
+        console.log = origLog;
+        rmDir(dir);
+      }
+    });
   });
 
   describe('invalid IDE', () => {

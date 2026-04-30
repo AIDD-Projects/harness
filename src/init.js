@@ -5,10 +5,22 @@ const path = require('node:path');
 const readline = require('node:readline');
 
 const HARNESS_DIR = path.join(__dirname, '..', 'harness');
+let currentBackupTimestamp = null;
 
 // ─── Template reader ─────────────────────────────────────────
 function readTemplate(name) {
   return fs.readFileSync(path.join(HARNESS_DIR, name), 'utf8');
+}
+
+function resetBackupTimestamp() {
+  currentBackupTimestamp = null;
+}
+
+function getBackupTimestamp() {
+  if (!currentBackupTimestamp) {
+    currentBackupTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  }
+  return currentBackupTimestamp;
 }
 
 // ─── File writer (mkdir -p + conflict check) ─────────────────
@@ -19,9 +31,19 @@ function writeFile(targetDir, relPath, content, overwrite) {
     console.log(`  ⏭  Skipped (exists): ${relPath}`);
     return false;
   }
+  let backupRelPath = null;
+  if (exists && overwrite) {
+    backupRelPath = path.join('.harness', 'init-backups', getBackupTimestamp(), relPath);
+    const backupPath = path.join(targetDir, backupRelPath);
+    fs.mkdirSync(path.dirname(backupPath), { recursive: true });
+    if (!fs.existsSync(backupPath)) {
+      fs.copyFileSync(fullPath, backupPath);
+    }
+  }
   fs.mkdirSync(path.dirname(fullPath), { recursive: true });
   fs.writeFileSync(fullPath, content, 'utf8');
-  console.log(`  ${exists ? '↻' : '✓'}  ${relPath}`);
+  const backupNote = backupRelPath ? ` (backup: ${backupRelPath})` : '';
+  console.log(`  ${exists ? '↻' : '✓'}  ${relPath}${backupNote}`);
   return true;
 }
 
@@ -810,6 +832,7 @@ async function run(argv) {
     const lang = detectLanguage(args.dir);
     const modeDesc = crew ? `${mode} + crew` : mode;
     console.log(`\n  Installing for ${gen.name} (${modeDesc} mode)... (detected language: ${lang})\n`);
+    resetBackupTimestamp();
     gen.fn(args.dir, overwrite, mode, crew);
 
     // Team mode extras
