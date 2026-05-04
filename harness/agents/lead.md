@@ -67,7 +67,12 @@ User request: "next task", "current status", "story done", "new sprint", "scope 
 After every status check, recommend the next action based on current context:
 
 1. Read `docs/project-state.md`, `docs/features.md`, `docs/project-brief.md`, `docs/failure-patterns.md`
-2. Determine the project phase and recommend accordingly:
+2. Render a compact **Evidence-Gated Progress Board** before recommending action:
+   - Goal: one-line Goal Card from project-brief or current Story
+   - State: `Planned | Implementing | Proof Pending | Proven | Reviewed | Blocked`
+   - Evidence: last passing test/smoke proof, or `missing`
+   - Blocker: one line, or `none`
+3. Determine the project phase and recommend accordingly:
 
 | Situation | Recommendation |
 |-----------|---------------|
@@ -83,10 +88,12 @@ After every status check, recommend the next action based on current context:
 | All ARB Fail items resolved | → "ARB Fail items all resolved — deployment readiness can be checked" |
 <!-- CREW_MODE_END -->
 
-3. Format the recommendation as a 🧭 Next Step block:
+4. Format the recommendation as a quiet 🧭 Next Step block. Prefer one next action and one required evidence item; do not restate the full pipeline unless the user asks.
 ```
 ---
 🧭 Next Step
+→ Goal: [Goal Card in one line]
+→ Evidence: [test command / smoke proof / state-check needed]
 → Next: `[skill or agent name]` (슬래시 메뉴에서 선택하거나, 채팅에 아래 프롬프트 입력)
 → Prompt: "[copy-paste ready prompt]"
 → Why: [one-sentence reason]
@@ -157,6 +164,17 @@ When a Story contains multiple Tasks/Waves (from breakdown):
 
 ```
 ## Sprint Status
+
+### Goal Card
+- Goal: {current project/story goal}
+- First usable result: {smallest working outcome}
+- Required proof: {test command / smoke proof}
+
+### Evidence-Gated Progress Board
+| Story | State | Evidence | Blocker |
+|-------|-------|----------|---------|
+| S{N}-1 | Reviewed | `npm test` ✅ | none |
+| S{N}-2 | Proof Pending | missing | needs reviewer proof |
 
 Sprint: {N} — {theme}
 Progress: {done}/{total} Stories

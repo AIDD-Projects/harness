@@ -145,6 +145,15 @@ If the `reviewer` agent was run in this session and produced `[STATE-AUDIT]` fla
 2. Apply the recommended state file update
 3. If the flag was already resolved during the session, skip it
 
+### Step 5.6a: Finalize Proof Ledger ⚠️ MANDATORY
+
+Before session end, record the working proof that justified completion:
+1. Read reviewer output or recent terminal evidence for passing tests/smoke proof.
+2. Add one compact row to `docs/project-state.md` → `## Proof Ledger` for each completed Story.
+3. If no proof exists, write `Proof missing` in the wrap-up report and recommend returning to `reviewer`; do not claim the Story is complete.
+
+Proof rows must stay short: Date, Story, Evidence, Result, Command / Observation. Do not paste long logs.
+
 ### Step 5.65: Auto-Commit State Files ⚠️ MANDATORY
 
 State file 변경사항을 커밋합니다. Learn 실행 결과가 커밋되지 않으면 다음 세션에서 유실됩니다.
@@ -209,6 +218,7 @@ Present a summary of all updates made.
 
 ### State Files Updated:
 - [x] docs/project-state.md — Quick Summary refreshed
+- [x] docs/project-state.md — Proof Ledger updated (if any Story completed)
 - [x] docs/failure-patterns.md — [N] patterns added/updated
 - [x] docs/features.md — [N] features updated (if applicable)
 - [x] docs/dependency-map.md — [N] modules verified/added (if applicable)

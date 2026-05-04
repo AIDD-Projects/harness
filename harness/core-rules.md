@@ -4,6 +4,14 @@ This project uses kode:harness for structured AI-assisted development.
 Skills and agents work together through shared state files.
 **Every response must end with a 🧭 Next Step block** — guide the user to the next action.
 
+## Quiet Navigator + Confidence Loop
+
+Common-mode users often begin with rough goals. Keep the navigator short and evidence-first:
+- **Goal Card**: Goal, first usable result, non-goal, risk, required proof.
+- **Proof Ledger**: command/evidence that proves the feature works.
+- **Evidence-Gated Progress Board**: `Planned → Implementing → Proof Pending → Proven → Reviewed`.
+- **Quiet Navigator**: one next action plus why; restate the pipeline only when useful.
+
 ## Session Start
 
 Read `docs/project-state.md` first. If all state files are empty, run `setup` skill.
@@ -52,9 +60,9 @@ When external planning artifacts exist (requirements, analysis, design documents
 5. `reviewer` → code review + crew artifact compliance check → commit → push
 6. `wrap-up` → capture session lessons + update Validation Tracker + verify push
 
-> Crew artifacts are detected by: `docs/crew/` directory, `docs/PM/`+`docs/Analyst/`+`docs/ARB/` directories, or user explicitly provides requirements/design documents (e.g., mentions "PRD", "산출물", "설계서", or provides file paths to planning artifacts).
-> **Reference, don't summarize**: setup creates a Crew Artifact Index (path table) in project-brief.md — each skill reads the original artifact directly via the indexed path.
-> Crew mode also enables the **CI Artifact Index** reference layer: if `docs/project-brief.md` contains `## CI Artifact Index`, reviewer Step 2.5 and release Step 3.5 surface the indexed company CI/CD guide when build/CI files change. The guide content stays external; only the path and key constraints are indexed.
+> Crew artifacts are detected by `docs/crew/`, `docs/PM/`+`docs/Analyst/`+`docs/ARB/`, or explicit requirements/design docs.
+> **Reference, don't summarize**: setup writes an Artifact Index; skills read originals via indexed paths.
+> If `## CI Artifact Index` exists, reviewer Step 2.5 and release Step 3.5 surface the external CI guide when build/CI files change.
 > This pipeline produces the same state files as 🟢 — the difference is the INPUT source and the addition of Validation Tracker for traceability.
 <!-- CREW_MODE_END -->
 
@@ -79,17 +87,21 @@ When the user provides a feature request or development goal in their prompt:
 
 **Every response must end with a 🧭 Next Step block.** This is mandatory — never omit it.
 
-When a skill or agent reports STATUS: DONE, output the next step in this format:
+Keep the block concise. When code changed, include the next evidence:
 
 ```
 ---
 🧭 Next Step
-→ Next: `{skill or agent name}` (슬래시 메뉴에서 선택하거나, 채팅에 프롬프트 입력)
-→ Prompt: "{copy-paste ready prompt for the user}"
+→ Goal: {current Goal Card in one line}
+→ Evidence: {test command / smoke proof / state-check needed next}
+→ Next: `{skill or agent name}` or [Coding]
+→ Prompt: "{copy-paste ready prompt}"
 → Why: {one-sentence reason}
-→ Pipeline: {🟢|🔵|🔴|🟡} Step {N}/{total}
+→ Pipeline: {🟢|🔵|🔴|🟡|🟣} Step {N}/{total}
 ---
 ```
+
+When a skill or agent reports STATUS: DONE, use the same block and point to the next row in the Chaining Map.
 
 ### Chaining Map — what comes after what
 
@@ -125,12 +137,12 @@ These laws are enforced across all skills and agents. Violations should be flagg
 2. **Type Check**: Before calling a constructor or factory, read the actual source file to verify parameters.
 3. **Scope Compliance**: Do not modify files outside the current Story scope without reporting first.
 4. **Security**: Never include credentials, passwords, or API keys in code or commits.
-5. **3-Failure Stop + Recalculating**: If the same approach fails 3 times, stop the current approach. Then:
+5. **3-Failure Stop + Recalculating**: If the same approach fails 3 times:
    - Automatically invoke `debug` skill in **Recalculating Mode** (one attempt)
-   - **Inject failure context**: Pass to debug a summary of the 3 failed attempts: (a) what approach was tried, (b) the error message for each attempt. This prevents debug from repeating the same failed approaches.
-   - Present the user with: (a) the blocker diagnosis, (b) 1-2 alternative approaches that differ from all 3 failed attempts
+   - Pass the failed approach and error for each attempt
+   - Present blocker diagnosis plus 1-2 different alternatives
    - If debug itself fails or the alternatives are rejected → **full stop**, escalate to the user
-   - Never retry the original failed approach after the 3-Failure Stop triggers
+   - Never retry the original failed approach
 6. **Dependency Map**: When adding or modifying a module, update dependency-map.md in the same commit.
 7. **Feature Registry**: When adding a feature, register it in features.md in the same commit.
 8. **Session Handoff**: At session end, update project-state.md Quick Summary so the next session has context.

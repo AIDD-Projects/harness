@@ -43,6 +43,23 @@
 
 <!-- Status legend: ⬜ todo, 🔧 active, ✅ done, 🚫 blocked, ❌ dropped -->
 
+## Evidence-Gated Progress Board
+
+<!-- Keep this compact. It tells the user where the project is and what proof is missing.
+   State: Planned → Implementing → Proof Pending → Proven → Reviewed → Blocked
+   | Story | Goal | State | Required Evidence | Last Proof | Blocker |
+   |-------|------|-------|-------------------|------------|---------|
+   | S1-1 | First usable result | Proof Pending | npm test | - | tests not run |
+-->
+
+## Proof Ledger
+
+<!-- One line per completed proof. Do not paste long logs.
+   | Date | Story | Evidence | Result | Command / Observation |
+   |------|-------|----------|--------|-----------------------|
+   | 2026-05-04 | S1-1 | Unit tests | ✅ pass | npm test |
+-->
+
 ## Module Registry
 
 <!-- Summary of current modules. Full details in docs/dependency-map.md -->

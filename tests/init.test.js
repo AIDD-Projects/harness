@@ -207,6 +207,52 @@ describe('harness init', () => {
     });
   });
 
+  describe('v0.10 confidence loop content', () => {
+    let tmpDir;
+
+    before(async () => {
+      tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+      console.log = origLog;
+    });
+
+    after(() => {
+      rmDir(tmpDir);
+    });
+
+    it('dispatcher defines Quiet Navigator and evidence-first progress', () => {
+      const content = fs.readFileSync(path.join(tmpDir, '.github/copilot-instructions.md'), 'utf8');
+      assert.ok(content.includes('Quiet Navigator'), 'dispatcher must define Quiet Navigator');
+      assert.ok(content.includes('Goal Card'), 'dispatcher must mention Goal Card');
+      assert.ok(content.includes('Proof Ledger'), 'dispatcher must mention Proof Ledger');
+      assert.ok(content.includes('Evidence-Gated Progress Board'), 'dispatcher must mention Evidence-Gated Progress Board');
+    });
+
+    it('generated agents preserve confidence loop contracts', () => {
+      const pm = fs.readFileSync(path.join(tmpDir, '.github/agents/pm.agent.md'), 'utf8');
+      const lead = fs.readFileSync(path.join(tmpDir, '.github/agents/lead.agent.md'), 'utf8');
+      const reviewer = fs.readFileSync(path.join(tmpDir, '.github/agents/reviewer.agent.md'), 'utf8');
+
+      assert.ok(pm.includes('Goal Card'), 'pm must output a Goal Card');
+      assert.ok(pm.includes('Proof Plan'), 'pm must plan required evidence');
+      assert.ok(lead.includes('Evidence-Gated Progress Board'), 'lead must render progress board');
+      assert.ok(reviewer.includes('Proof Ledger'), 'reviewer must record proof ledger');
+      assert.ok(reviewer.includes('[BLOCKER: WORKING_PROOF_MISSING]'), 'reviewer must block missing proof');
+    });
+
+    it('state templates include evidence fields without new files', () => {
+      const state = fs.readFileSync(path.join(tmpDir, 'docs/project-state.md'), 'utf8');
+      const brief = fs.readFileSync(path.join(tmpDir, 'docs/project-brief.md'), 'utf8');
+
+      assert.ok(state.includes('## Evidence-Gated Progress Board'), 'project-state must include progress board');
+      assert.ok(state.includes('## Proof Ledger'), 'project-state must include proof ledger');
+      assert.ok(brief.includes('## Done Definition'), 'project-brief must include done definition');
+      assert.ok(brief.includes('## Success Proof'), 'project-brief must include success proof');
+    });
+  });
+
   // ─── IDE-specific dispatcher / format checks (multi-IDE coverage) ──
   describe('IDE-specific dispatcher and agent formats', () => {
     async function build(ide) {

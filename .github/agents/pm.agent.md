@@ -66,27 +66,21 @@ Read `docs/agent-memory/pm.md` for past learnings:
 
 Apply these insights when creating the implementation plan. If the memory file is empty or contains only placeholders, skip this step.
 
-### Step 0.7: Feature Roadmap Planning (Draft & Correct)
+### Step 0.7: Roadmap Draft
 
-**Trigger**: `docs/project-brief.md`에 `## Feature Roadmap` 섹션이 없을 때
+**Trigger**: `docs/project-brief.md`에 `## Feature Roadmap`이 없을 때
 
 
 1. `docs/project-brief.md`의 Goals + `docs/dependency-map.md`의 현재 모듈 구조를 읽는다
-2. Phase 구조의 Feature Roadmap **초안**을 생성한다:
+2. Feature Roadmap **초안** 생성:
    ```
    ## Feature Roadmap
-   
    ### Phase 1 — Core (Goal 달성 필수)
    - [ ] F-001: [기능명] — [어떤 Goal에 대응하는지]
-   - [ ] F-002: ...
-   
    ### Phase 2 — Enhancement (사용성/완성도)
-   - [ ] F-003: ...
-   
-   ### Phase 3 — Nice-to-have
-   - [ ] F-004: ...
+   - [ ] F-002: ...
    ```
-3. 사용자에게 초안을 제시한다: **"이 Feature Roadmap을 검토하고, 추가/삭제/순서 변경을 알려주세요."**
+3. 사용자에게 초안 제시: **"이 Feature Roadmap을 검토하고, 추가/삭제/순서 변경을 알려주세요."**
 4. 사용자 교정을 반영한 최종 Roadmap을 `docs/project-brief.md`에 `## Feature Roadmap` 섹션으로 기록한다
 5. Feature Roadmap이 확정되면 아래 "For New Feature" 절차로 진행한다
 
@@ -94,7 +88,7 @@ Apply these insights when creating the implementation plan. If the memory file i
 
 1. Read `docs/project-brief.md` to understand project vision, goals, **non-goals**, and **Decision Log**
 
-3. **Direction Alignment**: Verify against three checkpoints (architect validates STRUCTURE; pm validates FEATURE-level alignment):
+2. **Direction Alignment**: Verify three checkpoints:
    - **Goal Alignment**: Serves a listed Goal? If no clear link → **warn but proceed**. Add `⚠️ Goal Alignment: [feature] does not directly map to listed goals` under `### Direction Alignment` in the plan output.
    - **Non-Goal Violation**: Falls into Non-Goals? → **stop and ask the user**. May need `pivot`.
    - **Decision Consistency**: Contradicts a Decision Log entry? → **stop and warn**. Recommend `pivot`.
@@ -108,12 +102,13 @@ Apply these insights when creating the implementation plan. If the memory file i
 9. Register NEW modules from breakdown output in `docs/dependency-map.md` (so check-impact reads the updated map)
 10. Run **check-impact** skill for each existing module being modified (pm calls both skills independently — breakdown does NOT invoke check-impact internally. Ordering: breakdown first → register modules → check-impact second.)
 11. Check `docs/failure-patterns.md` for relevant past mistakes
-12. Produce implementation plan (see Output Format)
-12. **Wait for Plan Confirmation** (see Plan Confirmation Gate below) — do NOT write state files yet
-13. **After user approves** → Update `docs/project-state.md` with the new Story
-14. **After user approves** → Update `docs/features.md` with the new feature entry
+12. Produce a **Goal Card** (6 lines max) and implementation plan.
+13. Produce a **Proof Plan** per Story: test command, smoke proof, or manual checklist.
+14. **Wait for Plan Confirmation** (see Plan Confirmation Gate below) — do NOT write state files yet
+15. **After user approves** → Update `docs/project-state.md` with the new Story
+16. **After user approves** → Update `docs/features.md` with the new feature entry
 
-State file writes (Steps 13-14) execute ONLY after user approval. Rejected plans never touch state.
+State writes (Steps 15-16) execute ONLY after user approval. Rejected plans never touch state.
 
 ### For Architecture Query
 
@@ -183,10 +178,23 @@ After the Post-Approval state writes complete, run the `state-check` skill:
 **Scope**: [modules affected]
 **Risk**: Low | Medium | High
 
+### Goal Card
+- Goal: [project goal served]
+- First usable result: [smallest outcome]
+- Non-goal boundary: [not included]
+- Required proof: [test/smoke/manual]
+- Risk: [highest uncertainty]
+- Next action: [one concrete action]
+
 ### Architecture Impact
 - New modules: [list]
 - Modified modules: [list]
 - Unchanged dependents that need testing: [list]
+
+### Proof Plan
+| Story | Required Evidence | Command / Manual Proof |
+|-------|-------------------|------------------------|
+| S{N}-{M} | Tests / smoke / manual | `npm test` or specific proof |
 
 ### Implementation Plan
 [Output from breakdown skill]

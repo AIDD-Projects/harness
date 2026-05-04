@@ -4,9 +4,8 @@
 // against the committed copy. Drift = developer forgot to regenerate after editing harness/.
 //
 // Notes:
-// - Runs without --crew (the published default). .github/copilot-instructions.md is
-//   intentionally crew-patched in this repo (v0.9.5) and is excluded from comparison.
-// - Skill/Agent files MUST stay 1:1 with harness/ to avoid shipping stale templates.
+// - Runs without --crew (the published default).
+// - Skill/Agent/core dispatcher files MUST stay 1:1 with harness/ to avoid shipping stale templates.
 //
 // Exit 0 = in sync. Exit 1 = drift (prints offending paths + remediation hint).
 
@@ -29,6 +28,7 @@ try {
   const targets = [
     { rel: '.github/skills', label: 'skills' },
     { rel: '.github/agents', label: 'agents' },
+    { rel: '.github/copilot-instructions.md', label: 'core dispatcher' },
   ];
 
   let drifted = false;
@@ -37,7 +37,7 @@ try {
     const generated = path.join(tmpRoot, t.rel);
     const committed = path.join(repoRoot, t.rel);
     if (!fs.existsSync(generated) || !fs.existsSync(committed)) {
-      console.error(`drift-check: missing dir ${t.rel} (generated=${fs.existsSync(generated)}, committed=${fs.existsSync(committed)})`);
+      console.error(`drift-check: missing ${t.rel} (generated=${fs.existsSync(generated)}, committed=${fs.existsSync(committed)})`);
       drifted = true;
       continue;
     }
@@ -46,20 +46,20 @@ try {
     } catch (e) {
       drifted = true;
       const out = (e.stdout || Buffer.from('')).toString();
-      console.error(`\n❌ drift in .github/${t.label}/ — committed copy differs from harness/ regeneration:`);
+      console.error(`\n❌ drift in ${t.rel} — committed copy differs from harness/ regeneration:`);
       console.error(out.trim().split('\n').slice(0, 30).join('\n'));
     }
   }
 
   if (drifted) {
     console.error(
-      '\nFix: re-run `npm run harness:sync` to regenerate `.github/skills` and `.github/agents` from `harness/`.\n' +
+      '\nFix: re-run `npm run harness:sync` to regenerate `.github` files from `harness/`.\n' +
       'Source of Truth is `harness/`. Edit there, then sync.'
     );
     process.exit(1);
   }
 
-  console.log('✅ harness/ ↔ .github/ in sync (skills + agents)');
+  console.log('✅ harness/ ↔ .github/ in sync (skills + agents + core dispatcher)');
   process.exit(0);
 } finally {
   try { fs.rmSync(tmpRoot, { recursive: true, force: true }); } catch (_) { /* ignore */ }

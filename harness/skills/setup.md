@@ -135,6 +135,17 @@ Ask the user these questions (skip any already answered by Phase 1):
 5. "Are there any type decisions or conventions the AI should know about?"
 6. "What is your test command?" (show detected command if found, e.g., `npm test`, `pytest`, `go test ./...`)
 
+### Phase 2.1: Common Mode Confidence Loop
+
+Before filling state files, collapse the answers into a **Goal Card** and **Proof Profile**:
+- Goal: one sentence from Vision + top goal
+- First usable result: smallest working outcome the user can inspect
+- Non-goal boundary: what will not be built now
+- Required proof: test command, smoke proof, or manual checklist
+- Open question: at most one unresolved ambiguity
+
+If the user's answers are vague, ask at most one follow-up question. If still unclear, record the assumption instead of looping.
+
 ### Phase 3: Fill State Files
 
 Using data from Phase 1 + Phase 2, fill the following files:
@@ -144,6 +155,8 @@ Using data from Phase 1 + Phase 2, fill the following files:
 - Vision → from user answer #1
 - Goals → from user answer #2
 - Non-Goals → from user answer #3
+- Done Definition → from Goal Card / first usable result
+- Success Proof → from Proof Profile (test command, smoke proof, or manual checklist)
 <!-- CREW_MODE_START -->
 - Crew Artifact Index → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
 - Validation Tracker → from Phase 1.5 (🟣 pipeline only — leave as template comment for 🟢 pipeline)
@@ -230,6 +243,11 @@ After setup completes, remind the user that shared files require `git pull` befo
 - [x]docs/dependency-map.md — [N] modules, [N] dependencies
 - [x]docs/project-state.md — Sprint 1 initialized
 - [ ]docs/failure-patterns.md — templates only (no changes)
+
+### Goal Card
+- Goal: [one sentence]
+- First usable result: [observable outcome]
+- Required proof: [test/smoke/manual]
 
 STATUS: DONE
 ```

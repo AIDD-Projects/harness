@@ -32,6 +32,8 @@ npx @kodevibe/harness init          # pick your IDE
 
 That's it. Your AI now has persistent memory, direction guardrails, and self-correction loops.
 
+v0.10 adds the **Common Mode Confidence Loop**: the AI first narrows your rough goal into a short Goal Card, plans the proof that will show the feature works, and keeps progress gated on tests or smoke evidence instead of long navigator chatter.
+
 <details>
 <summary>More install options</summary>
 
@@ -75,6 +77,7 @@ kode:harness solves this with three mechanisms:
 | **State Persistence** | AI forgetting goals, decisions, and progress between sessions |
 | **Direction Guard** | AI drifting away from project goals or contradicting past decisions |
 | **Failure Patterns** | AI repeating the same mistakes across sessions |
+| **Proof Ledger** | AI claiming progress without tests, smoke proof, or user-visible evidence |
 
 ---
 
@@ -94,7 +97,9 @@ kode:harness solves this with three mechanisms:
 | Feature | Description |
 |---------|-------------|
 | 🛡️ **Direction Guard** | Every coding request is checked against project goals/non-goals before execution |
-| 🧭 **Navigation Dispatcher** | Turn-by-Turn navigation through 5 pipelines with copy-paste next-step prompts |
+| 🧭 **Quiet Navigator** | Short next-action guidance centered on current goal and required evidence |
+| ✅ **Evidence-Gated Progress Board** | Stories move from Planned → Proof Pending → Proven only when tests or smoke proof exist |
+| 📒 **Proof Ledger** | Review and wrap-up outputs record compact proof: command, result, and observation |
 | 📝 **State Persistence** | 5 markdown files that persist project knowledge across LLM sessions |
 | 🔄 **5 Pipelines** | 🟢 New Dev → 🔵 Continue → 🔴 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven |
 | 🛠️ **11 Skills** | Step-by-step procedures: setup, debug, breakdown, review, pivot, state-check, and more |
@@ -280,7 +285,7 @@ Original crew documents are **never modified**. Only the index and tracker are c
 
 ## Roadmap
 
-kode:harness is at **v0.9.7** — added a `harness/` ↔ `.github/` drift guard (`npm run harness:check-drift`), kode:vibe ecosystem positioning + IDE selection guide in the README, and a concrete `project-brief.md` example. v0.9.6 added init backups, pm-naming alignment, and LICENSE cleanup.
+kode:harness is at **v0.10.0** — adds the Common Mode Confidence Loop: Goal Card, Quiet Navigator, Evidence-Gated Progress Board, and Proof Ledger. v0.9.7 added the drift guard, README positioning, IDE guide, and reviewer working-proof gate.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
@@ -292,7 +297,8 @@ kode:harness is at **v0.9.7** — added a `harness/` ↔ `.github/` drift guard 
 | **Self-Verify** | v0.9.2 | ✅ Done | state-check skill, Iron Law #10, Confirmation Gate Defaults, multi-IDE fix, CI Artifact Index |
 | **IDE Realignment** | v0.9.4 | ✅ Done | All 6 IDE adapters aligned with official docs; Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`; release skill Step 6.5 + qa-check.sh §10 regression guards |
 | **Consistency & Budget** | v0.9.5 | ✅ Done | Iron Laws stale-copy fix (reviewer.md), dispatcher sync (core-rules.md ↔ copilot-instructions.md), lightness budgets recalibrated (40K/1500/2500) with rationale |
-| **Drift Guard & Positioning** | v0.9.7 | ✅ Current | `harness/`↔`.github/` drift detector, reviewer working-proof gate, kode:vibe positioning, IDE selection guide, project-brief example |
+| **Drift Guard & Positioning** | v0.9.7 | ✅ Done | `harness/`↔`.github/` drift detector, reviewer working-proof gate, kode:vibe positioning, IDE selection guide, project-brief example |
+| **Confidence Loop** | v0.10.0 | ✅ Current | Goal Card, Quiet Navigator, Evidence-Gated Progress Board, Proof Ledger, QA/content regression tests |
 | **Safety & Branding** | v0.9.6 | ✅ Done | init overwrite backups, shipped pm naming cleanup, LICENSE branding cleanup |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 

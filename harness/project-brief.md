@@ -34,6 +34,24 @@ _Example (kode:harness)_: Developers and small teams (1–10) using AI coding as
 
 <!-- Who is this for? Be specific. Replace the example above with your own. -->
 
+## Done Definition
+
+<!-- What makes the project or first usable slice releasable? Keep this to 3-5 observable checks.
+   Example:
+   - [ ] User can complete the core workflow end-to-end
+   - [ ] Automated tests pass
+   - [ ] Smoke proof confirms the app/CLI responds
+-->
+
+## Success Proof
+
+<!-- How will the user know this works? Prefer commands, metrics, or manual checks.
+   Example:
+   - Test command: npm test
+   - Smoke proof: npm run build && npm start
+   - Manual proof: create item → refresh → item persists
+-->
+
 <!-- CREW_MODE_START -->
 ## Crew Artifact Index
 

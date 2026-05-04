@@ -232,6 +232,12 @@ if [ -d "harness/" ]; then
   if [ -f "harness/agents/reviewer.md" ]; then
     grep -q "Cross-check features" harness/agents/reviewer.md && ok "reviewer: features Cross-check 존재" || fail "reviewer: features Cross-check 누락"
   fi
+
+  # v0.10 Confidence Loop contracts
+  grep -q "Quiet Navigator" harness/core-rules.md && ok "core-rules: Quiet Navigator 존재" || fail "core-rules: Quiet Navigator 누락"
+  grep -q "Goal Card" harness/agents/pm.md && ok "pm: Goal Card 존재" || fail "pm: Goal Card 누락"
+  grep -q "Evidence-Gated Progress Board" harness/agents/lead.md && ok "lead: Evidence-Gated Progress Board 존재" || fail "lead: Evidence-Gated Progress Board 누락"
+  grep -q "Proof Ledger" harness/agents/reviewer.md && ok "reviewer: Proof Ledger 존재" || fail "reviewer: Proof Ledger 누락"
 fi
 
 # ═══════════════════════════════════════════════

@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-05-04
+
+### Added
+- **Common Mode Confidence Loop** — common/non-crew users now get a Goal Card, required proof, and quiet next action instead of long navigator chatter.
+- **Evidence-Gated Progress Board** — `lead` surfaces Story state as `Planned → Implementing → Proof Pending → Proven → Reviewed`, with evidence and blockers visible.
+- **Proof Ledger** — `reviewer`, `wrap-up`, and `project-state.md` now use compact proof records: evidence, result, and command/observation.
+- **Done Definition / Success Proof** — `project-brief.md` template now asks common users to define what releasable means and how it will be proven.
+- **Content regression tests + QA checks** — init tests and `qa-check.sh` now verify the v0.10 confidence-loop contracts are present in generated outputs.
+
+### Changed
+- **Quiet Navigator** — the mandatory 🧭 block stays, but common-mode guidance is now shorter and evidence-first: Goal, Evidence, Next, Prompt, Why, Pipeline.
+- **Drift guard expanded** — `scripts/check-harness-drift.js` now checks the generated VS Code core dispatcher as well as skills and agents.
+
+### Verified
+- Tests PASS
+- `npm run harness:check-drift` PASS
+- `bash scripts/qa-check.sh` PASS
+
 ## [0.9.7] - 2026-05-01
 
 ### Added
@@ -180,6 +198,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Solo and Team modes
 - CLI with `init` command
 
+[0.10.0]: https://github.com/AIDD-Projects/harness/compare/v0.9.7...v0.10.0
+[0.9.7]: https://github.com/AIDD-Projects/harness/compare/v0.9.6...v0.9.7
+[0.9.6]: https://github.com/AIDD-Projects/harness/compare/v0.9.5...v0.9.6
+[0.9.5]: https://github.com/AIDD-Projects/harness/compare/v0.9.4...v0.9.5
+[0.9.4]: https://github.com/AIDD-Projects/harness/compare/v0.9.3...v0.9.4
+[0.9.3]: https://github.com/AIDD-Projects/harness/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/AIDD-Projects/harness/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/AIDD-Projects/harness/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/AIDD-Projects/harness/compare/v0.8.4...v0.9.0

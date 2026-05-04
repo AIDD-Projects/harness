@@ -82,6 +82,13 @@ Changed file list (user-provided or from `git diff --name-only`)
 - If any existing test fails → output `[BLOCKER: TESTS_FAILING] Tests must pass before code review can continue.` STOP. Do not proceed to Step 4. Do not suggest commit.
 - If no verification command can be found or run → output `[BLOCKER: WORKING_PROOF_MISSING] Cannot mark review DONE without test or smoke proof.` STOP and ask for the command or evidence.
 
+Record the result as a **Proof Ledger** entry. Keep it short:
+
+| Evidence | Result | Command / Observation |
+|----------|--------|-----------------------|
+| Unit tests | ✅ pass | `npm test` |
+| Smoke proof | ✅ pass | `curl /health → 200` |
+
 **Step 4: Security Check (secure skill)**
 - [ ] No credentials, .env, or temp files in staging (FP-004)
 - [ ] No hardcoded API keys or passwords
@@ -163,6 +170,7 @@ If review is BLOCKED → do NOT suggest commit. Fix first.
 - Architecture rules: ✅
 - Test integrity: ✅ / ⚠️ (detail)
 - Working proof: command/evidence + PASS result
+- Proof Ledger: compact table with evidence, result, and command/observation
 - Security check: ✅ / ❌ (detail)
 - Failure pattern check: ✅ / ⚠️ (FP-NNN)
 
