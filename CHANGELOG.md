@@ -5,7 +5,23 @@ All notable changes to kode:harness and its harness engineering approach are doc
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+> **Pre-1.0 stability notice.** kode:harness is in active 0.x development. Per SemVer §4, the public surface (CLI flags, state file shapes, skill/agent contracts) may change between any two minor versions. v1.0.0 will be cut only after the IDE compatibility matrix and the 11 skills + 4 agents stay frozen for 30 days alongside external production usage. Until then, breaking changes will be flagged in the **Changed** section of each release.
+
 ## [Unreleased]
+
+## [0.9.7] - 2026-05-01
+
+### Added
+- **Drift guard** between `harness/` (Source of Truth) and the repo-committed `.github/` files. New script `scripts/check-harness-drift.js` re-runs `init` into a tmp directory and diffs `.github/skills` + `.github/agents`; npm scripts `harness:check-drift` and `harness:sync` make the workflow explicit.
+- **Source of Truth statement** in `CONTRIBUTING.md` — `harness/` is canonical, `.github/` (and the `.claude/`, `.cursor/`, `.codex/`, `.windsurf/`, `.agents/` siblings) are generated outputs. Drift = bug.
+- **Concrete `project-brief.md` example** — the shipped template now carries kode:harness's own Vision / Goals / Non-Goals / Target Users alongside the placeholders, so first-time `setup` users see what "good" looks like.
+- **README ecosystem positioning** — clarified kode:harness's role inside the kode:vibe ecosystem (execution layer between planning and infrastructure layers) and added an explicit IDE selection guide so newcomers can pick the right `--ide` without trial-and-error.
+- **Verification-first reviewer gate** — reviewer now blocks review completion when tests fail or no working proof is available. This keeps the navigator focused on runnable evidence, not procedural chatter.
+
+### Verified
+- Tests still PASS
+- `npm run harness:check-drift` PASS
+- `bash scripts/qa-check.sh` PASS
 
 ## [0.9.6] - 2026-04-30
 

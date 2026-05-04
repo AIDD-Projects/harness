@@ -13,7 +13,7 @@ One command does everything — no manual editing required.
 
 ## When to Apply
 
-- Right after running `harness init` on a new project
+- Right after running `@kodevibe/harness init` on a new project
 - When joining an existing project that has empty state files
 - When state files are outdated and need a refresh
 - When any agent reports "state files are empty"
@@ -186,28 +186,6 @@ For projects with fewer than 3 modules (e.g., single-file scripts, small CLI too
 - `docs/dependency-map.md` may have only 1-2 rows — this is normal, not a gap
 - `breakdown` Waves may collapse into a single Wave — skip Wave-level pacing
 - Consider a simplified workflow: `setup → pm → [code] → reviewer → wrap-up` (skip lead for single-story projects)
-
-## Embedded Knowledge
-
-### Session Bootstrap Protocol
-When starting a NEW session (not during setup), read these files in order:
-1. `docs/project-state.md` — Quick Summary tells you where we left off
-2. `docs/features.md` — What features exist
-3. `docs/failure-patterns.md` — What mistakes to avoid
-4. `docs/project-brief.md` — Project vision and non-goals
-
-### Workflow Pipeline
-- New feature: `pm → [code] → reviewer → lead → wrap-up`
-- Bug fix: `debug → [fix] → sync-tests → reviewer → wrap-up`
-- Session lifecycle: `lead ("where are we?") → [work] → wrap-up`
-
-### State File Size Limits
-- docs/project-brief.md: Max 200 lines
-- docs/project-state.md: Max 300 lines
-- docs/failure-patterns.md: Max 50 patterns
-- docs/dependency-map.md: Max 100 modules
-- docs/features.md: Max 50 features
-- docs/agent-memory/*.md: Max 100 lines each
 
 ## Anti-patterns
 

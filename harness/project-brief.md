@@ -1,46 +1,38 @@
 # Project Brief
 
-> **Fill this out immediately after running `@kodevibe/harness init`.** The pm agent uses this file for Direction Guard — without it, scope drift cannot be prevented.
+> **Fill this out immediately after running `@kodevibe/harness init`.** The pm agent uses this file for Direction Guard. Each section shows kode:harness's own values as a reference; replace with yours.
 
 ## Vision
 
-<!-- What is this project and why does it exist? Keep it to 1-2 sentences.
-   This is the north star for all decisions.
-   Examples:
-   - "An open-source MCP hub that connects AI tools to enterprise services."
-   - "A CLI tool that generates IDE-specific instruction files for LLM agents."
-   - "An e-commerce platform focused on local artisan products."
--->
+_Example (kode:harness)_: Keep AI coding agents aligned on project direction across sessions and teammates, via markdown-native guardrails inside whichever IDE the developer uses.
+
+<!-- What is this project and why does it exist? Keep it to 1-2 sentences. The north star for all decisions. Replace the example above with your own. -->
 
 ## Goals
 
-<!-- What must this project achieve? List 3-5 concrete, measurable goals.
-   Examples:
-   - Support 50+ MCP servers with auto-discovery
-   - Sub-100ms routing latency
-   - Zero-config developer experience
-   - API coverage for all CRUD operations by v1.0
--->
+_Example (kode:harness)_:
+- Persist project memory across LLM sessions via 5 markdown state files.
+- Detect direction drift before code is written (Direction Guard in pm/lead/reviewer).
+- Stay lightweight: ≤30 files, ≤40K tokens. Zero runtime deps. MIT.
+- Support 6 IDEs with one `npx` install.
+
+<!-- 3-5 concrete, measurable goals. Replace the example above with your own. -->
 
 ## Non-Goals
 
-<!-- What is explicitly OUT OF SCOPE? This is equally important as Goals.
-   The pm agent will WARN you when a requested feature falls here.
-   Examples:
-   - Not a hosting platform — users deploy their own
-   - Not supporting legacy REST APIs — MCP only
-   - Not building a UI dashboard in v1
-   - No mobile app — web only
--->
+_Example (kode:harness)_:
+- Not a runtime / SDK — we ship instructions, not LLM execution.
+- Not a project-management replacement — state files coordinate AI, not standups.
+- Not solo-only — multi-developer alignment is the differentiator.
+- Not a UI/dashboard — markdown in the repo is the interface.
+
+<!-- Explicitly OUT OF SCOPE. The pm agent WARNs when a request falls here. Replace the example above with your own. -->
 
 ## Target Users
 
-<!-- Who is this for? Be specific.
-   Examples:
-   - "Solo developers and small teams (1-3) using AI coding assistants."
-   - "Enterprise teams migrating from monolith to microservices."
-   - "Data scientists who need reproducible ML pipelines."
--->
+_Example (kode:harness)_: Developers and small teams (1–10) using AI coding assistants daily, who have felt their AI "forget" decisions and prefer markdown-in-repo over a SaaS dashboard.
+
+<!-- Who is this for? Be specific. Replace the example above with your own. -->
 
 <!-- CREW_MODE_START -->
 ## Crew Artifact Index

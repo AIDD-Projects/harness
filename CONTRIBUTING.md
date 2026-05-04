@@ -50,6 +50,16 @@ Before contributing, please understand the core principles of kode:harness and h
 4. **Synchronous I/O** — All file operations use `fs.*Sync` methods.
 5. **Native IDE Formats** — Each IDE gets files in its native format. No adapters needed.
 
+### Source of Truth: `harness/` is canonical
+
+`harness/` is the single source of truth for skills, agents, state-file templates, and core rules. The IDE-specific directories that ship in this repo — `.github/`, `.claude/`, `.cursor/`, `.codex/`, `.windsurf/`, `.agents/` — are **generated outputs** of `src/init.js`. Do not edit them by hand.
+
+- Edit `harness/skills/*.md`, `harness/agents/*.md`, or `harness/core-rules.md`.
+- Run `npm run harness:sync` to regenerate the IDE-specific copies for this repo.
+- `npm run harness:check-drift` (and `bash scripts/qa-check.sh` §11) fails CI if `harness/` and `.github/` go out of sync.
+
+Why: npm users receive the contents of `harness/`. If `.github/` has been hand-patched and we forget to mirror the change back into `harness/`, our package ships stale templates while our own development environment looks fine. Treat any drift as a bug.
+
 ### Pull Request Process
 
 1. Fork the repository
@@ -105,6 +115,16 @@ npm test    # 전체 테스트 실행 (Node.js 네이티브 테스트 러너)
 3. **멀티 개발자 방향 정렬** — "또 하나의 솔로 harness"가 아님. 모든 기능은 팀 방향 정렬을 지원해야 함
 4. **동기식 I/O** — 모든 파일 작업은 `fs.*Sync` 메서드 사용
 5. **네이티브 IDE 포맷** — 각 IDE에 고유 포맷으로 파일 생성. 어댑터 불필요
+
+### Source of Truth: `harness/`가 정본
+
+`harness/`가 스킬·에이전트·상태 파일 템플릿·코어 룰의 단일 정본(Source of Truth)입니다. 이 저장소에 함께 들어 있는 IDE별 디렉터리 — `.github/`, `.claude/`, `.cursor/`, `.codex/`, `.windsurf/`, `.agents/` — 는 `src/init.js`가 만든 **생성 산출물**입니다. 손으로 직접 수정하지 마세요.
+
+- `harness/skills/*.md`, `harness/agents/*.md`, `harness/core-rules.md`만 편집하세요.
+- `npm run harness:sync`로 이 저장소의 IDE별 파일을 재생성하세요.
+- `npm run harness:check-drift`(및 `bash scripts/qa-check.sh` §11)는 `harness/`와 `.github/`가 어긋나면 실패합니다.
+
+이유: npm 사용자는 `harness/` 내용을 그대로 받습니다. `.github/`만 손으로 패치하고 `harness/`로 반영하지 않으면, 우리 패키지는 stale 템플릿을 배포하면서 우리 개발 환경만 정상으로 보입니다. drift는 버그로 취급합니다.
 
 ### Pull Request 절차
 

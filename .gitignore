@@ -33,5 +33,6 @@ docs/features.md
 docs/dependency-map.md
 docs/failure-patterns.md
 docs/agent-memory/
+.harness/init-backups/
 failure-patterns.md
 .vscode/instructions/

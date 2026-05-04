@@ -94,6 +94,12 @@ If neither `## CI Artifact Index` nor `.harness/ci-index.md` is present → skip
 - [ ] New features have tests
 - [ ] Existing tests pass
 
+**Verification is a gate, not a suggestion.** Before continuing to Step 4, the reviewer must include concrete working proof:
+- Run the project's test/verification command when available (for example `npm test`, `pnpm test`, `pytest`, `go test ./...`, or the command recorded in docs/project-brief.md / package scripts).
+- If the change is user-facing and tests do not exercise the behavior, include a minimal smoke proof (command, URL, screenshot/manual action, or observed output).
+- If any existing test fails → output `[BLOCKER: TESTS_FAILING] Tests must pass before code review can continue.` STOP. Do not proceed to Step 4. Do not suggest commit.
+- If no verification command can be found or run → output `[BLOCKER: WORKING_PROOF_MISSING] Cannot mark review DONE without test or smoke proof.` STOP and ask for the command or evidence.
+
 **Step 4: Security Check (secure skill)**
 - [ ] No credentials, .env, or temp files in staging (FP-004)
 - [ ] No hardcoded API keys or passwords
@@ -206,6 +212,7 @@ If review is BLOCKED → do NOT suggest commit. Fix first.
 ### Passed Items
 - Architecture rules: ✅
 - Test integrity: ✅ / ⚠️ (detail)
+- Working proof: command/evidence + PASS result
 - Security check: ✅ / ❌ (detail)
 - Failure pattern check: ✅ / ⚠️ (FP-NNN)
 <!-- CREW_MODE_START -->
@@ -233,6 +240,8 @@ These rules are enforced during every review. The full Iron Laws (10) are define
 
 ### Completion Protocol
 Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT**
+
+`DONE` and `DONE_WITH_CONCERNS` require: tests pass, working proof is shown, and no blocker remains. If tests fail or working proof is missing, report `BLOCKED`.
 
 ### Concreteness
 - Specify exact file paths and line numbers

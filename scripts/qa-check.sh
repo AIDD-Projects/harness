@@ -25,7 +25,7 @@ for arg in "$@"; do
   esac
 done
 
-if $CHECK_OSS; then TOTAL=13; else TOTAL=10; fi
+if $CHECK_OSS; then TOTAL=14; else TOTAL=11; fi
 
 echo "============================================"
 echo "  kode:harness QA 자동 점검"
@@ -67,8 +67,9 @@ if [ -d "harness/" ]; then
   existing_states=""
   for sf in $state_files; do [ -f "$sf" ] && existing_states="$existing_states $sf"; done
   if [ -n "$existing_states" ]; then
-    state_words=$(cat $existing_states | wc -w | tr -d ' ')
-    [ "$state_words" -le 3000 ] && ok "State 합계: ${state_words}단어 (≤3000)" || fail "State 합계: ${state_words}단어 — 상한 초과!"
+    # CREW_MODE 블록은 npm 사용자(crew=false)에게 stripped 되어 전달되므로 제외하고 측정.
+    state_words=$(cat $existing_states | sed '/CREW_MODE_START/,/CREW_MODE_END/d' | wc -w | tr -d ' ')
+    [ "$state_words" -le 3000 ] && ok "State 합계: ${state_words}단어 (≤3000, CREW_MODE 제외)" || fail "State 합계: ${state_words}단어 — 상한 초과!"
   fi
 else
   warn "harness/ 디렉토리 없음 — 경량성 점검 스킵"
@@ -333,6 +334,25 @@ if grep -q "generateAntigravity" src/init.js 2>/dev/null; then
 fi
 
 # ═══════════════════════════════════════════════
+# 11. harness/ ↔ .github/ drift
+# ═══════════════════════════════════════════════
+# `harness/` 가 Source of Truth. `.github/skills` + `.github/agents` 는
+# init.js 가 생성한 산출물이므로 둘이 항상 일치해야 함.
+# drift = 개발자가 harness/ 수정 후 재생성을 잊은 상태 → npm 사용자가 stale 받음.
+header 11 "harness/ ↔ .github/ drift"
+
+if command -v node >/dev/null 2>&1 && [ -f scripts/check-harness-drift.js ]; then
+  if node scripts/check-harness-drift.js >/tmp/harness-drift.out 2>&1; then
+    ok "harness/ ↔ .github/ in sync (skills + agents)"
+  else
+    fail "harness/ ↔ .github/ drift 발견 — 'npm run harness:sync' 필요"
+    sed -n '1,15p' /tmp/harness-drift.out | while read line; do echo "    $line"; done
+  fi
+else
+  warn "scripts/check-harness-drift.js 없음 — drift 점검 스킵"
+fi
+
+# ═══════════════════════════════════════════════
 # OSS 점검 (--oss 또는 --all)
 # ═══════════════════════════════════════════════
 if $CHECK_OSS; then
@@ -346,9 +366,9 @@ if $CHECK_OSS; then
   else
 
   # ═══════════════════════════════════════════════
-  # 10. GitHub 버전 정합성
+  # 12. GitHub 버전 정합성
   # ═══════════════════════════════════════════════
-  header 11 "GitHub 버전 정합성"
+  header 12 "GitHub 버전 정합성"
 
   PKG_VER=$(node -e "console.log(require('./package.json').version)" 2>/dev/null || echo "N/A")
   NPM_VER=$(npm view @kodevibe/harness version 2>/dev/null || echo "N/A")
@@ -370,7 +390,7 @@ if $CHECK_OSS; then
   # ═══════════════════════════════════════════════
   # 11. CI 상태
   # ═══════════════════════════════════════════════
-  header 12 "CI 상태"
+  header 13 "CI 상태"
 
   CI_JSON=$(gh api "repos/$OWNER/$REPO/actions/runs" --jq '.workflow_runs[0]' 2>/dev/null || echo "{}")
   CI_STATUS=$(echo "$CI_JSON" | jq -r '.conclusion // "unknown"')
@@ -386,7 +406,7 @@ if $CHECK_OSS; then
   # ═══════════════════════════════════════════════
   # 12. GitHub 커뮤니티 & 설정
   # ═══════════════════════════════════════════════
-  header 13 "GitHub 커뮤니티 & 설정"
+  header 14 "GitHub 커뮤니티 & 설정"
 
   for f in LICENSE CODE_OF_CONDUCT.md SECURITY.md .github/PULL_REQUEST_TEMPLATE.md .github/workflows/ci.yml; do
     gh api "repos/$OWNER/$REPO/contents/$f" --jq '.name' >/dev/null 2>&1 \

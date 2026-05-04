@@ -76,6 +76,12 @@ Changed file list (user-provided or from `git diff --name-only`)
 - [ ] New features have tests
 - [ ] Existing tests pass
 
+**Verification is a gate, not a suggestion.** Before continuing to Step 4, the reviewer must include concrete working proof:
+- Run the project's test/verification command when available (for example `npm test`, `pnpm test`, `pytest`, `go test ./...`, or the command recorded in docs/project-brief.md / package scripts).
+- If the change is user-facing and tests do not exercise the behavior, include a minimal smoke proof (command, URL, screenshot/manual action, or observed output).
+- If any existing test fails → output `[BLOCKER: TESTS_FAILING] Tests must pass before code review can continue.` STOP. Do not proceed to Step 4. Do not suggest commit.
+- If no verification command can be found or run → output `[BLOCKER: WORKING_PROOF_MISSING] Cannot mark review DONE without test or smoke proof.` STOP and ask for the command or evidence.
+
 **Step 4: Security Check (secure skill)**
 - [ ] No credentials, .env, or temp files in staging (FP-004)
 - [ ] No hardcoded API keys or passwords
@@ -156,6 +162,7 @@ If review is BLOCKED → do NOT suggest commit. Fix first.
 ### Passed Items
 - Architecture rules: ✅
 - Test integrity: ✅ / ⚠️ (detail)
+- Working proof: command/evidence + PASS result
 - Security check: ✅ / ❌ (detail)
 - Failure pattern check: ✅ / ⚠️ (FP-NNN)
 
@@ -164,17 +171,7 @@ STATUS: DONE / DONE_WITH_CONCERNS / BLOCKED
 
 ## Embedded Rules
 
-These rules are enforced during every review:
-
-### Iron Laws
-1. **Mock Sync**: Interface change → mock updated in same commit (FP-001)
-2. **Type Check**: Verify constructor/factory parameters from source, not memory (FP-002)
-3. **Scope Compliance**: Changes must be within current Story scope (docs/project-state.md)
-4. **Security**: No credentials, passwords, or API keys in code or commits
-5. **3-Failure Stop**: Same approach failed 3 times → stop and report
-6. **Dependency Map**: New/modified module → docs/dependency-map.md updated
-7. **Feature Registry**: New feature → docs/features.md updated
-8. **Session Handoff**: Session end → docs/project-state.md Quick Summary updated
+These rules are enforced during every review. The full Iron Laws (10) are defined in `harness/core-rules.md` — reviewer enforces all of them. Below are review-specific rules that supplement the Iron Laws.
 
 ### Testing Rules
 - New feature = New test. No feature code without tests.
@@ -190,6 +187,8 @@ These rules are enforced during every review:
 
 ### Completion Protocol
 Report using: **DONE** | **DONE_WITH_CONCERNS** | **BLOCKED** | **NEEDS_CONTEXT**
+
+`DONE` and `DONE_WITH_CONCERNS` require: tests pass, working proof is shown, and no blocker remains. If tests fail or working proof is missing, report `BLOCKED`.
 
 ### Concreteness
 - Specify exact file paths and line numbers
