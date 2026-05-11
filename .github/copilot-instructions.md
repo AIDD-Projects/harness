@@ -11,6 +11,7 @@ Common-mode users often begin with rough goals. Keep the navigator short and evi
 - **Proof Ledger**: command/evidence that proves the feature works.
 - **Evidence-Gated Progress Board**: `Planned → Implementing → Proof Pending → Proven → Reviewed`.
 - **Quiet Navigator**: one next action plus why; restate the pipeline only when useful.
+- **Proof-First Enforcement**: code/state/pipeline movement is not progress until tests, smoke proof, or manual check proves the usable result works.
 
 ## Session Start
 
@@ -125,6 +126,7 @@ These laws are enforced across all skills and agents. Violations should be flagg
 8. **Session Handoff**: At session end, update project-state.md Quick Summary so the next session has context.
 9. **Common First**: All features must work at Common level (🟢🔵🔴) without crew dependency. Crew-specific logic must be inside crew marker blocks only. Never add crew-only code to Common paths.
 10. **Self-Verify**: Every agent MUST run the `state-check` skill before reporting STATUS: DONE. If state-check returns FAIL, the agent must NOT report DONE — fix the listed drift first. WARN may proceed but warnings must be included in the agent's output.
+11. **Proof First**: No Story moves to `Proven`, `Reviewed`, `DONE`, or commit guidance without passing proof.
 
 ## Confirmation Gate Defaults
 

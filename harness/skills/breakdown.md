@@ -77,6 +77,7 @@ Ensures bottom-up implementation: foundations first, then layers that depend on 
 - Never implement a module before its dependencies exist
 - Each task should be completable in one session
 - Every task must include its test files
+- Implementation and tests belong in the same Wave whenever possible. Do not defer tests to a later Wave unless the proof harness itself is the earlier Wave.
 - New modules MUST be registered in docs/dependency-map.md (Iron Law #6) — the breakdown OUTPUT section lists these registrations, and pm (or the user, if invoked directly) is responsible for executing the actual state file writes
 - If a task exceeds Story scope, stop and report to user
 

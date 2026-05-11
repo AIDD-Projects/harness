@@ -67,7 +67,7 @@ User request: "next task", "current status", "story done", "new sprint", "scope 
 After every status check, recommend the next action based on current context:
 
 1. Read `docs/project-state.md`, `docs/features.md`, `docs/project-brief.md`, `docs/failure-patterns.md`
-2. Render a compact **Evidence-Gated Progress Board** before recommending action:
+2. MUST render a compact **Evidence-Gated Progress Board** before recommending action:
    - Goal: one-line Goal Card from project-brief or current Story
    - State: `Planned | Implementing | Proof Pending | Proven | Reviewed | Blocked`
    - Evidence: last passing test/smoke proof, or `missing`
@@ -103,12 +103,16 @@ After every status check, recommend the next action based on current context:
 ```
 
 **Request: "story done" / "S{N}-{M} done"**
-1. Update the Story status to `done` in docs/project-state.md
-2. Add completion record to "Recent Changes" section
-3. **Commit/Push check**: If changes are uncommitted, remind:
+1. Read the Story's Proof Plan and current Evidence-Gated Progress Board row.
+2. Require proof before marking done:
+   - Passing proof → set state to `Proven`, update Story status to `✅ done`, append Proof Ledger / Evidence Summary row.
+   - Missing proof → keep state `Proof Pending`, output `[BLOCKER: PROOF_MISSING]`, and do not advance to the next Story.
+   - Failing proof → keep state `Implementing`, output `[BLOCKER: PROOF_FAILING]`, and fix within current Story.
+3. Add completion record to "Recent Changes" section only after passing proof.
+4. **Commit/Push check**: If changes are uncommitted, remind:
    - "⚠️ S{N}-{M} 완료 — 커밋하셨나요? `git add <files> && git commit -m \"S{N}-{M}: {description}\"`"
    - Team mode: Also remind to push — "팀원에게 공유하려면 `git push origin {branch}` 실행"
-4. Guide to next Story if available
+5. Guide to next Story only after proof passes.
 
 **Request: "new story" / "next task"**
 1. Find next `todo` Story in docs/project-state.md
@@ -143,9 +147,10 @@ When invoked after pm approval, verify that pm wrote state files correctly:
 
 When a Story contains multiple Tasks/Waves (from breakdown):
 - Guide implementation **one Wave at a time** (not one file at a time, not all at once)
-- After each Wave is implemented, **run tests (or invoke `reviewer` for a quick check)** to verify the Wave is clean before proceeding
+- After each Wave is implemented, **run tests or smoke proof** to verify the Wave is clean before proceeding
+- Record a mini Proof Ledger row inline: Evidence, Result, Command / Observation
 - Only after verification passes, prompt: "Wave {N} 완료 (tests pass). Wave {N+1}로 넘어갈까요?"
-- If tests fail → fix within the current Wave before moving on. Do NOT advance to the next Wave with failing tests.
+- If tests fail → output `[BLOCKER: WAVE_PROOF_FAILING]`, fix within the current Wave, and do NOT advance.
 - This prevents context overload from modifying too many modules simultaneously
 - Exception: If a Wave contains only a single trivial task, it may be combined with the next Wave
 

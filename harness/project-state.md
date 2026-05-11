@@ -35,13 +35,22 @@
 
 ## Story Status
 
-| ID | Title | Status | Assignee |
-|----|-------|--------|----------|
-| S1-1 | Project scaffolding | ⬜ todo | |
-| S1-2 | Core feature implementation | ⬜ todo | |
-| S1-3 | Test coverage | ⬜ todo | |
+| ID | Title | Status | Assignee | Proof Plan |
+|----|-------|--------|----------|------------|
+| S1-0 | Proof setup | ⬜ todo | | test command or smoke proof |
+| S1-1 | Project scaffolding | ⬜ todo | | exact command/checklist |
+| S1-2 | Core feature implementation | ⬜ todo | | exact command/checklist |
+| S1-3 | Test coverage | ⬜ todo | | exact command/checklist |
 
 <!-- Status legend: ⬜ todo, 🔧 active, ✅ done, 🚫 blocked, ❌ dropped -->
+
+## Evidence Summary
+
+<!-- Keep the current proof state visible at a glance.
+   | Story | Status | Last Proof | Result | Blocker |
+   |-------|--------|------------|--------|---------|
+   | S1-1 | Proof Pending | - | - | tests not run |
+-->
 
 ## Evidence-Gated Progress Board
 

@@ -253,6 +253,52 @@ describe('harness init', () => {
     });
   });
 
+  describe('v0.11 proof-first enforcement content', () => {
+    let tmpDir;
+
+    before(async () => {
+      tmpDir = makeTmpDir();
+      const origLog = console.log;
+      console.log = () => {};
+      await run(['init', '--ide', 'vscode', '--mode', 'solo', '--dir', tmpDir]);
+      console.log = origLog;
+    });
+
+    after(() => {
+      rmDir(tmpDir);
+    });
+
+    it('dispatcher defines Proof-First Enforcement and Iron Law #11', () => {
+      const content = fs.readFileSync(path.join(tmpDir, '.github/copilot-instructions.md'), 'utf8');
+      assert.ok(content.includes('Proof-First Enforcement'), 'dispatcher must define proof-first enforcement');
+      assert.ok(content.includes('Proof First'), 'dispatcher must include Proof First iron law');
+      assert.ok(content.includes('not progress until tests'), 'dispatcher must say progress requires proof');
+    });
+
+    it('agents enforce proof before story completion and review', () => {
+      const pm = fs.readFileSync(path.join(tmpDir, '.github/agents/pm.agent.md'), 'utf8');
+      const lead = fs.readFileSync(path.join(tmpDir, '.github/agents/lead.agent.md'), 'utf8');
+      const reviewer = fs.readFileSync(path.join(tmpDir, '.github/agents/reviewer.agent.md'), 'utf8');
+
+      assert.ok(pm.includes('Story 0: set up test/smoke proof'), 'pm must add proof setup story when proof path is missing');
+      assert.ok(pm.includes('never TBD'), 'pm proof plan must reject vague proof');
+      assert.ok(lead.includes('[BLOCKER: PROOF_MISSING]'), 'lead must block story done without proof');
+      assert.ok(lead.includes('[BLOCKER: WAVE_PROOF_FAILING]'), 'lead must block next wave on failing proof');
+      assert.ok(reviewer.includes('[BLOCKER: PROOF_COMMAND_INVALID]'), 'reviewer must block invalid proof command');
+      assert.ok(reviewer.includes('[BLOCKER: NO_PROOF_STRATEGY]'), 'reviewer must block missing proof strategy');
+    });
+
+    it('state templates and state-check include proof coverage', () => {
+      const state = fs.readFileSync(path.join(tmpDir, 'docs/project-state.md'), 'utf8');
+      const stateCheck = fs.readFileSync(path.join(tmpDir, '.github/skills/state-check/SKILL.md'), 'utf8');
+
+      assert.ok(state.includes('## Evidence Summary'), 'project-state must include evidence summary');
+      assert.ok(state.includes('Proof Plan'), 'story status must include proof plan column');
+      assert.ok(stateCheck.includes('Check 7: Proof Ledger Coverage'), 'state-check must verify proof ledger coverage');
+      assert.ok(stateCheck.includes('done but no Proof Ledger entry'), 'state-check must warn on done story without proof');
+    });
+  });
+
   // ─── IDE-specific dispatcher / format checks (multi-IDE coverage) ──
   describe('IDE-specific dispatcher and agent formats', () => {
     async function build(ide) {

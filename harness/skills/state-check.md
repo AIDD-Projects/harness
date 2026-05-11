@@ -105,6 +105,16 @@ If `docs/project-brief.md` contains a `## Validation Tracker` section:
 If no Validation Tracker → skip.
 <!-- CREW_MODE_END -->
 
+### Check 7: Proof Ledger Coverage
+
+1. Read `docs/project-state.md` (or `.harness/project-state.md` in Team mode).
+2. For each Story marked `✅ done`, verify at least one Proof Ledger or Evidence Summary row exists with a passing result.
+3. Outcomes:
+   - Done Story with passing proof → PASS
+   - Done Story with no proof → WARN: `[WARN] Story {S-N-M} done but no Proof Ledger entry — run reviewer`
+   - Done Story with failing proof → FAIL: `[FAIL] Story {S-N-M} proof shows failure but status is done`
+   - In-progress Story without proof → PASS; proof pending is normal
+
 ## Output Format
 
 ```
@@ -125,6 +135,9 @@ If no Validation Tracker → skip.
 
 ### Check 4: Agent Memory Legacy Names
 - No legacy names found (or list of legacy files to rename)
+
+### Check 7: Proof Ledger Coverage
+- {N} done Stories checked / {M} missing proof / {K} failing proof
 
 <!-- CREW_MODE_START -->
 ### Check 6: Validation Tracker (🟣)

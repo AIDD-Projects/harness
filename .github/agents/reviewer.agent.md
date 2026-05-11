@@ -79,8 +79,10 @@ Changed file list (user-provided or from `git diff --name-only`)
 **Verification is a gate, not a suggestion.** Before continuing to Step 4, the reviewer must include concrete working proof:
 - Run the project's test/verification command when available (for example `npm test`, `pnpm test`, `pytest`, `go test ./...`, or the command recorded in docs/project-brief.md / package scripts).
 - If the change is user-facing and tests do not exercise the behavior, include a minimal smoke proof (command, URL, screenshot/manual action, or observed output).
-- If any existing test fails → output `[BLOCKER: TESTS_FAILING] Tests must pass before code review can continue.` STOP. Do not proceed to Step 4. Do not suggest commit.
-- If no verification command can be found or run → output `[BLOCKER: WORKING_PROOF_MISSING] Cannot mark review DONE without test or smoke proof.` STOP and ask for the command or evidence.
+- If any existing test fails → output `[BLOCKER: TESTS_FAILING]`. STOP before Step 4.
+- If a Proof Plan command cannot run → output `[BLOCKER: PROOF_COMMAND_INVALID]` with the command. STOP.
+- If test files exist but no test command exists → output `[BLOCKER: NO_TEST_COMMAND]`. STOP.
+- If no proof path exists → output `[BLOCKER: NO_PROOF_STRATEGY]` and `[BLOCKER: WORKING_PROOF_MISSING]`. STOP.
 
 Record the result as a **Proof Ledger** entry. Keep it short:
 
@@ -88,6 +90,8 @@ Record the result as a **Proof Ledger** entry. Keep it short:
 |----------|--------|-----------------------|
 | Unit tests | ✅ pass | `npm test` |
 | Smoke proof | ✅ pass | `curl /health → 200` |
+
+If state files are in scope, write/request Proof Ledger / Evidence Summary immediately after proof passes.
 
 **Step 4: Security Check (secure skill)**
 - [ ] No credentials, .env, or temp files in staging (FP-004)

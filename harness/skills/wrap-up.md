@@ -150,7 +150,8 @@ If the `reviewer` agent was run in this session and produced `[STATE-AUDIT]` fla
 Before session end, record the working proof that justified completion:
 1. Read reviewer output or recent terminal evidence for passing tests/smoke proof.
 2. Add one compact row to `docs/project-state.md` → `## Proof Ledger` for each completed Story.
-3. If no proof exists, write `Proof missing` in the wrap-up report and recommend returning to `reviewer`; do not claim the Story is complete.
+3. Cross-check completed Stories against `## Evidence Summary` / `## Proof Ledger`.
+4. If no proof exists, write `[PROOF-GAP] Proof missing` in the wrap-up report and recommend returning to `reviewer`; do not claim the Story is complete.
 
 Proof rows must stay short: Date, Story, Evidence, Result, Command / Observation. Do not paste long logs.
 

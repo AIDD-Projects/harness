@@ -132,7 +132,7 @@ Apply these insights when creating the implementation plan. If the memory file i
 10. Run **check-impact** skill for each existing module being modified (pm calls both skills independently — breakdown does NOT invoke check-impact internally. Ordering: breakdown first → register modules → check-impact second.)
 11. Check `docs/failure-patterns.md` for relevant past mistakes
 12. Produce a **Goal Card** (6 lines max) and implementation plan.
-13. Produce a **Proof Plan** per Story: test command, smoke proof, or manual checklist.
+13. Produce a **Proof Plan** per Story: exact test/smoke command or checklist; never TBD. If no proof path exists, add Story 0: set up test/smoke proof.
 14. **Wait for Plan Confirmation** (see Plan Confirmation Gate below) — do NOT write state files yet
 15. **After user approves** → Update `docs/project-state.md` with the new Story
 16. **After user approves** → Update `docs/features.md` with the new feature entry
@@ -163,17 +163,17 @@ State writes (Steps 15-16) execute ONLY after user approval. Rejected plans neve
 
 ## Plan Confirmation Gate
 
-After producing ANY plan (New Feature, Refactor, or Crew-Driven), **do NOT proceed to coding immediately**.
+After any plan, **do NOT proceed to coding immediately**.
 
 1. Present the complete plan to the user
-2. Ask: **"이 경로(Plan)대로 구현을 시작할까요?"** (or equivalent confirmation request)
+2. Ask: **"이 경로와 Proof 명령으로 검증 가능할까요?"**
 3. Wait for explicit user approval (`Yes`, `Go`, `진행해줘`, etc.)
 4. **Only after approval** → execute **MANDATORY State File Write** (below), then output 🧭 Next Step pointing to `lead`
-5. If the user requests changes → revise the plan and re-confirm. **No state files are written until approval.**
+5. If the user requests changes → revise and re-confirm. **No state files are written until approval.**
 
 ### ⚠️ MANDATORY: Post-Approval State File Write
 
-**This section executes IMMEDIATELY after user approval. Do NOT skip. Do NOT output the 🧭 Next Step block until ALL writes below are complete.**
+**This section executes IMMEDIATELY after user approval. Complete all writes before 🧭.**
 
 After user approves the plan, perform these writes in order:
 
@@ -198,7 +198,7 @@ After user approves the plan, perform these writes in order:
    - ARB Fail Resolution: fill Story column with mapped Story IDs
 <!-- CREW_MODE_END -->
 
-**Completion Check**: Before outputting 🧭, verify:
+**Completion Check**: Verify:
 - [ ] features.md has new feature row(s)
 - [ ] project-state.md has Story rows with `⬜ todo` status
 - [ ] dependency-map.md has new module rows (if plan introduces new modules)
@@ -241,7 +241,8 @@ After the Post-Approval state writes complete, run the `state-check` skill:
 ### Proof Plan
 | Story | Required Evidence | Command / Manual Proof |
 |-------|-------------------|------------------------|
-| S{N}-{M} | Tests / smoke / manual | `npm test` or specific proof |
+| S{N}-0 | Proof setup, if needed | Story 0: set up test/smoke proof |
+| S{N}-{M} | Tests / smoke / manual | exact command/checklist; never TBD |
 
 ### Implementation Plan
 [Output from breakdown skill]

@@ -32,7 +32,7 @@ npx @kodevibe/harness init          # pick your IDE
 
 That's it. Your AI now has persistent memory, direction guardrails, and self-correction loops.
 
-v0.10 adds the **Common Mode Confidence Loop**: the AI first narrows your rough goal into a short Goal Card, plans the proof that will show the feature works, and keeps progress gated on tests or smoke evidence instead of long navigator chatter.
+v0.11 adds **Proof-First Enforcement** on top of the Common Mode Confidence Loop: pm must define runnable proof, lead cannot mark a Story done without passing evidence, reviewer blocks commit guidance when proof is missing or failing, and state-check audits Proof Ledger coverage.
 
 <details>
 <summary>More install options</summary>
@@ -100,6 +100,7 @@ kode:harness solves this with three mechanisms:
 | 🧭 **Quiet Navigator** | Short next-action guidance centered on current goal and required evidence |
 | ✅ **Evidence-Gated Progress Board** | Stories move from Planned → Proof Pending → Proven only when tests or smoke proof exist |
 | 📒 **Proof Ledger** | Review and wrap-up outputs record compact proof: command, result, and observation |
+| 🔒 **Proof-First Enforcement** | pm/lead/reviewer/state-check block vague plans, unproven completion, failing tests, and missing proof records |
 | 📝 **State Persistence** | 5 markdown files that persist project knowledge across LLM sessions |
 | 🔄 **5 Pipelines** | 🟢 New Dev → 🔵 Continue → 🔴 Bug Fix → 🟡 Direction Change → 🟣 Crew-Driven |
 | 🛠️ **11 Skills** | Step-by-step procedures: setup, debug, breakdown, review, pivot, state-check, and more |
@@ -229,7 +230,7 @@ npx @kodevibe/harness init --team
 
 ## Iron Laws
 
-These 10 rules are enforced across all skills and agents. They form the quality backbone of every kode:harness project managed with harness engineering.
+These 11 rules are enforced across all skills and agents. They form the quality backbone of every kode:harness project managed with harness engineering.
 
 | # | Law | Enforced By |
 |---|-----|-------------|
@@ -241,6 +242,9 @@ These 10 rules are enforced across all skills and agents. They form the quality 
 | 6 | **Dependency Map** — New/modified module → update `dependency-map.md` in the same commit. | `reviewer`, `wrap-up` |
 | 7 | **Feature Registry** — New feature → register in `features.md` in the same commit. | `reviewer`, `wrap-up` |
 | 8 | **Session Handoff** — Session end → update `project-state.md` Quick Summary. | `wrap-up` |
+| 9 | **Common First** — Common mode must work without crew artifacts; crew-only logic stays in crew marker blocks. | All agents |
+| 10 | **Self-Verify** — Run `state-check` before reporting DONE. FAIL blocks DONE. | All agents |
+| 11 | **Proof First** — No Story moves to Proven, Reviewed, DONE, or commit guidance without passing proof. | `pm`, `lead`, `reviewer`, `state-check` |
 
 ## Documentation
 
@@ -279,13 +283,13 @@ Original crew documents are **never modified**. Only the index and tracker are c
 | Dependencies | Node 20+ | Bun + Node + Playwright | Node 18+ | Zero |
 | IDE support | 20+ (installer) | 5 (setup --host) | 13 (runtime select) | 6 (native format) |
 | Direction management | ❌ | ❌ | ❌ | ✅ (Direction Guard + pivot + Decision Log) |
-| Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (10 laws embedded in skills) |
+| Iron Laws (code quality rules) | ❌ | ❌ | ❌ | ✅ (11 laws embedded in skills) |
 | Cold start | ❌ | ❌ | `/gsd-new-project` | ✅ (`setup` skill) |
 | Context per task | 4-6 files | 1 file | Fresh 200k per plan | 2-3 files (136-line dispatcher) |
 
 ## Roadmap
 
-kode:harness is at **v0.10.0** — adds the Common Mode Confidence Loop: Goal Card, Quiet Navigator, Evidence-Gated Progress Board, and Proof Ledger. v0.9.7 added the drift guard, README positioning, IDE guide, and reviewer working-proof gate.
+kode:harness is at **v0.11.0** — makes Common Mode proof-first behavior enforceable: Proof Plans need exact commands/checklists, Story completion is blocked without evidence, reviewer must stop on missing/failing proof, and state-check audits Proof Ledger coverage.
 
 | Phase | Version | Status | Focus |
 |---|---|---|---|
@@ -298,12 +302,14 @@ kode:harness is at **v0.10.0** — adds the Common Mode Confidence Loop: Goal Ca
 | **IDE Realignment** | v0.9.4 | ✅ Done | All 6 IDE adapters aligned with official docs; Antigravity `.agents/`, Codex `.toml`, Cursor `.cursor/rules/`; release skill Step 6.5 + qa-check.sh §10 regression guards |
 | **Consistency & Budget** | v0.9.5 | ✅ Done | Iron Laws stale-copy fix (reviewer.md), dispatcher sync (core-rules.md ↔ copilot-instructions.md), lightness budgets recalibrated (40K/1500/2500) with rationale |
 | **Drift Guard & Positioning** | v0.9.7 | ✅ Done | `harness/`↔`.github/` drift detector, reviewer working-proof gate, kode:vibe positioning, IDE selection guide, project-brief example |
-| **Confidence Loop** | v0.10.0 | ✅ Current | Goal Card, Quiet Navigator, Evidence-Gated Progress Board, Proof Ledger, QA/content regression tests |
+| **Confidence Loop** | v0.10.0 | ✅ Done | Goal Card, Quiet Navigator, Evidence-Gated Progress Board, Proof Ledger, QA/content regression tests |
+| **Proof-First Enforcement** | v0.11.0 | ✅ Current | Mandatory Proof Plan, lead proof blockers, reviewer proof blockers, state-check Proof Ledger coverage |
 | **Safety & Branding** | v0.9.6 | ✅ Done | init overwrite backups, shipped pm naming cleanup, LICENSE branding cleanup |
 | **Validation** | v1.0 | 🔜 Next | Real-world project adoption, user feedback collection |
 
 ### What's Next
 
+- [ ] Pilot: Run v0.11 proof-first Common Mode on a real project and measure proof coverage
 - [ ] Pilot: Run external planning artifacts through kode:harness's 🟣 pipeline on a real project
 - [ ] Adopt kode:harness in real projects and collect usage data
 - [ ] Document case studies: solo vs team, crew vs no-crew

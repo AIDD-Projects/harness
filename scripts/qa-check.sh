@@ -238,6 +238,13 @@ if [ -d "harness/" ]; then
   grep -q "Goal Card" harness/agents/pm.md && ok "pm: Goal Card 존재" || fail "pm: Goal Card 누락"
   grep -q "Evidence-Gated Progress Board" harness/agents/lead.md && ok "lead: Evidence-Gated Progress Board 존재" || fail "lead: Evidence-Gated Progress Board 누락"
   grep -q "Proof Ledger" harness/agents/reviewer.md && ok "reviewer: Proof Ledger 존재" || fail "reviewer: Proof Ledger 누락"
+
+  # v0.11 Proof-First enforcement contracts
+  grep -q "Proof-First Enforcement" harness/core-rules.md && ok "core-rules: Proof-First Enforcement 존재" || fail "core-rules: Proof-First Enforcement 누락"
+  grep -q "Story 0: set up test/smoke proof" harness/agents/pm.md && ok "pm: Story 0 proof setup gate 존재" || fail "pm: Story 0 proof setup gate 누락"
+  grep -q "\[BLOCKER: PROOF_MISSING\]" harness/agents/lead.md && ok "lead: PROOF_MISSING blocker 존재" || fail "lead: PROOF_MISSING blocker 누락"
+  grep -q "\[BLOCKER: PROOF_COMMAND_INVALID\]" harness/agents/reviewer.md && ok "reviewer: PROOF_COMMAND_INVALID blocker 존재" || fail "reviewer: PROOF_COMMAND_INVALID blocker 누락"
+  grep -q "Check 7: Proof Ledger Coverage" harness/skills/state-check.md && ok "state-check: Proof Ledger Coverage 존재" || fail "state-check: Proof Ledger Coverage 누락"
 fi
 
 # ═══════════════════════════════════════════════

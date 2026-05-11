@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-05-11
+
+### Added
+- **Common Mode Proof-First Enforcement** — v0.10 confidence-loop concepts are now mandatory gates across pm, lead, reviewer, and state-check.
+- **Mandatory Proof Plan** — pm requires exact proof commands/checklists per Story and recommends Story 0 when a project has no test or smoke path.
+- **Lead proof blockers** — lead keeps Stories in Proof Pending or Implementing when proof is missing or failing, instead of advancing to done.
+- **Reviewer proof blockers** — reviewer now distinguishes invalid proof commands, missing test commands, missing proof strategy, and failing tests before security review or commit guidance.
+- **Evidence Summary + Proof Ledger coverage** — project-state includes an Evidence Summary, and state-check verifies done Stories have passing proof records.
+
+### Changed
+- **Wave pacing** — breakdown/lead guidance keeps implementation and tests in the same Wave where possible, and blocks the next Wave on failing proof.
+- **Wrap-up proof handling** — wrap-up validates existing proof records and reports proof gaps instead of treating proof as a post-hoc narrative.
+
+### Verified
+- `npm test` PASS (181 tests)
+- `npm run harness:check-drift` PASS
+- `bash scripts/qa-check.sh` PASS
+- `git diff --check` clean
+
 ## [0.10.0] - 2026-05-04
 
 ### Added
@@ -198,6 +217,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Solo and Team modes
 - CLI with `init` command
 
+[0.11.0]: https://github.com/AIDD-Projects/harness/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/AIDD-Projects/harness/compare/v0.9.7...v0.10.0
 [0.9.7]: https://github.com/AIDD-Projects/harness/compare/v0.9.6...v0.9.7
 [0.9.6]: https://github.com/AIDD-Projects/harness/compare/v0.9.5...v0.9.6
