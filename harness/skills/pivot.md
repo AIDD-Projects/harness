@@ -114,7 +114,9 @@ After pivot completes, always append a 🧭 block:
 | Pivot Result | 🧭 Next Step |
 |---|---|
 | All state files updated | `pm` — "변경된 방향에 맞춰 재계획해줘" |
+<!-- CREW_MODE_START -->
 | Crew artifacts exist for new direction | `setup` (🟣) — "crew 산출물을 기반으로 state를 다시 세팅해줘" |
+<!-- CREW_MODE_END -->
 | User cancelled | 🏁 No action — "기존 방향을 유지합니다" |
 
 Example 🧭 block:

@@ -282,10 +282,14 @@ describe('harness init', () => {
 
       assert.ok(pm.includes('Story 0: set up test/smoke proof'), 'pm must add proof setup story when proof path is missing');
       assert.ok(pm.includes('never TBD'), 'pm proof plan must reject vague proof');
+      assert.ok(pm.includes('[ERROR: PROOF_PLAN_UNDEFINED]'), 'pm must stop before state writes when proof plan is undefined');
       assert.ok(lead.includes('[BLOCKER: PROOF_MISSING]'), 'lead must block story done without proof');
       assert.ok(lead.includes('[BLOCKER: WAVE_PROOF_FAILING]'), 'lead must block next wave on failing proof');
+      assert.ok(reviewer.includes('[BLOCKER: TESTS_FAILING]'), 'reviewer must block failing tests');
+      assert.ok(reviewer.includes('[BLOCKER: NO_TEST_COMMAND]'), 'reviewer must block test files without a test command');
       assert.ok(reviewer.includes('[BLOCKER: PROOF_COMMAND_INVALID]'), 'reviewer must block invalid proof command');
       assert.ok(reviewer.includes('[BLOCKER: NO_PROOF_STRATEGY]'), 'reviewer must block missing proof strategy');
+      assert.ok(reviewer.includes('Commit-message-only requests are guidance'), 'reviewer must treat commit-message-only requests as commit guidance');
     });
 
     it('state templates and state-check include proof coverage', () => {
@@ -293,9 +297,10 @@ describe('harness init', () => {
       const stateCheck = fs.readFileSync(path.join(tmpDir, '.github/skills/state-check/SKILL.md'), 'utf8');
 
       assert.ok(state.includes('## Evidence Summary'), 'project-state must include evidence summary');
-      assert.ok(state.includes('Proof Plan'), 'story status must include proof plan column');
+      assert.ok(state.includes('| ID | Title | Status | Assignee | Proof Plan |'), 'story status must include proof plan column');
       assert.ok(stateCheck.includes('Check 7: Proof Ledger Coverage'), 'state-check must verify proof ledger coverage');
-      assert.ok(stateCheck.includes('done but no Proof Ledger entry'), 'state-check must warn on done story without proof');
+      assert.ok(stateCheck.includes('is done but has no passing Proof Ledger/Evidence Summary entry'), 'state-check must fail done story without proof');
+      assert.ok(stateCheck.includes('proof coverage gaps are FAIL'), 'proof coverage warnings must not be allowed to proceed');
     });
   });
 
@@ -1105,7 +1110,7 @@ describe('harness init', () => {
       });
 
       it('Solo files do NOT contain Crew-specific keywords', () => {
-        const crewKeywords = ['Phase 1.5', 'Validation Tracker', 'Crew Artifact'];
+        const crewKeywords = ['Phase 1.5', 'Validation Tracker', 'Crew Artifact', 'Crew-Driven', 'docs/crew/', 'FR reference', 'Crew artifacts exist'];
         for (const [name, content] of Object.entries(soloFiles)) {
           for (const kw of crewKeywords) {
             assert.ok(!content.includes(kw), `${name} should not contain Crew keyword "${kw}"`);

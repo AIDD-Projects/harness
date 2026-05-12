@@ -177,7 +177,7 @@ STATUS: DONE
 
 Bootstrap always leads to `pm`. Append this block after STATUS: DONE:
 
-**If NO crew artifacts** (🟢 pipeline):
+**Default common pipeline**:
 ```
 ---
 🧭 Next Step

@@ -2,8 +2,7 @@
 
 ## Role
 
-Review code changes before commit or PR for quality, security, and test integrity.
-Finds issues and auto-fixes where safe, escalates where not.
+Review changes before commit/PR for quality, security, tests. Auto-fix safe issues; escalate the rest.
 
 ## Invoked By
 
@@ -186,10 +185,12 @@ After running state-check, also verify:
 For each missing update: flag as `[STATE-AUDIT]` in the output and provide the exact update that should be made.
 **Severity**:
 - Missing dependency-map or features.md entries for new modules/features are **blockers** — fix before commit.
-- `[STATE-AUDIT: FR-COVERAGE]` flags (features.md status ↔ Story 완료 불일치) are **blockers** — features.md 상태 갱신 후 commit. 30초면 해결되며 wrap-up까지 미루면 FR 추적이 실제와 불일치합니다.
+- `[STATE-AUDIT: FR-COVERAGE]` flags (features.md status ↔ Story 완료 불일치) are **blockers** — features.md 상태 갱신 후 commit.
 - Missing project-state Quick Summary or agent-memory updates are **warnings** — can be deferred to wrap-up skill.
 
 **Step 9: Commit Guidance**
+
+Commit-message-only requests are guidance; provide only after proof passes.
 
 When review result is DONE or DONE_WITH_CONCERNS (no blockers):
 

@@ -85,7 +85,11 @@ if [ -f "package.json" ] && grep -q '"test"' package.json; then
   test_count=$(echo "$test_output" | grep -c "pass\|ok\|✓\|# tests" || echo "0")
   echo "    테스트 수: ~${test_count}건"
 else
-  warn "package.json에 test 스크립트 없음"
+  if find . -path './node_modules' -prune -o -name '*.test.*' -o -name '*.spec.*' | grep -q .; then
+    fail "test 파일은 있지만 package.json test 스크립트 없음"
+  else
+    warn "package.json에 test 스크립트 없음"
+  fi
 fi
 
 # ═══════════════════════════════════════════════
@@ -242,9 +246,20 @@ if [ -d "harness/" ]; then
   # v0.11 Proof-First enforcement contracts
   grep -q "Proof-First Enforcement" harness/core-rules.md && ok "core-rules: Proof-First Enforcement 존재" || fail "core-rules: Proof-First Enforcement 누락"
   grep -q "Story 0: set up test/smoke proof" harness/agents/pm.md && ok "pm: Story 0 proof setup gate 존재" || fail "pm: Story 0 proof setup gate 누락"
+  grep -q "\[ERROR: PROOF_PLAN_UNDEFINED\]" harness/agents/pm.md && ok "pm: PROOF_PLAN_UNDEFINED gate 존재" || fail "pm: PROOF_PLAN_UNDEFINED gate 누락"
   grep -q "\[BLOCKER: PROOF_MISSING\]" harness/agents/lead.md && ok "lead: PROOF_MISSING blocker 존재" || fail "lead: PROOF_MISSING blocker 누락"
+  grep -q "\[BLOCKER: TESTS_FAILING\]" harness/agents/reviewer.md && ok "reviewer: TESTS_FAILING blocker 존재" || fail "reviewer: TESTS_FAILING blocker 누락"
+  grep -q "\[BLOCKER: NO_TEST_COMMAND\]" harness/agents/reviewer.md && ok "reviewer: NO_TEST_COMMAND blocker 존재" || fail "reviewer: NO_TEST_COMMAND blocker 누락"
   grep -q "\[BLOCKER: PROOF_COMMAND_INVALID\]" harness/agents/reviewer.md && ok "reviewer: PROOF_COMMAND_INVALID blocker 존재" || fail "reviewer: PROOF_COMMAND_INVALID blocker 누락"
   grep -q "Check 7: Proof Ledger Coverage" harness/skills/state-check.md && ok "state-check: Proof Ledger Coverage 존재" || fail "state-check: Proof Ledger Coverage 누락"
+  grep -q "is done but has no passing Proof Ledger/Evidence Summary entry" harness/skills/state-check.md && ok "state-check: proof gap FAIL 존재" || fail "state-check: proof gap FAIL 누락"
+  grep -q "STOP before Step 5.65" harness/skills/wrap-up.md && ok "wrap-up: PROOF-GAP auto-commit 차단 존재" || fail "wrap-up: PROOF-GAP auto-commit 차단 누락"
+
+  if grep -RInE "Crew-Driven|docs/crew/|FR reference|Crew artifacts exist|Validation Tracker|Crew Artifact" .github/copilot-instructions.md .github/agents .github/skills >/tmp/k-harness-crew-leak.txt 2>/dev/null; then
+    fail "Common .github 생성물에 crew 전용 문구 누출: $(head -n 1 /tmp/k-harness-crew-leak.txt)"
+  else
+    ok "Common .github 생성물: crew 전용 문구 누출 없음"
+  fi
 fi
 
 # ═══════════════════════════════════════════════

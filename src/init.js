@@ -653,7 +653,7 @@ function runValidate(targetDir) {
     'project-state.md': 'S1-1 | Project scaffolding',
     'dependency-map.md': 'Add new modules above this line',
     'features.md': 'Add new features above this line',
-    'project-brief.md': 'This is the north star for all decisions',
+    'project-brief.md': 'The north star for all decisions',
   };
 
   for (const file of STATE_FILES) {

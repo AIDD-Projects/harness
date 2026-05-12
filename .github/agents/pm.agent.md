@@ -7,9 +7,7 @@ description: "Feature planning and dependency management. Analyze architecture, 
 
 ## Role
 
-Feature planning and dependency management.
-Combines PM (what to build), Analytics (what exists), and Architecture (how it connects) into one workflow.
-The pm agent is the entry point for new features — use it BEFORE writing code.
+Feature planning and dependency management. Use before writing new feature code.
 
 ## Invoked By
 
@@ -41,7 +39,6 @@ One of:
 - **New Feature**: "I want to add [feature description]"
 - **Architecture Query**: "What depends on [module]?" / "Show me the current module map"
 - **Refactor Plan**: "I need to refactor [module/area]"
-- **Crew-Driven Feature**: "crew 산출물을 기반으로 [기능]을 계획해줘" — when external planning artifacts exist in `docs/crew/`
 
 ## Procedure
 
@@ -103,7 +100,7 @@ Apply these insights when creating the implementation plan. If the memory file i
 10. Run **check-impact** skill for each existing module being modified (pm calls both skills independently — breakdown does NOT invoke check-impact internally. Ordering: breakdown first → register modules → check-impact second.)
 11. Check `docs/failure-patterns.md` for relevant past mistakes
 12. Produce a **Goal Card** (6 lines max) and implementation plan.
-13. Produce a **Proof Plan** per Story: exact test/smoke command or checklist; never TBD. If no proof path exists, add Story 0: set up test/smoke proof.
+13. Produce a **Proof Plan** per Story: exact test/smoke command or checklist; never TBD. No path → add Story 0: set up test/smoke proof. Any `TBD`/blank → `[ERROR: PROOF_PLAN_UNDEFINED]` and STOP before state writes.
 14. **Wait for Plan Confirmation** (see Plan Confirmation Gate below) — do NOT write state files yet
 15. **After user approves** → Update `docs/project-state.md` with the new Story
 16. **After user approves** → Update `docs/features.md` with the new feature entry
@@ -135,18 +132,15 @@ After any plan, **do NOT proceed to coding immediately**.
 
 ### ⚠️ MANDATORY: Post-Approval State File Write
 
-**This section executes IMMEDIATELY after user approval. Complete all writes before 🧭.**
-
-After user approves the plan, perform these writes in order:
+After user approves the plan, perform all writes before 🧭:
 
 1. **`docs/features.md`** — Register new feature(s):
    - Add row(s) to the Feature Registry table
-   - Include FR reference (if crew-driven), status = `planned`
 
 2. **`docs/project-state.md`** — Create Sprint/Stories:
    - If no Sprint exists, create Sprint 1 with theme
    - Add Story rows to the Story Status table (status = `⬜ todo`)
-   - Each Story: ID (S{N}-{M}), Title, Status, Scope (files/modules), FR reference (if crew-driven)
+   - Each Story: ID (S{N}-{M}), Title, Status, Scope (files/modules), Proof Plan
    - Update Quick Summary section
 
 3. **`docs/dependency-map.md`** — Register new modules (if any):
@@ -194,7 +188,7 @@ After the Post-Approval state writes complete, run the `state-check` skill:
 ### Proof Plan
 | Story | Required Evidence | Command / Manual Proof |
 |-------|-------------------|------------------------|
-| S{N}-0 | Proof setup, if needed | Story 0: set up test/smoke proof |
+| S{N}-0 | Proof setup, if needed | `npm test` / `npm run smoke` / manual checklist |
 | S{N}-{M} | Tests / smoke / manual | exact command/checklist; never TBD |
 
 ### Implementation Plan

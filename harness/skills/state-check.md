@@ -46,7 +46,7 @@ For each file:
 1. Read all `✅ done` Stories from `docs/project-state.md` (or `.harness/project-state.md` in Team mode) Story Status table
 2. Read `docs/features.md` Feature Registry
 3. For each `✅ done` Story:
-   - If Story has `[FR-NNN]` prefix → must map to a feature row with that FR reference
+   - If Story has an external reference prefix → must map to a feature row with the same reference
    - Otherwise → must map to at least one feature row whose Key Files overlap with the Story's Scope
 4. Outcomes:
    - Story ✅ done but no matching feature row → FAIL: `[FAIL] Story {S-N-M} done but no feature registered`
@@ -111,7 +111,7 @@ If no Validation Tracker → skip.
 2. For each Story marked `✅ done`, verify at least one Proof Ledger or Evidence Summary row exists with a passing result.
 3. Outcomes:
    - Done Story with passing proof → PASS
-   - Done Story with no proof → WARN: `[WARN] Story {S-N-M} done but no Proof Ledger entry — run reviewer`
+   - Done Story with no proof → FAIL: `[FAIL] Story {S-N-M} is done but has no passing Proof Ledger/Evidence Summary entry — revert to Proof Pending or run reviewer proof before DONE/commit guidance`
    - Done Story with failing proof → FAIL: `[FAIL] Story {S-N-M} proof shows failure but status is done`
    - In-progress Story without proof → PASS; proof pending is normal
 
@@ -155,7 +155,7 @@ STATUS: PASS | WARN | FAIL
 ### Result Interpretation
 
 - **PASS** — all checks passed; calling agent may proceed with STATUS: DONE
-- **WARN** — non-blocking issues; calling agent should include warnings in its output but may proceed
+- **WARN** — non-blocking issues; calling agent should include warnings in its output but may proceed. Exception: proof coverage gaps are FAIL.
 - **FAIL** — blocking; calling agent must NOT report STATUS: DONE until failures are resolved
 
 ### 🧭 Navigation — After State Check

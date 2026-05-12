@@ -152,6 +152,7 @@ Before session end, record the working proof that justified completion:
 2. Add one compact row to `docs/project-state.md` → `## Proof Ledger` for each completed Story.
 3. Cross-check completed Stories against `## Evidence Summary` / `## Proof Ledger`.
 4. If no proof exists, write `[PROOF-GAP] Proof missing` in the wrap-up report and recommend returning to `reviewer`; do not claim the Story is complete.
+5. If `[PROOF-GAP]` exists, STOP before Step 5.65. Do not auto-commit state files that mark a Story done/reviewed without passing proof. Revert the Story to Proof Pending or return to `reviewer`.
 
 Proof rows must stay short: Date, Story, Evidence, Result, Command / Observation. Do not paste long logs.
 
